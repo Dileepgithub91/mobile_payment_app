@@ -4,8 +4,11 @@ const get = async (url) => {
     return axios.get(url)
 }
 
-const post = async (url, data) => {
-    return axios.post(url, data)
+const post = async (url, data={}, headers={}) => {
+    const config = {
+        headers
+    };
+    return axios.post(url, data, config)
 }
 
 module.exports = {

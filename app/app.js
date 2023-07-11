@@ -1,10 +1,14 @@
 const express = require("express");
 const boom = require('@hapi/boom');
+const morgan = require('morgan')
 const { testOtp } = require("./controllers/test.controller");
 const route =require("./routes")
 const port = 3000;
 
 const app = express();
+app.use(morgan('dev'));
+
+require('dotenv').config();
 
 // PARSING
 app.use(express.json());
