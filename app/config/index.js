@@ -1,4 +1,6 @@
 module.exports = (key) => {
-    console.log(process.env)
-    return "value"
+    if (key in process.env) {
+        return process.env[key];
+    }
+    return null;
 }

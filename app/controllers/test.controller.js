@@ -1,5 +1,7 @@
 const query = require('../services/database');
 const client = require("../services/client");
+const datagenit = require('../services/datagen.service');
+const env = require("../config");
 
 const getGiftCards = async (req, res) => {
     // console.log(client)
@@ -15,19 +17,9 @@ const login = async (req, res) => {
 }
 
 const testOtp = async (req, res) => {
-    let smsConfig = {
-        "auth": "D!~2453vgqsZZU6Bd",
-        "senderid": "rzeein",
-        "msisdn": 7696543637,
-        "message": "Hello World"
-    }
-
-    const queryString = '?' + new URLSearchParams(smsConfig).toString();
-    let url = `https://api.datagenit.com/sms${queryString}`
-    const response = await client.get(url)
-    console.log(response)
-    res.json(response.data)
- }
+    datagenit.getBalance()
+    res.json({"test": "asdf"})
+}
 
 module.exports = {
     login,

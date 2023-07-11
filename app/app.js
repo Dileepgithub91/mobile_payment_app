@@ -1,8 +1,12 @@
 const express = require("express");
+const morgan = require('morgan')
 const { testOtp } = require("./controllers/test.controller");
 const port = 3000;
 
 const app = express();
+app.use(morgan('dev'));
+
+require('dotenv').config();
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
