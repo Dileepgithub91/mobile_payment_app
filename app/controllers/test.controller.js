@@ -1,6 +1,7 @@
 const query = require('../services/database');
 const client = require("../services/client");
 const datagenit = require('../services/datagen.service');
+const surepass = require('../services/surepass.service');
 const env = require("../config");
 
 const getGiftCards = async (req, res) => {
@@ -17,7 +18,7 @@ const login = async (req, res) => {
 }
 
 const testOtp = async (req, res) => {
-    datagenit.getBalance()
+    surepass.verifyPan("TestPAN")
     res.json({"test": "asdf"})
 }
 
