@@ -1,5 +1,5 @@
 const client = require("./client");
-const env = require("../config");
+const env = require("../env");
 const { SUREPASS_ENDPOINT } = require("../core/constants")
 
 

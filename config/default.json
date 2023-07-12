@@ -1,0 +1,6 @@
+{
+  "logger": {
+    "logFileDir": "logs",
+    "logFileName": "app.log"
+  }
+}
