@@ -1,4 +1,4 @@
-const client = require("./client");
+const { client } = require("../helpers");
 const env = require("../env");
 const { SUREPASS_ENDPOINT } = require("../core/constants")
 
@@ -17,7 +17,7 @@ const verifyPan = async (pan) => {
         
         const url = `${SUREPASS_ENDPOINT}/api/v1/pan/pan-comprehensive`;
         const response = await client.post(url, data, headers);
-        console.log(response);
+        // console.log(response);
 
         return true
 

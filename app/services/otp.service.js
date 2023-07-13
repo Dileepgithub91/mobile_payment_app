@@ -1,9 +1,0 @@
-const sendOtp = (mobile) => {
-
-}
-
- 
-
-
-
-
