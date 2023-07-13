@@ -13,7 +13,7 @@ module.exports.success = async (res, message="Success", data=null, code=200) => 
 }
 
 
-module.exports.validatationError = async (message="Validation Error", data=null, code=412) => {
+module.exports.validatationError = async (res,message="Validation Error", data=null, code=412) => {
     const response = {
         success: false,
         message: message,
@@ -27,7 +27,7 @@ module.exports.validatationError = async (message="Validation Error", data=null,
     res.status(code).json(response);
 }
 
-module.exports.generalError = async (message="Error", code=412) => {
+module.exports.generalError = async (res,message="Error", code=412) => {
     const response = {
         success: false,
         message: message
@@ -36,7 +36,7 @@ module.exports.generalError = async (message="Error", code=412) => {
     res.status(code).json(response);
 }
 
-module.exports.internalError = async (message="Internal Error", code=500) => {
+module.exports.internalError = async (res,message="Internal Error", code=500) => {
     const response = {
         success: false,
         message: message
