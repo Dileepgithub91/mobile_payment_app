@@ -1,14 +1,11 @@
 const mysql = require("mysql2");
 const env = require("../env");
 
-console.log(env('APP_NAME'))
-
 const pool = mysql.createPool({
-  host: env("DB_HOST"),
-  user: env("DB_USER"),
-  password: env("DB_PASS"),
-  database: env("DB_NAME"),
-  port: env("DB_PORT"),
+  host: env('DB_HOST'),
+  user: env('DB_USER'),
+  password: env('DB_PASS'),
+  database: env('DB_NAME'),
   waitForConnections: true,
   connectionLimit: 10,
   maxIdle: 10, // max idle connections, the default value is the same as `connectionLimit`
