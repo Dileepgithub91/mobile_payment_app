@@ -1,5 +1,5 @@
 const query = require('./database');
-const client = require("./client");
+const { client } = require("../helpers");
 const env = require("../env");
 
 const sendOtp = async () => {
