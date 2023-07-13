@@ -4,15 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon app/app.js",
-    "start": "node app/app.js",
+    "start": "nodemon app/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@hapi/boom": "^10.0.1",
     "axios": "^1.4.0",
     "config": "^3.3.9",
     "cors": "^2.8.5",

@@ -2,10 +2,9 @@ const query = require('./database');
 const { client } = require("../helpers");
 const env = require("../env");
 
-const sendOtp = async () => {
+const sendOtp = async ({mobileNo,otp}) => {
 
     try {
-
         let smsConfig = {
             "auth": env('SMS_AUTH'),
             "senderid": env('SMS_SENDER_ID'),

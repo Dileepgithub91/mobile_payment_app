@@ -3,10 +3,9 @@ const authController = require('../controllers/auth.controller');
 const router = express.Router();
 
 
-router.post('/genotp', authController.genPassCode);
-// router.post('/register', authController.registerUser);
-// // router.post('/signin', authController.signinUser);
-// router.get('/test',auth(), authController.testAuthApi);
+router.post('/registration-send-otp', authController.getRegisterOtp);
+router.post('/registration-verify-otp', authController.verifyRegisterOtp);
+router.post('/registration-resend-otp', authController.getResendOtp);
 
 
 module.exports = router

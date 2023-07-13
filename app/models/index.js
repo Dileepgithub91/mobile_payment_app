@@ -19,8 +19,9 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.users = require("./user.model")(sequelize, DataTypes);
-db.otp_verify = require("./verification.model")(sequelize, DataTypes);
+db.users = require("./users.model")(sequelize, DataTypes);
+db.user_profile = require("./user_profile.model")(sequelize, DataTypes);
+db.registration_verification = require("./registration_verification.model")(sequelize, DataTypes);
 db.jwt_token = require("./token.model")(sequelize, DataTypes);
 
 db.sequelize.sync({ force: false }).then(() => {
