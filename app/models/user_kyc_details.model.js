@@ -1,57 +1,57 @@
 module.exports = (sequelize, DataTypes) => {
-  const User_profile = sequelize.define("user_profile", {
+  const user_kyc_details = sequelize.define("user_kyc_details", {
     user_id: {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    bussiness_name: {
+    adhaar_number: {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    whatsapp_number: {
+    adhaar_image_front: {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    device_type: {
+    adhaar_image_back: {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    device_token: {
+    adhaar_attachmented_number: {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    alternate_mobile: {
+    pan_number: {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    agreement_type: {
+    pan_image: {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    agreement_completed: {
+    driving_license: {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    refferal_code: {
+    passport_number: {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    referred_by: {
+    voter_id_card: {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    signup_completed: {
+    gst_number: {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    kyc_level: {
+    gst_state_code: {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    last_login: {
+    gst_state: {
       type: DataTypes.STRING,
       allowNull: true,
     }
   });
-  return User_profile;
+  return user_kyc_details;
 };
