@@ -59,13 +59,17 @@ const saveManualKycFile = async (req, res, next) => {
     let AadharBack = "";
     let PanImage = "";
     let kycLevel = 1;
+    let adhaarKycStatus="null";
+    let panKycStatus="null";
     if (req.files) {
       AadharFront = req.files.frontAdhar[0].path;
       AadharBack = req.files.backAdhar[0].path;
       PanImage = req.files.pan[0].path;
     }
     AadharFront === "" && AadharBack === "" ? {} : kycLevel + 1;
+    AadharFront === "" && AadharBack === "" ? {} : adhaarKycStatus="pending";
     PanImage === "" ? {} : kycLevel + 1;
+    PanImage === "" ? {} : panKycStatus="pending";
     ///update user profile
     await userProfileServices.updateUser(
       {
@@ -78,6 +82,8 @@ const saveManualKycFile = async (req, res, next) => {
       adhaar_image_front: AadharFront,
       adhaar_image_back: AadharBack,
       pan_image: PanImage,
+      adhaar_kyc_status:adhaarKycStatus,
+      pan_kyc_status:panKycStatus
     });
     response.success(res, "User Profile Updated!");
   } catch (error) {
@@ -89,9 +95,20 @@ const saveManualKycFile = async (req, res, next) => {
 
 const getUserProfile = async (req, res, next) => {
   try {
-    const userId = req.params.userId; //req.user.user_id
-    const userProfile = await userServices.getUserProfilebyUserID(userId);
+    const userId = req.user.user_id;
+    const userProfile = await userProfileServices.getUserProfilebyUserID(userId);
     response.success(res, "User Profile Updated!", userProfile);
+  } catch (error) {
+    logger.log("info", error.message);
+    console.log(error);
+    response.generalError(res, error.message);
+  }
+};
+const getManualKycdocument = async (req, res, next) => {
+  try {
+    const userId = req.params.userId; //req.user.user_id
+    const userKyc = await userKycDetailsServices.getUserKycDetailsByUserId(userId);
+    response.success(res, "User Kyc data retrived!", userKyc);
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
@@ -103,4 +120,5 @@ module.exports = {
   updateUserProfile,
   getUserProfile,
   saveManualKycFile,
+  getManualKycdocument
 };

@@ -11,7 +11,20 @@ const addUserKycDetails = async (body) => {
     throw error;
   }
 };
+const getUserKycDetailsByUserId = async (userId) => {
+  try {
+    const user = await userKycDetails.findAll({
+      where:{
+        user_id:userId
+      }
+    });
+    return user;
+  } catch (error) {
+    throw error;
+  }
+};
 
 module.exports = {
   addUserKycDetails,
+  getUserKycDetailsByUserId
 };

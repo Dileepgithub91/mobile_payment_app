@@ -20,7 +20,7 @@ router.get(
   userController.getUserProfile
 );
 router.post(
-  "/get-user-kyc-manualy",
+  "/save-user-kyc-manualy",
   auth("updateOwn", "profile"),
   KycDocumentUploader.fields([
     { name: "frontAdhar", maxCount: 1 },
@@ -28,6 +28,11 @@ router.post(
     { name: "pan", maxCount: 1 },
   ]),
   userController.saveManualKycFile
+);
+router.get(
+  "/get-user-kyc-status",
+  auth("readOwn", "profile"),
+  userController.getManualKycdocument
 );
 
 module.exports = router;

@@ -1,3 +1,4 @@
+const bcrypt =require("bcrypt");
 const Validator = require("../validations/otpverify.validate");
 const { response } = require("../helpers");
 const logger = require("../logger");
@@ -75,11 +76,16 @@ const verifyRegisterOtp = async (req, res, next) => {
       { current_step: "user-profile" },
       registeredUser.id
     );
+      //generate 8 length
+      const password= await HelperFunction.generateStrongPassword(8);
+      console.log(password);
+      const hashedPassword =await bcrypt.hash(password, 10);
       //add new user
     const user = await userServices.addUser({
       first_name: "guest",
       last_name: "user",
       mobile_no: value.mobileNo,
+      password: hashedPassword
     });
     //generate token
     const token =await HelperFunction.genAuthToken(user.user_id,deviceType,ipAddress);
@@ -211,7 +217,7 @@ const loginViaPassowrd = async (req, res, next) => {
       response.generalError(res, "User Not Found");
       return false;
     }
-    if(user.password!=value.password){
+    if(!await bcrypt.compare(value.password, user.password)){
       logger.log("info", "Password does not match!");
       response.generalError(res, "Password does not match!");
       return false;
