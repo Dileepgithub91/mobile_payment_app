@@ -5,16 +5,28 @@ const userKycDetails = db.user_kyc_details;
 
 const addUserKycDetails = async (body) => {
   try {
-    const user = await userKycDetails.create(body);
+    const userId = body.user_id;
+    const user = await userKycDetails.findAll({
+      where: { user_id: userId },
+    });
+    if (user.length == 0) {
+      user = await userKycDetails.create(body);
+    } else {
+      delete body.user_id;
+      await userKycDetails.update(body, {
+        where: { user_id: userId },
+      });
+    }
+
     return user;
   } catch (error) {
     throw error;
   }
 };
-const updateUserKycDetails = async (body,userId) => {
+const updateUserKycDetails = async (body, userId) => {
   try {
-    const user = await userKycDetails.update(body,{
-      where: { user_id: userId }
+    const user = await userKycDetails.update(body, {
+      where: { user_id: userId },
     });
     return user;
   } catch (error) {
@@ -24,9 +36,9 @@ const updateUserKycDetails = async (body,userId) => {
 const getUserKycDetailsByUserId = async (userId) => {
   try {
     const user = await userKycDetails.findOne({
-      where:{
-        user_id:userId
-      }
+      where: {
+        user_id: userId,
+      },
     });
     return user;
   } catch (error) {
@@ -37,5 +49,5 @@ const getUserKycDetailsByUserId = async (userId) => {
 module.exports = {
   addUserKycDetails,
   getUserKycDetailsByUserId,
-  updateUserKycDetails
+  updateUserKycDetails,
 };

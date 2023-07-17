@@ -44,5 +44,25 @@ router.get(
   auth("readOwn", "profile"),
   userController.getManualKycdocument
 );
+router.post(
+  "/kyc-verify-pan-auto",
+  auth("readOwn", "profile"),
+  userController.kycPanVerification
+);
+router.post(
+  "/kyc-verify-aadhar-auto-generate-otp",
+  auth("readOwn", "profile"),
+  userController.kycAadharGenerateOtp
+);
+router.post(
+  "/kyc-verify-aadhar-auto-verify-otp",
+  auth("readOwn", "profile"),
+  userController.kycAadharVerificationOtp
+);
+router.post(
+  "/kyc-verify-gst-auto",
+  auth("readOwn", "profile"),
+  userController.kycGStVerification
+);
 
 module.exports = router;
