@@ -1,6 +1,7 @@
 const { Sequelize, DataTypes } = require("sequelize");
-const sequelize = new Sequelize("select_karo", "root", "testing012", {
-  host: "localhost",
+const env = require("../env");
+const sequelize = new Sequelize(env("DB_NAME"), env("DB_USER"), env("DB_PASS"), {
+  host: env("DB_HOST"),
   dialect:"mysql",
   operatorsAliases: false,
 });

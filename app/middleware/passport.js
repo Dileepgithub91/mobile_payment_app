@@ -1,6 +1,4 @@
 const {userServices} =require("../services")
-require('dotenv').config();
-
 const  { Strategy:JwtStrategy,ExtractJwt } = require('passport-jwt');
 
 const jwtOptions = {
