@@ -1,12 +1,10 @@
 const { client } = require("../helpers");
 const env = require("../env");
-const { SUREPASS_ENDPOINT } = require("../core/constants")
-
+const { SUREPASS_ENDPOINT } = require("../core/constants");
 
 const verifyPan = async (pan) => {
 
     try {
-
         const data = {
             "id_number": pan
         }
@@ -28,5 +26,5 @@ const verifyPan = async (pan) => {
 }
 
 module.exports = {
-    verifyPan,
-}
+  verifyPan,
+};
