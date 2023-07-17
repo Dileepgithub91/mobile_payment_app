@@ -12,6 +12,21 @@ const addUserAddress = async (body) => {
   }
 };
 
+const updateUserAddress = async (bodyData,userId) => {
+  try {
+    const user = await userAddresses.update(bodyData,{
+      where:{
+        user_id:userId
+      }
+    });
+    return user;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
 module.exports = {
   addUserAddress,
+  updateUserAddress
 };

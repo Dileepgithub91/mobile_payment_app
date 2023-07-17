@@ -5,9 +5,9 @@ module.exports = {
     kycService: require('./kyc.service'),
     authServices: require('./auth.service'),
     userServices: require('./users.service'),
-    userProfileServices: require('./user_profile.service'),
-    userAddressServices: require('./user_addresses.service'),
-    userKycDetailsServices: require('./user_kyc_details.service'),
-    userTokenServices: require('./user_token.service'),
+    userProfileServices: require('./user.profile.service'),
+    userAddressServices: require('./user.addresses.service'),
+    userKycDetailsServices: require('./user.kyc.details.service'),
+    userTokenServices: require('./user.token.service'),
     businessCustomerServices: require('./business.customer.services')
 }

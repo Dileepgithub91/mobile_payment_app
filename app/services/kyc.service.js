@@ -1,114 +1,63 @@
-const { client } = require("../helpers");
-const env = require("../env");
-const { SUREPASS_ENDPOINT } = require("../core/constants")
-
+const { surepassService } = require("../services");
+const logger = require("../logger");
 
 //Pan verification
 const verifyPan = async (pan) => {
-    try {
-      const data = {"id_number": pan}
-      const headers = {
-          'Authorization': 'Bearer ' + env('SUREPASS_TOKEN'),
-          'Content-Type':'application/json'
-      }
-      const url = `${SUREPASS_ENDPOINT}/api/v1/pan/pan-comprehensive`;
-      const response = await client.get(url,data, headers);
-  
-      return {
-        success: true,
-        message: "Pan Verified Successfully!",
-        data: response.data,
-      };
-    } catch (e) {
-      console.log(e.response);
-      return {
-        success: false,
-        message: "Pan Verification Failed, enter correct pan number!",
-        data: e
-      };
+  try {
+    const panData =await surepassService.verifyPan(pan);
+    if(!panData.success){
+        throw panData;
     }
-  };
+    return panData
+  } catch (error) {
+    logger.log("info",error);
+    throw error;
+  }
+};
 
-  ///Aadhar Verification
+///Aadhar Verification
 const generateAadharOtp = async (aadhar) => {
-    try {
-      const data = {"id_number": aadhar}
-      const headers = {
-          'Authorization': 'Bearer ' + env('SUREPASS_TOKEN'),
-          'Content-Type':'application/json'
-      }
-      const url = `${SUREPASS_ENDPOINT}/api/v1/aadhaar-v2/generate-otp`;
-      const response = await client.get(url, data,headers);
-  
-      return {
-        success: true,
-        message: "Aadhar Otp Sent Successfully!",
-        data: response.data,
-      };
-    } catch (e) {
-      console.log(e.response);
-      return {
-        success: false,
-        message: "Aadhar Otp Generation Failed, enter correct aadhar number!",
-        data: e
-      };
+  try {
+    const response =await surepassService.generateAadharOtp(aadhar);
+    if(!response.success){
+        throw response;
     }
-  };
-const VerifyAadharOtp = async (ClientId,Otp) => {
-    try {
-      const data = {"client_id": ClientId,"otp": Otp}
-      const headers = {
-          'Authorization': 'Bearer ' + env('SUREPASS_TOKEN'),
-          'Content-Type':'application/json'
-      }
-      const url = `${SUREPASS_ENDPOINT}/api/v1/aadhaar-v2/submit-otp`;
-      const response = await client.get(url, data,headers);
-  
-      return {
-        success: true,
-        message: "Aadhar otp verified Successfully!",
-        data: response.data,
-      };
-    } catch (e) {
-      console.log(e.response);
-      return {
-        success: false,
-        message: "Aadhar Otp verification Failed!",
-        data: e
-      };
+    return response
+  } catch (error) {
+    logger.log("info",error);
+    throw error;
+   };
+};
+const VerifyAadharOtp = async (ClientId, Otp) => {
+  try {
+    const response =await surepassService.VerifyAadharOtp(ClientId, Otp);
+    if(!response.success){
+        throw response;
     }
-  };
+    return response
+  } catch (error) {
+    logger.log("info",error);
+    throw error;
+   };
+};
 
-  ///GST Verification
+///GST Verification
 const verifyGst = async (gstNo) => {
-    try {
-      const data = {"id_number": gstNo,"filing_status_get":true}
-      const headers = {
-          'Authorization': 'Bearer ' + env('SUREPASS_TOKEN'),
-          'Content-Type':'application/json'
-      }
-      const url = `${SUREPASS_ENDPOINT}/api/v1/corporate/gstin`;
-      const response = await client.get(url,data, headers);
-  
-      return {
-        success: true,
-        message: "Gst Verified Successfully!",
-        data: response.data,
-      };
-    } catch (e) {
-      console.log(e.response);
-      return {
-        success: false,
-        message: "GST Verification Failed, enter correct GST number!",
-        data: e
-      };
+  try {
+    const response =await surepassService.verifyGst(gstNo);
+    if(!response.success){
+        throw response;
     }
-  };
-
+    return response
+  } catch (error) {
+    logger.log("info",error);
+    throw error;
+  }
+};
 
 module.exports = {
-    verifyPan,
-    generateAadharOtp,
-    VerifyAadharOtp,
-    verifyGst
-}
+  verifyPan,
+  generateAadharOtp,
+  VerifyAadharOtp,
+  verifyGst,
+};

@@ -1,25 +1,27 @@
 const query = require('./database');
 const { client } = require("../helpers");
 const env = require("../env");
+const logger = require("../logger");
+const { DATAGENIT_ENDPOINT } = require("../core/constants");
 
-const sendOtp = async ({mobileNo,otp}) => {
+const sendOtp = async (mobileNo,otp) => {
 
     try {
         let smsConfig = {
             "auth": env('SMS_AUTH'),
             "senderid": env('SMS_SENDER_ID'),
-            "msisdn": 9015483838,
-            "message": "Dear customer, use this One Time Password 125 for verification. This OTP will be valid for the next 5 mins. Thanks & Regards - RZEE."
+            "msisdn": mobileNo,
+            "message": `Dear customer, use this One Time Password ${otp} for verification. This OTP will be valid for the next 5 mins. Thanks & Regards - RZEE.`
         }
     
         const queryString = '?' + new URLSearchParams(smsConfig).toString();
-        let url = `https://api.datagenit.com/sms${queryString}`;
+        let url = `${DATAGENIT_ENDPOINT}/sms${queryString}`;
         const response = await client.get(url);
 
-        return true
+        return true;
 
     } catch (e) {
-        console.log(e);
+        logger.log("info",e);
         return false;
     }
 }
@@ -39,7 +41,7 @@ const getBalance = async () => {
         return true
 
     } catch (e) {
-        console.log(e);
+        logger.log("info",e);
         return false;
     }
 }

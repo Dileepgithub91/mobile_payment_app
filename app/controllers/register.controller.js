@@ -3,7 +3,7 @@ const Validator = require("../validations/otpverify.validate");
 const { response } = require("../helpers");
 const logger = require("../logger");
 const HelperFunction =require("../helpers/functions");
-const { authServices, userServices,userTokenServices } = require("../services");
+const { authServices, userServices,userTokenServices,dataGenService } = require("../services");
 
 const getRegisterOtp = async (req, res, next) => {
   try {
@@ -15,6 +15,7 @@ const getRegisterOtp = async (req, res, next) => {
       mobileNo: value.mobileNo,
     });
     ///api to send otp
+    await dataGenService.sendOtp(value.mobileNo,registeredUser.otp);
     response.success(res, "Your otp have been sent");
   } catch (error) {
     logger.log("info", error.message);
@@ -138,7 +139,8 @@ const sendForgetPasswordOtp = async (req, res, next) => {
     const passotp = Math.floor(100000 + Math.random() * 900000);
     //forget password ki otp where to save
     await authServices.updateRegistrationUser({ otp: passotp }, user.id);
-    // /api to send otp
+    ///api to send otp
+    await dataGenService.sendOtp(value.mobileNo,passotp);
     response.success(res, "Your otp have been sent");
   } catch (error) {
     logger.log("info", error.message);
