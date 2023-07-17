@@ -1,4 +1,4 @@
-const Validator = require("../validations/user.validate");
+const Validator = require("../validations/business.customer.validate");
 const { response } = require("../helpers");
 const logger = require("../logger");
 const {

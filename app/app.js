@@ -24,7 +24,7 @@ app.get("/", (req, res) => {
 app.use("/api/",route);
 
 app.get("/api/v1/profile", passport.authenticate('jwt', { session: false }), function(req, res) {
-  res.end('Hello World!');
+  res.send('Hello World!');
 });
 
 app.get("/test", testOtp);

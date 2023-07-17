@@ -47,6 +47,7 @@ module.exports = (sequelize, DataTypes) => {
     kyc_level: {
       type: DataTypes.STRING,
       allowNull: true,
+      defaultValue: "0",
     },
     last_login: {
       type: DataTypes.STRING,

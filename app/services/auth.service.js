@@ -6,7 +6,26 @@ const registration_verification = db.registration_verification;
 const addRegistrationUser = async ({ mobileNo }) => {
   try {
     const passotp = Math.floor(100000 + Math.random() * 900000);
-    const registeredUser = await registration_verification.create({mobile_no:mobileNo,otp:passotp});
+    const registeredUser = await registration_verification.findAll({
+      where: {
+        mobile_no: mobileNo,
+      },
+    });
+    if (registeredUser.length == 0) {
+      registeredUser = await registration_verification.create({
+        mobile_no: mobileNo,
+        otp: passotp,
+      });
+    } else {
+      registeredUser = await registration_verification.update(
+        { mobile_no: mobileNo, otp: passotp },
+        {
+          where: {
+            mobile_no: mobileNo,
+          },
+        }
+      );
+    }
     return registeredUser;
   } catch (error) {
     throw error;
@@ -15,19 +34,19 @@ const addRegistrationUser = async ({ mobileNo }) => {
 const findRegistrationUser = async (query) => {
   try {
     const user = await registration_verification.findAll({
-      where:query
+      where: query,
     });
     return user[0];
   } catch (error) {
     throw error;
   }
 };
-const updateRegistrationUser = async (updateBody,id) => {
+const updateRegistrationUser = async (updateBody, id) => {
   try {
-    const user = await registration_verification.update(updateBody,{
-      where:{
-        id:id
-      }
+    const user = await registration_verification.update(updateBody, {
+      where: {
+        id: id,
+      },
     });
     return user[0];
   } catch (error) {
@@ -38,5 +57,5 @@ const updateRegistrationUser = async (updateBody,id) => {
 module.exports = {
   addRegistrationUser,
   findRegistrationUser,
-  updateRegistrationUser
+  updateRegistrationUser,
 };

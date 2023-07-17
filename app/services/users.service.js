@@ -34,14 +34,12 @@ const getUserByUserId = async (userID) => {
         user_id: userID,
       },
     });
-    const token = await userToken.findAll({
+    const getToken = await userToken.findAll({
       where: {
         user_id: userID,
       },
     });
-    console.log(getuser[0]);
-    console.log(token);
-    return {user:getuser[0],token};
+    return {user:getuser[0].dataValues,token:getToken[0].dataValues};
   } catch (error) {
     throw error;
   }

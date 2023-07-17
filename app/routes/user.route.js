@@ -1,5 +1,4 @@
 const express = require("express");
-const passport =require("passport");
 const userController = require("../controllers/users.controller");
 const router = express.Router();
 
@@ -17,8 +16,18 @@ router.post(
 ); //auth("readOwn","profile")
 router.get(
   "/get-user-profile",
-  passport.authenticate("jwt",{session:false}),
+  auth("readOwn", "profile"),
   userController.getUserProfile
+);
+router.post(
+  "/save-user-kyc-manualy",
+  auth("updateOwn", "profile"),
+  KycDocumentUploader.fields([
+    { name: "frontAdhar", maxCount: 1 },
+    { name: "backAdhar", maxCount: 1 },
+    { name: "pan", maxCount: 1 },
+  ]),
+  userController.saveManualKycFile
 );
 router.post(
   "/save-user-kyc-manualy",

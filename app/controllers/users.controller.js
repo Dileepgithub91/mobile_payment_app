@@ -33,6 +33,7 @@ const updateUserProfile = async (req, res, next) => {
       avtar: value.avtar || "",
       image_url: imageUrl,
       whatsapp_number: value.whatsappNumber,
+      kyc_level:"0",
       alternate_mobile: value.alternateMobile,
       refferal_code: value.refferalCode,
     });
@@ -98,6 +99,7 @@ const saveManualKycFile = async (req, res, next) => {
 
 const getUserProfile = async (req, res, next) => {
   try {
+    // console.log(req.user);
     const userId = req.user.user_id;
     const userProfile = await userProfileServices.getUserProfilebyUserID(
       userId
