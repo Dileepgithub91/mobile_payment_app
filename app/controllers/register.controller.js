@@ -1,9 +1,14 @@
-const bcrypt =require("bcrypt");
+const bcrypt = require("bcrypt");
 const Validator = require("../validations/otpverify.validate");
 const { response } = require("../helpers");
 const logger = require("../logger");
-const HelperFunction =require("../helpers/functions");
-const { authServices, userServices,userTokenServices,dataGenService } = require("../services");
+const HelperFunction = require("../helpers/functions");
+const {
+  authServices,
+  userServices,
+  userTokenServices,
+  dataGenService,
+} = require("../services");
 
 const getRegisterOtp = async (req, res, next) => {
   try {
@@ -15,7 +20,7 @@ const getRegisterOtp = async (req, res, next) => {
       mobileNo: value.mobileNo,
     });
     ///api to send otp
-    await dataGenService.sendOtp(value.mobileNo,registeredUser.otp);
+    await dataGenService.sendOtp(value.mobileNo, registeredUser.otp);
     response.success(res, "Your otp have been sent");
   } catch (error) {
     logger.log("info", error.message);
@@ -25,7 +30,7 @@ const getRegisterOtp = async (req, res, next) => {
 };
 const verifyRegisterOtp = async (req, res, next) => {
   try {
-    const { mobileNo, otp ,deviceType,ipAddress} = req.body;
+    const { mobileNo, otp, deviceType, ipAddress } = req.body;
     const now = new Date().toISOString();
     ///validate input
     const value = await Validator.register_otp_verify.validateAsync({
@@ -77,21 +82,28 @@ const verifyRegisterOtp = async (req, res, next) => {
       { current_step: "user-profile" },
       registeredUser.id
     );
-      //generate 8 length
-      const password= await HelperFunction.generateStrongPassword(8);
-      console.log(password);
-      const hashedPassword =await bcrypt.hash(password, 10);
-      //add new user
+    //generate 8 length
+    const password = await HelperFunction.generateStrongPassword(8);
+    console.log(password);
+    const hashedPassword = await bcrypt.hash(password, 10);
+    //add new user
     const user = await userServices.addUser({
       first_name: "guest",
       last_name: "user",
       mobile_no: value.mobileNo,
-      password: hashedPassword
+      password: hashedPassword,
     });
     //generate token
-    const token =await HelperFunction.genAuthToken(user.user_id,deviceType,ipAddress);
-    await userTokenServices.addUserToken({user_id:user.user_id,token:token})
-    response.success(res, "User Registered Successfully!",{user,token});
+    const token = await HelperFunction.genAuthToken(
+      user.user_id,
+      deviceType,
+      ipAddress
+    );
+    await userTokenServices.addUserToken({
+      user_id: user.user_id,
+      token: token,
+    });
+    response.success(res, "User Registered Successfully!", { user, token });
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
@@ -115,6 +127,7 @@ const getResendOtp = async (req, res, next) => {
     const passotp = Math.floor(100000 + Math.random() * 900000);
     await authServices.updateRegistrationUser({ otp: passotp }, user.id);
     ///api to send otp
+    await dataGenService.sendOtp(value.mobileNo, registeredUser.otp);
     response.success(res, "Your otp have been sent");
   } catch (error) {
     logger.log("info", error.message);
@@ -140,7 +153,7 @@ const sendForgetPasswordOtp = async (req, res, next) => {
     //forget password ki otp where to save
     await authServices.updateRegistrationUser({ otp: passotp }, user.id);
     ///api to send otp
-    await dataGenService.sendOtp(value.mobileNo,passotp);
+    await dataGenService.sendOtp(value.mobileNo, passotp);
     response.success(res, "Your otp have been sent");
   } catch (error) {
     logger.log("info", error.message);
@@ -199,7 +212,11 @@ const verifyForgetPasswordOtp = async (req, res, next) => {
       return false;
     }
     //Sent email for change password
-    response.success(res, "A email for change password has been sent to your registered email!",{user,token});
+    response.success(
+      res,
+      "A email for change password has been sent to your registered email!",
+      { user, token }
+    );
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
@@ -208,10 +225,10 @@ const verifyForgetPasswordOtp = async (req, res, next) => {
 };
 const loginViaPassowrd = async (req, res, next) => {
   try {
-    const { mobileNo ,password,deviceType,ipAddress} = req.body;
+    const { mobileNo, password, deviceType, ipAddress } = req.body;
     const value = await Validator.userLogin.validateAsync({
       mobileNo: mobileNo,
-      password: password
+      password: password,
     });
     const user = await userServices.getUserByMobile(value.mobileNo);
     if (!user) {
@@ -219,16 +236,23 @@ const loginViaPassowrd = async (req, res, next) => {
       response.generalError(res, "User Not Found");
       return false;
     }
-    if(!await bcrypt.compare(value.password, user.password)){
+    if (!(await bcrypt.compare(value.password, user.password))) {
       logger.log("info", "Password does not match!");
       response.generalError(res, "Password does not match!");
       return false;
     }
     //remove password from user before removing
-     delete user.dataValues.password;
-    const token =await HelperFunction.genAuthToken(user.user_id,deviceType,ipAddress);
-    await userTokenServices.addUserToken({user_id:user.user_id,token:token})
-    response.success(res, "User Registered Successfully!",{user,token});
+    delete user.dataValues.password;
+    const token = await HelperFunction.genAuthToken(
+      user.user_id,
+      deviceType,
+      ipAddress
+    );
+    await userTokenServices.addUserToken({
+      user_id: user.user_id,
+      token: token,
+    });
+    response.success(res, "User Registered Successfully!", { user, token });
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
@@ -242,5 +266,5 @@ module.exports = {
   getResendOtp,
   loginViaPassowrd,
   sendForgetPasswordOtp,
-  verifyForgetPasswordOtp
+  verifyForgetPasswordOtp,
 };
