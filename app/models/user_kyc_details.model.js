@@ -20,11 +20,19 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true,
     },
+    adhaar_kyc_status: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     pan_number: {
       type: DataTypes.STRING,
       allowNull: true,
     },
     pan_image: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    pan_kyc_status: {
       type: DataTypes.STRING,
       allowNull: true,
     },
@@ -51,7 +59,11 @@ module.exports = (sequelize, DataTypes) => {
     gst_state: {
       type: DataTypes.STRING,
       allowNull: true,
-    }
+    },
+    gst_kyc_status: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   });
   return user_kyc_details;
 };
