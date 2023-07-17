@@ -6,11 +6,8 @@ const { jwtStrategy } = require('./middleware/passport');
 const { testOtp } = require("./controllers/test.controller");
 const route =require("./routes")
 const port = 3000;
-
 const app = express();
 app.use(morgan('dev'));
-
-
 
 // PARSING
 app.use(express.json());
