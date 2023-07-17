@@ -1,4 +1,5 @@
 const express = require("express");
+const passport =require("passport");
 const userController = require("../controllers/users.controller");
 const router = express.Router();
 
@@ -16,7 +17,7 @@ router.post(
 ); //auth("readOwn","profile")
 router.get(
   "/get-user-profile",
-  auth("readOwn", "profile"),
+  passport.authenticate("jwt",{session:false}),
   userController.getUserProfile
 );
 router.post(

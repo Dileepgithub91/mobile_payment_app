@@ -15,7 +15,9 @@ app.use(express.urlencoded({ extended: true }));
 
 // PASSPORT
 app.use(passport.initialize());
-passport.use('jwt',jwtStrategy);
+// passport.use('jwt',jwtStrategy);
+// passport config
+require('./middleware/passport2')(passport);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");

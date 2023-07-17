@@ -7,7 +7,7 @@ const verify = (req, res, resolve, reject, rights) => async (err, user) => {
   console.log(user);
 
   if (err || !user) {
-    return reject(new Error("Sorry, unauthorized"));
+    return reject(new Error("Sorry, unauthorized")); 
   }
   // req.user = {
   //   id: user.id,
@@ -15,32 +15,33 @@ const verify = (req, res, resolve, reject, rights) => async (err, user) => {
   //   role: user.role,
   // };
 
-  if (rights.length) {
-    const action = rights[0]; // createAny, readAny...
-    const resource = rights[1];
-    const permission = roles.can(req.user.role)[action](resource);
-    if (!permission.granted) {
-      return reject(
-        new ApiError(
-          httpStatus.FORBIDDEN,
-          "Sorry, you don't have enough rights"
-        )
-      );
-    }
-    res.locals.permission = permission;
-  }
+  // if (rights.length) {
+  //   const action = rights[0]; // createAny, readAny...
+  //   const resource = rights[1];
+  //   const permission = roles.can(req.user.role)[action](resource);
+  //   if (!permission.granted) {
+  //     return reject(
+  //       new ApiError(
+  //         httpStatus.FORBIDDEN,
+  //         "Sorry, you don't have enough rights"
+  //       )
+  //     );
+  //   }
+  //   res.locals.permission = permission;
+  // }
   resolve();
 };
 
 const auth =
-  (...rights) =>
+  () =>
   async (req, res, next) => {
-    console.log(req.body);
     return new Promise((resolve, reject) => {
+      console.log("authentication started");
+      console.log(`authentication ${req.user}`);
       passport.authenticate(
         "jwt",
         { session: false },
-        verify(req, res, resolve, reject, rights)
+        verify(req, res, resolve, reject)
       )(req, res, next);
     })
       .then(() => next())

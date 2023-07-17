@@ -27,6 +27,7 @@ db.user_kyc_details = require("./user_kyc_details.model")(sequelize, DataTypes);
 db.user_profile = require("./user_profile.model")(sequelize, DataTypes);
 db.registration_verification = require("./registration_verification.model")(sequelize, DataTypes);
 db.user_token = require("./user_token.model")(sequelize, DataTypes);
+db.business_customer = require("./business.customer.model")(sequelize, DataTypes);
 
 db.sequelize.sync({ force: false }).then(() => {
   console.log("yes re-sync done!");
