@@ -6,7 +6,7 @@ const registration_verification = db.registration_verification;
 const addRegistrationUser = async ({ mobileNo }) => {
   try {
     const passotp = Math.floor(100000 + Math.random() * 900000);
-    const registeredUser = await registration_verification.findAll({
+    let registeredUser = await registration_verification.findAll({
       where: {
         mobile_no: mobileNo,
       },
@@ -16,7 +16,7 @@ const addRegistrationUser = async ({ mobileNo }) => {
         mobile_no: mobileNo,
         otp: passotp,
       });
-    } else {
+    } else {  
       registeredUser = await registration_verification.update(
         { mobile_no: mobileNo, otp: passotp },
         {
