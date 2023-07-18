@@ -16,11 +16,8 @@ const verify = (req, res, resolve, reject, rights) => async (err, user) => {
     const permission = roles.can(req.user.role_id)[action](resource);
     if (!permission.granted) {
       return reject(
-        new ApiError(
-          httpStatus.FORBIDDEN,
-          "Sorry, you don't have enough rights"
+       new Error("Sorry, you don't have enough rights") 
         )
-      );
     }
     res.locals.permission = permission;
   }
