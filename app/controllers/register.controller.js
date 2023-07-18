@@ -84,7 +84,6 @@ const verifyRegisterOtp = async (req, res, next) => {
     );
     //generate 8 length
     const password = await HelperFunction.generateStrongPassword(8);
-    console.log(password);
     const hashedPassword = await bcrypt.hash(password, 10);
     //add new user
     const user = await userServices.addUser({
