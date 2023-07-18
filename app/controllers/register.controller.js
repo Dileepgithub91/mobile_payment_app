@@ -31,7 +31,7 @@ const getRegisterOtp = async (req, res, next) => {
 const verifyRegisterOtp = async (req, res, next) => {
   try {
     const { mobileNo, otp, deviceType, ipAddress } = req.body;
-    const now = new Date().toISOString();
+    
     ///validate input
     const value = await Validator.register_otp_verify.validateAsync({
       mobileNo: mobileNo,

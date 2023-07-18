@@ -6,6 +6,7 @@ const router = express.Router();
 const auth = require("../middleware/auth");
 
 router.post("/add-business-customer-request",  auth("readOwn", "profile"), customerController.addNewBusinessCustomerrequest);
+router.post("/verify-business-customer-request-otp",  auth("readOwn", "profile"), customerController.verifyBusinessCustomerrequest);
 
 
 module.exports = router;

@@ -68,7 +68,7 @@ module.exports = (sequelize, DataTypes) => {
     status: {
       type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: "active",
+      defaultValue: "notVerified",
     },
   });
   return business_customer;

@@ -41,6 +41,45 @@ const findRegistrationUser = async (query) => {
     throw error;
   }
 };
+
+const verifyRegistrationotp = async ({mobileNo,otp}) => {
+  try {
+    const now = new Date().toISOString();
+    const user = await registration_verification.findAll({
+      where: {
+        mobile_no:mobileNo
+      },
+    });
+    const registeredUser = user[0].dataValues;
+    const blockedDate = new Date(registeredUser.blocked_untill);
+    //check if the user has not been blocked besacuse of exceeded otp limit i.e. 3
+    if (blockedDate >= now) {
+     throw new Error("You have Used up your otp tries,try again later")
+    }
+
+    const updatedRetriesValue = parseInt(registeredUser.no_of_retries) + 1;
+    //check if the otp is correct
+    if (registeredUser.otp !== otp) {
+      await authServices.updateRegistrationUser(
+        { no_of_retries: updatedRetriesValue },
+        registeredUser.id
+      );
+      throw new Error("Invalid Otp!, enter correct otp.")
+    }
+    //check if the user has not exceeded otp limit i.e. 3
+    if (updatedRetriesValue >= 3) {
+      await authServices.updateRegistrationUser(
+        { no_of_retries: 0, blocked_untill: now },
+        registeredUser.id
+      );
+      throw new Error("You have exceeded no of tries for otp,you can try again tomorrow");
+    }
+    return registeredUser;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const updateRegistrationUser = async (updateBody, id) => {
   try {
     const user = await registration_verification.update(updateBody, {
@@ -58,4 +97,5 @@ module.exports = {
   addRegistrationUser,
   findRegistrationUser,
   updateRegistrationUser,
+  verifyRegistrationotp
 };
