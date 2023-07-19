@@ -8,6 +8,30 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true,
     },
+    bussiness_type: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    bussiness_yearly_turnover: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    bussiness_monthaly_turnover: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    bussiness_email: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    bussiness_card: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    bussiness_alternate_mobile: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     whatsapp_number: {
       type: DataTypes.STRING,
       allowNull: true,

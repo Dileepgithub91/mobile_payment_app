@@ -39,7 +39,7 @@ const updateUserProfile = async (req, res, next) => {
     });
     ///create new user address
     await userAddressServices.addUserAddress({
-      user_id: "req.user.user_id",
+      user_id: req.user.user_id,
       address_type: "user_address",
       address_line_1: value.addressLine1,
       address_line_2: value.addressLine2,
@@ -90,6 +90,35 @@ const saveManualKycFile = async (req, res, next) => {
       pan_kyc_status: panKycStatus,
     });
     response.success(res, "User Profile Updated!");
+  } catch (error) {
+    logger.log("info", error.message);
+    console.log(error);
+    response.generalError(res, error.message);
+  }
+};
+
+const skipUserKyc = async (req, res, next) => {
+  try {
+     ///update user
+     await userServices.updateUser(
+      {
+       status:"Active"
+      },
+      req.user.user_id
+    );
+    ///update user profile
+    await userProfileServices.updateUser(
+      {
+        kyc_level: "0",
+      },
+      req.user.user_id
+    );
+    ///update User Kyc files
+    await userKycDetailsServices.addUserKycDetails({
+      adhaar_kyc_status: "notVerified",
+      pan_kyc_status: "notVerified",
+    });
+    response.success(res, "User Kyc Skiped!");
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
@@ -258,6 +287,7 @@ const kycGStVerification = async (req, res, next) => {
 module.exports = {
   updateUserProfile,
   getUserProfile,
+  skipUserKyc,
   saveManualKycFile,
   getManualKycdocument,
   kycPanVerification,

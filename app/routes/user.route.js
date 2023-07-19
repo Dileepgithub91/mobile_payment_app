@@ -13,12 +13,20 @@ router.post(
   auth("updateOwn", "profile"),
   AvatarUploader.single("ProfileImage"),
   userController.updateUserProfile
-); //auth("readOwn","profile")
+);
+
 router.get(
   "/get-user-profile",
   auth("readOwn", "profile"),
   userController.getUserProfile
 );
+
+router.post(
+  "/skip-user-kyc",
+  auth("updateOwn", "profile"),
+  userController.skipUserKyc
+);
+
 router.post(
   "/save-user-kyc-manualy",
   auth("updateOwn", "profile"),
@@ -29,26 +37,31 @@ router.post(
   ]),
   userController.saveManualKycFile
 );
+
 router.get(
   "/get-user-kyc-status",
   auth("readOwn", "profile"),
   userController.getManualKycdocument
 );
+
 router.post(
   "/kyc-verify-pan-auto",
   auth("readOwn", "profile"),
   userController.kycPanVerification
 );
+
 router.post(
   "/kyc-verify-aadhar-auto-generate-otp",
   auth("readOwn", "profile"),
   userController.kycAadharGenerateOtp
 );
+
 router.post(
   "/kyc-verify-aadhar-auto-verify-otp",
   auth("readOwn", "profile"),
   userController.kycAadharVerificationOtp
 );
+
 router.post(
   "/kyc-verify-gst-auto",
   auth("readOwn", "profile"),

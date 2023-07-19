@@ -15,7 +15,7 @@ const addUser = async (body) => {
     if (user.length == 0) {
       body.user_id = Math.floor(1000 + Math.random() * 9000);
       body.role = "user";
-      body.status = "active";
+      body.status = "Inactive";
       user = await users.create(body);
     } else {
       delete body.mobile_no;
