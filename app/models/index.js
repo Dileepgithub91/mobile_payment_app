@@ -28,6 +28,8 @@ db.user_profile = require("./user.profile.model")(sequelize, DataTypes);
 db.registration_verification = require("./registration.verification.model")(sequelize, DataTypes);
 db.user_token = require("./user.token.model")(sequelize, DataTypes);
 db.business_customer = require("./business.customer.model")(sequelize, DataTypes);
+db.business_agreement = require("./business.agreement.model")(sequelize, DataTypes);
+db.company_agreement_uploaded_document = require("./company.agreement.upload.document.model")(sequelize, DataTypes);
 
 db.sequelize.sync({ force: false }).then(() => {
   console.log("yes re-sync done!");

@@ -111,6 +111,8 @@ const saveBusinessCustomerprofile = async (req, res, next) => {
     state_id: value.stateId,
     postcode: value.postcode,
   });
+
+  ///Update Comapny agreement document
     
     response.success(res, "Your Business Customer Profile has been Updated!",customer);
   } catch (error) {

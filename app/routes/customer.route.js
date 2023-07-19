@@ -8,6 +8,7 @@ const auth = require("../middleware/auth");
 //uploader for Avatar
 const AvatarUploader = require("../uploader/avatar.uploader");
 const BusinessCardUploader = require("../uploader/businessCard.uploader");
+const KycDocumentUploader = require("../uploader/kyc.Doc.uploader");
 
 router.post("/add-business-customer-request",  auth("readOwn", "profile"), customerController.addNewBusinessCustomerrequest);
 router.post("/verify-business-customer-request-otp",  auth("readOwn", "profile"), customerController.verifyBusinessCustomerrequest);
