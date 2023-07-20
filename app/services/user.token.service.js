@@ -14,7 +14,7 @@ const addUserToken = async (body) => {
     if (user.length == 0) {
       user = await userToken.create(body);
     } else {
-      user = await userToken.update(
+      await userToken.update(
         {
           token: body.token,
         },

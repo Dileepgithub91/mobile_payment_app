@@ -15,7 +15,7 @@ const addUserProfile = async (body) => {
       user = await userProfile.create(body);
     } else {
       delete body.user_id;
-      user = await userProfile.update(body, {
+      await userProfile.update(body, {
         where: {
           user_id: userID,
         },

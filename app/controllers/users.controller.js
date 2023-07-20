@@ -108,7 +108,7 @@ const skipUserKyc = async (req, res, next) => {
       req.user.user_id
     );
     ///update user profile
-    await userProfileServices.updateUser(
+    await userProfileServices.updateUserProfilebyUserID(
       {
         kyc_level: "0",
       },
@@ -116,6 +116,7 @@ const skipUserKyc = async (req, res, next) => {
     );
     ///update User Kyc files
     await userKycDetailsServices.addUserKycDetails({
+      user_id:req.user.user_id,
       adhaar_kyc_status: "notVerified",
       pan_kyc_status: "notVerified",
     });
@@ -147,11 +148,24 @@ const getUserProfile = async (req, res, next) => {
 };
 const getManualKycdocument = async (req, res, next) => {
   try {
-    const userId = req.params.userId; //req.user.user_id
+    const userId = req.user.user_id;
+    let aadharKyc={};
+    let panKyc={};
+    let gstKyc={};
     const userKyc = await userKycDetailsServices.getUserKycDetailsByUserId(
       userId
     );
-    response.success(res, "User Kyc data retrived!", userKyc);
+    if(userKyc.adhaar_kyc_status=="Verified"){
+      aadharKyc= await kycService.getAadharVerificationData(userId);
+    }
+    if(userKyc.pan_kyc_status=="Verified"){
+      panKyc= await kycService.getPanVerificationData(userId);
+    }
+    if(userKyc.gst_kyc_status=="Verified"){
+      gstKyc= await kycService.getGSTVerificationData(userId);
+    }
+    let kycDetails={...userKyc.dataValues,...aadharKyc,...panKyc,...gstKyc}
+    response.success(res, "User Kyc data retrived!", kycDetails);
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);

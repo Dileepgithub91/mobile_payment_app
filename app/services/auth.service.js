@@ -17,7 +17,7 @@ const addRegistrationUser = async ({ mobileNo }) => {
         otp: passotp,
       });
     } else {  
-      registeredUser = await registration_verification.update(
+       await registration_verification.update(
         { mobile_no: mobileNo, otp: passotp },
         {
           where: {

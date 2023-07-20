@@ -231,7 +231,7 @@ const skipBusinessCustomerKyc = async (req, res, next) => {
       req.user.user_id
     );
     ///update user profile
-    await userProfileServices.updateUser(
+    await userProfileServices.updateUserProfilebyUserID(
       {
         kyc_level: "0",
       },
@@ -272,7 +272,7 @@ const saveManualKycFile = async (req, res, next) => {
     PanImage === "" ? {} : kycLevel + 1;
     PanImage === "" ? {} : (panKycStatus = "pending");
     ///update user profile
-    await userProfileServices.updateUser(
+    await userProfileServices.updateUserProfilebyUserID(
       {
         kyc_level: kycLevel,
       },
