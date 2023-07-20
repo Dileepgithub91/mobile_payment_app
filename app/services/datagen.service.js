@@ -21,7 +21,7 @@ const sendOtp = async (mobileNo,otp) => {
         return true;
 
     } catch (e) {
-        logger.log("info",e);
+        logger.log("error", e);
         return false;
     }
 }
