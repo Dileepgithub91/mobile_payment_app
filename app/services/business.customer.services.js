@@ -7,8 +7,8 @@ const CompanyUploadedDocs = db.company_agreement_uploaded_document;
 
 const addBusinessCustomerRequest = async (body) => {
   try {
-    const mobileNO =body.mobileNo;
-    const customer = await businessCustomer.findAll({
+    const mobileNO =body.mobile_no;
+    let customer = await businessCustomer.findAll({
       where: {
         mobile_no: mobileNO,
       },
@@ -16,8 +16,8 @@ const addBusinessCustomerRequest = async (body) => {
     if(customer.length==0){
       customer = await businessCustomer.create(body);
     }else{
-      delete body.mobileNo;
-      customer = await businessCustomer.update(body,{
+      delete body.mobile_no;
+       await businessCustomer.update(body,{
         where: {
           mobile_no: mobileNO,
         },

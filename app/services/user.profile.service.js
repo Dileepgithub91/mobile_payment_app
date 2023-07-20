@@ -6,7 +6,7 @@ const userProfile = db.user_profile;
 const addUserProfile = async (body) => {
   try {
     const userID = body.user_id;
-    const user = await userProfile.findAll({
+    let user = await userProfile.findAll({
       where: {
         user_id: userID,
       },
@@ -15,7 +15,7 @@ const addUserProfile = async (body) => {
       user = await userProfile.create(body);
     } else {
       delete body.user_id;
-      user = await userProfile.update(body, {
+      await userProfile.update(body, {
         where: {
           user_id: userID,
         },

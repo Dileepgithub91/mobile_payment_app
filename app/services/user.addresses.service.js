@@ -6,7 +6,7 @@ const userAddresses = db.user_addresses;
 const addUserAddress = async (body) => {
   try {
     const userId = body.user_id;
-    const user = await userAddresses.findAll({
+    let user = await userAddresses.findAll({
       where: { user_id: userId ,address_type: "user_address"},
     });
     if (user.length == 0) {

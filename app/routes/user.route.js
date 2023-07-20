@@ -8,15 +8,13 @@ const auth = require("../middleware/auth");
 const AvatarUploader = require("../uploader/avatar.uploader");
 const KycDocumentUploader = require("../uploader/kyc.Doc.uploader");
 
-router.post(
-  "/save-user-profile",
+router.post("/save-user-profile",
   auth("updateOwn", "profile"),
   AvatarUploader.single("ProfileImage"),
   userController.updateUserProfile
 );
 
-router.get(
-  "/get-user-profile",
+router.get("/get-user-profile",
   auth("readOwn", "profile"),
   userController.getUserProfile
 );

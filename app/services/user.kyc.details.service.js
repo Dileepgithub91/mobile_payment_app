@@ -6,7 +6,7 @@ const userKycDetails = db.user_kyc_details;
 const addUserKycDetails = async (body) => {
   try {
     const userId = body.user_id;
-    const user = await userKycDetails.findAll({
+    let user = await userKycDetails.findAll({
       where: { user_id: userId },
     });
     if (user.length == 0) {

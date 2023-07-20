@@ -60,7 +60,7 @@ const saveManualKycFile = async (req, res, next) => {
     let AadharFront = "";
     let AadharBack = "";
     let PanImage = "";
-    let kycLevel = 1;
+    let kycLevel = null;
     let adhaarKycStatus = "null";
     let panKycStatus = "null";
     if (req.files) {
@@ -68,14 +68,14 @@ const saveManualKycFile = async (req, res, next) => {
       AadharBack = req.files.backAdhar[0].path;
       PanImage = req.files.pan[0].path;
     }
-    AadharFront === "" && AadharBack === "" ? {} : kycLevel + 1;
+    AadharFront === "" && AadharBack === "" ? {} : kycLevel="1";
     AadharFront === "" && AadharBack === ""
       ? {}
       : (adhaarKycStatus = "pending");
-    PanImage === "" ? {} : kycLevel + 1;
+    PanImage === "" ? {} : kycLevel="2";
     PanImage === "" ? {} : (panKycStatus = "pending");
     ///update user profile
-    await userProfileServices.updateUser(
+    await userProfileServices.updateUserProfilebyUserID(
       {
         kyc_level: kycLevel,
       },
@@ -83,6 +83,7 @@ const saveManualKycFile = async (req, res, next) => {
     );
     ///update User Kyc files
     await userKycDetailsServices.addUserKycDetails({
+      user_id:req.user.user_id,
       adhaar_image_front: AadharFront,
       adhaar_image_back: AadharBack,
       pan_image: PanImage,
@@ -107,7 +108,7 @@ const skipUserKyc = async (req, res, next) => {
       req.user.user_id
     );
     ///update user profile
-    await userProfileServices.updateUser(
+    await userProfileServices.updateUserProfilebyUserID(
       {
         kyc_level: "0",
       },
@@ -115,6 +116,7 @@ const skipUserKyc = async (req, res, next) => {
     );
     ///update User Kyc files
     await userKycDetailsServices.addUserKycDetails({
+      user_id:req.user.user_id,
       adhaar_kyc_status: "notVerified",
       pan_kyc_status: "notVerified",
     });
@@ -133,7 +135,11 @@ const getUserProfile = async (req, res, next) => {
     const userProfile = await userProfileServices.getUserProfilebyUserID(
       userId
     );
-    response.success(res, "User Profile Updated!", userProfile);
+    const userLogin = await userServices.getUserByUserId(
+      userId
+    );
+    const user={...userLogin.user,...userProfile.dataValues};
+    response.success(res, "User Profile Updated!", user);
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
@@ -142,11 +148,24 @@ const getUserProfile = async (req, res, next) => {
 };
 const getManualKycdocument = async (req, res, next) => {
   try {
-    const userId = req.params.userId; //req.user.user_id
+    const userId = req.user.user_id;
+    let aadharKyc={};
+    let panKyc={};
+    let gstKyc={};
     const userKyc = await userKycDetailsServices.getUserKycDetailsByUserId(
       userId
     );
-    response.success(res, "User Kyc data retrived!", userKyc);
+    if(userKyc.adhaar_kyc_status=="Verified"){
+      aadharKyc= await kycService.getAadharVerificationData(userId);
+    }
+    if(userKyc.pan_kyc_status=="Verified"){
+      panKyc= await kycService.getPanVerificationData(userId);
+    }
+    if(userKyc.gst_kyc_status=="Verified"){
+      gstKyc= await kycService.getGSTVerificationData(userId);
+    }
+    let kycDetails={...userKyc.dataValues,...aadharKyc,...panKyc,...gstKyc}
+    response.success(res, "User Kyc data retrived!", kycDetails);
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
@@ -174,18 +193,15 @@ const kycPanVerification = async (req, res, next) => {
       },
       req.user.user_id
     );
-    //update user profile Services
-    const userProfile = await userProfileServices.getUserProfilebyUserID(
-      req.user.user_id
-    );
-    const kycLevel = parseInt(userProfile.kyc_level) + 1;
     //update kyc level
     await userProfileServices.updateUserProfilebyUserID(
       {
-        kyc_level: kycLevel,
+        kyc_level: "2",
       },
       req.user.user_id
     );
+    //save pan responce
+    await kycService.SavePanVerificationData(panData.data);
     response.success(res, "User Kyc Pan Verification Successfull!");
   } catch (error) {
     logger.log("info", error);
@@ -227,18 +243,15 @@ const kycAadharVerificationOtp = async (req, res, next) => {
       },
       req.user.user_id
     );
-    //update user profile Services
-    const userProfile = await userProfileServices.getUserProfilebyUserID(
-      req.user.user_id
-    );
-    const kycLevel = parseInt(userProfile.kyc_level) + 1;
     //update kyc level
     await userProfileServices.updateUserProfilebyUserID(
       {
-        kyc_level: kycLevel,
+        kyc_level: "1",
       },
       req.user.user_id
     );
+     //save pan responce
+     await kycService.SaveAadharVerificationData(aadharData.data);
     response.success(res, "User Kyc Gst Verification Successfull!");
   } catch (error) {
     logger.log("info", error);
@@ -264,19 +277,16 @@ const kycGStVerification = async (req, res, next) => {
       },
       req.user.user_id
     );
-    //update user profile Services
-    const userProfile = await userProfileServices.getUserProfilebyUserID(
-      req.user.user_id
-    );
-    const kycLevel = parseInt(userProfile.kyc_level) + 1;
     //update kyc level
     await userProfileServices.updateUserProfilebyUserID(
       {
-        kyc_level: kycLevel,
+        kyc_level: "3",
         bussiness_name:gstData.data.business_name
       },
       req.user.user_id
     );
+     //save pan responce
+     await kycService.SaveGSTVerificationData(gstData.data);
     response.success(res, "User Kyc Gst Verification Successfull!");
   } catch (error) {
     logger.log("info", error);
