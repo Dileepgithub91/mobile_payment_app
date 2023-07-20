@@ -59,3 +59,7 @@ module.exports.saveCustomerShopDetails = Joi.object({
   businessAddress:Joi.string(),
   businessZipCode:Joi.string(),
 });
+
+module.exports.uploadBusinessAgreement = Joi.object({
+  agreementDocumentId: Joi.string().min(1).required(),
+});

@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     status: {
       type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: "Active"
+      defaultValue: "notVerified"
     }
   });
   return company_agreement_uploaded_document;
