@@ -11,9 +11,10 @@ const {
   userServices,
   userProfileServices,
   userKycDetailsServices,
+  dataGenService
 } = require("../services");
 
-const addNewBusinessCustomerrequest = async (req, res, next) => {
+const addNewBusinessCustomerRequest = async (req, res, next) => {
   try {
     const bodyData = req.body;
     //validator
@@ -59,7 +60,7 @@ const addNewBusinessCustomerrequest = async (req, res, next) => {
     response.generalError(res, error.message);
   }
 };
-const verifyBusinessCustomerrequest = async (req, res, next) => {
+const verifyBusinessCustomerRequest = async (req, res, next) => {
   try {
     const { mobileNo, otp } = req.body;
     ///validate input
@@ -76,9 +77,10 @@ const verifyBusinessCustomerrequest = async (req, res, next) => {
     }
     ///update business request
     const customer = await businessCustomerServices.addBusinessCustomerRequest({
-      mobileNo: value.mobileNo,
+      mobile_no: value.mobileNo,
       status: "Verified",
     });
+    customer.status="Verified";
     response.success(
       res,
       "Business Customer Service Request Submitted!",
@@ -96,7 +98,7 @@ const saveBusinessCustomerprofile = async (req, res, next) => {
   try {
     const bodyData = req.body;
     const UserID = req.user.user_id;
-    const imageUrl = "";
+    let imageUrl = "";
     //validator
     const value =
       await businessCustomerValidator.saveCustomerProfile.validateAsync(
@@ -167,7 +169,7 @@ const saveBusinessCustomerprofile = async (req, res, next) => {
 const saveBusinessCustomerShopDetails = async (req, res, next) => {
   try {
     const bodyData = req.body;
-    const imageUrl = "";
+    let imageUrl = "";
     //validator
     const value =
       await businessCustomerValidator.saveCustomerProfile.validateAsync(
@@ -336,8 +338,8 @@ const uploadUserBusinessAgreement = async (req, res, next) => {
 };
 
 module.exports = {
-  addNewBusinessCustomerrequest,
-  verifyBusinessCustomerrequest,
+  addNewBusinessCustomerRequest,
+  verifyBusinessCustomerRequest,
   saveBusinessCustomerprofile,
   saveBusinessCustomerShopDetails,
   getBusinessCustomerProfile,
