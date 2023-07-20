@@ -174,18 +174,15 @@ const kycPanVerification = async (req, res, next) => {
       },
       req.user.user_id
     );
-    //update user profile Services
-    const userProfile = await userProfileServices.getUserProfilebyUserID(
-      req.user.user_id
-    );
-    const kycLevel = parseInt(userProfile.kyc_level) + 1;
     //update kyc level
     await userProfileServices.updateUserProfilebyUserID(
       {
-        kyc_level: kycLevel,
+        kyc_level: "2",
       },
       req.user.user_id
     );
+    //save pan responce
+    await kycService.SavePanVerificationData(panData.data);
     response.success(res, "User Kyc Pan Verification Successfull!");
   } catch (error) {
     logger.log("info", error);
@@ -227,18 +224,15 @@ const kycAadharVerificationOtp = async (req, res, next) => {
       },
       req.user.user_id
     );
-    //update user profile Services
-    const userProfile = await userProfileServices.getUserProfilebyUserID(
-      req.user.user_id
-    );
-    const kycLevel = parseInt(userProfile.kyc_level) + 1;
     //update kyc level
     await userProfileServices.updateUserProfilebyUserID(
       {
-        kyc_level: kycLevel,
+        kyc_level: "1",
       },
       req.user.user_id
     );
+     //save pan responce
+     await kycService.SaveAadharVerificationData(aadharData.data);
     response.success(res, "User Kyc Gst Verification Successfull!");
   } catch (error) {
     logger.log("info", error);
@@ -264,19 +258,16 @@ const kycGStVerification = async (req, res, next) => {
       },
       req.user.user_id
     );
-    //update user profile Services
-    const userProfile = await userProfileServices.getUserProfilebyUserID(
-      req.user.user_id
-    );
-    const kycLevel = parseInt(userProfile.kyc_level) + 1;
     //update kyc level
     await userProfileServices.updateUserProfilebyUserID(
       {
-        kyc_level: kycLevel,
+        kyc_level: "3",
         bussiness_name:gstData.data.business_name
       },
       req.user.user_id
     );
+     //save pan responce
+     await kycService.SaveGSTVerificationData(gstData.data);
     response.success(res, "User Kyc Gst Verification Successfull!");
   } catch (error) {
     logger.log("info", error);

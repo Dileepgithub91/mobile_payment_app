@@ -16,7 +16,7 @@ router.post("/verify-business-customer-request-otp",  auth("readOwn", "profile")
 router.post("/save-business-customer-profile",  auth("updateOwn", "profile"),AvatarUploader.single("ProfileImage"), customerController.saveBusinessCustomerprofile);
 router.post("/save-business-customer-shop-details",  auth("updateOwn", "profile"),BusinessCardUploader.single("BusinessCard"), customerController.saveBusinessCustomerShopDetails);
 router.get("/get-business-customer-profile",  auth("readOwn", "profile"), customerController.getBusinessCustomerProfile);
-router.get("/skip-business-customer-kyc",  auth("updateOwn", "profile"), customerController.skipBusinessCustomerKyc);
+router.post("/skip-business-customer-kyc",  auth("updateOwn", "profile"), customerController.skipBusinessCustomerKyc);
 router.post("/save-business-customer-kyc-manualy",auth("updateOwn", "profile"),KycDocumentUploader.fields([
     { name: "frontAdhar", maxCount: 1 },
     { name: "backAdhar", maxCount: 1 },
@@ -24,7 +24,7 @@ router.post("/save-business-customer-kyc-manualy",auth("updateOwn", "profile"),K
     ]),
     customerController.saveManualKycFile
   );
-  router.get("/get-user-business-agreement",  auth("updateOwn", "profile"), customerController.getUserBusinessAgreement);
-  router.get("/upload-user-business-agreement",  auth("updateOwn", "profile"), KycDocumentUploader.fields({ name: "agreementDocument", maxCount: 1 }),customerController.uploadUserBusinessAgreement);
+router.get("/get-user-business-agreement",  auth("updateOwn", "profile"), customerController.getUserBusinessAgreement);
+router.post ("/upload-user-business-agreement",  auth("updateOwn", "profile"), KycDocumentUploader.fields({ name: "agreementDocument", maxCount: 1 }),customerController.uploadUserBusinessAgreement);
 
 module.exports = router;

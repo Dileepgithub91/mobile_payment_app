@@ -23,22 +23,22 @@ const addNewBusinessCustomerrequest = async (req, res, next) => {
       );
     ///update user
     const customer = await businessCustomerServices.addBusinessCustomerRequest({
-      first_name: firstName,
-      middle_name: middleName,
-      last_name: lastName,
-      request_type: requestType,
-      mobile_no: mobileNo,
-      address_line_1: addressLine1,
-      address_line_2: addressLine2,
-      state: state,
-      city: city,
-      zip_code: zipCode,
-      services: services,
-      business_name: businessName,
-      company_type: businessType,
-      business_address_1: businessAddress1,
-      business_address_2: businessAddress2,
-      monthaly_turn_over: monthalyTurnOver,
+      first_name: value.firstName,
+      middle_name: value.middleName,
+      last_name: value.lastName,
+      request_type: value.requestType,
+      mobile_no: value.mobileNo,
+      address_line_1: value.addressLine1,
+      address_line_2: value.addressLine2,
+      state: value.state,
+      city: value.city,
+      zip_code: value.zipCode,
+      services: value.services,
+      business_name: value.businessName,
+      company_type: value.businessType,
+      business_address_1: value.businessAddress1,
+      business_address_2: value.businessAddress2,
+      monthaly_turn_over: value.monthalyTurnOver,
     });
 
     //add new opt from register otp:
