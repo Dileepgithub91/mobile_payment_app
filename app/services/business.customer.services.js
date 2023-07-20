@@ -30,14 +30,28 @@ const addBusinessCustomerRequest = async (body) => {
   }
 };
 
+///Get Business Request
+const getBusinessCustomerRequest= async (mobileNo) => {
+  try {
+    const customer = await businessCustomer.findAll({
+      where: {
+        mobile_no: mobileNo,
+      },
+    });
+    return customer[0].dataValues;
+  } catch (error) {
+    throw new Error("Business Request Not Found!");
+  }
+};
+////get business agreement list
 const getBusinessAgreement= async (CompanyType) => {
   try {
-    const notes = await businessAgreement.findAll({
+    const agreement = await businessAgreement.findAll({
       where: {
         company_type: CompanyType,
       },
     });
-    return notes;
+    return agreement;
   } catch (error) {
     throw error;
   }
@@ -52,7 +66,7 @@ const uploadBusinessAgreementDocument = async (body) => {
     throw error;
   }
 };
-const getBusinessAgreementDocument= async (user_id) => {
+const getUploadedBusinessAgreementDocument= async (user_id) => {
   try {
     const notes = await CompanyUploadedDocs.findAll({
       where: {
@@ -61,13 +75,14 @@ const getBusinessAgreementDocument= async (user_id) => {
     });
     return notes;
   } catch (error) {
-    throw error;
+    throw new Error("Business Agreement Document Not Found!");
   }
 };
 
 module.exports = {
   addBusinessCustomerRequest,
+  getBusinessCustomerRequest,
   getBusinessAgreement,
   uploadBusinessAgreementDocument,
-  getBusinessAgreementDocument
+  getUploadedBusinessAgreementDocument
 };

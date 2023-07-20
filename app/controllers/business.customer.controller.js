@@ -1,4 +1,7 @@
-const {businessCustomerValidator,otpVerificationValidator} = require("../validations");
+const {
+  businessCustomerValidator,
+  otpVerificationValidator,
+} = require("../validations");
 const { response } = require("../helpers");
 const logger = require("../logger");
 const {
@@ -7,32 +10,35 @@ const {
   userAddressServices,
   userServices,
   userProfileServices,
-  userKycDetailsServices
+  userKycDetailsServices,
 } = require("../services");
 
 const addNewBusinessCustomerrequest = async (req, res, next) => {
   try {
     const bodyData = req.body;
     //validator
-    const value = await businessCustomerValidator.saveNewCustomerRequest.validateAsync(bodyData);
+    const value =
+      await businessCustomerValidator.saveNewCustomerRequest.validateAsync(
+        bodyData
+      );
     ///update user
-    const customer= await businessCustomerServices.addBusinessCustomerRequest({
-      first_name:firstName,
-      middle_name:middleName,
-      last_name:lastName,
-      request_type:requestType,
-      mobile_no:mobileNo,
-      address_line_1:addressLine1,
-      address_line_2:addressLine2,
-      state:state,
-      city:city,
-      zip_code:zipCode,
-      services:services,
-      business_name:businessName,
+    const customer = await businessCustomerServices.addBusinessCustomerRequest({
+      first_name: firstName,
+      middle_name: middleName,
+      last_name: lastName,
+      request_type: requestType,
+      mobile_no: mobileNo,
+      address_line_1: addressLine1,
+      address_line_2: addressLine2,
+      state: state,
+      city: city,
+      zip_code: zipCode,
+      services: services,
+      business_name: businessName,
       company_type: businessType,
-      business_address_1:businessAddress1,
-      business_address_2:businessAddress2,
-      monthaly_turn_over:monthalyTurnOver
+      business_address_1: businessAddress1,
+      business_address_2: businessAddress2,
+      monthaly_turn_over: monthalyTurnOver,
     });
 
     //add new opt from register otp:
@@ -41,8 +47,12 @@ const addNewBusinessCustomerrequest = async (req, res, next) => {
     });
     ///api to send otp
     await dataGenService.sendOtp(value.mobileNo, registeredUser.otp);
-    
-    response.success(res, "Your otp to verify business request has been sent!",customer);
+
+    response.success(
+      res,
+      "Your otp to verify business request has been sent!",
+      customer
+    );
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
@@ -51,21 +61,29 @@ const addNewBusinessCustomerrequest = async (req, res, next) => {
 };
 const verifyBusinessCustomerrequest = async (req, res, next) => {
   try {
-    const {mobileNo,otp} =req.body;
-     ///validate input
-     const value = await otpVerificationValidator.register_otp_verify.validateAsync({
-      mobileNo: mobileNo,
-      otp: otp,
-    });
-    //verify otp 
-    const regesteredUser =await authServices.verifyRegistrationotp(value);
-    if(!regesteredUser){
+    const { mobileNo, otp } = req.body;
+    ///validate input
+    const value =
+      await otpVerificationValidator.register_otp_verify.validateAsync({
+        mobileNo: mobileNo,
+        otp: otp,
+      });
+    //verify otp
+    const regesteredUser = await authServices.verifyRegistrationotp(value);
+    if (!regesteredUser) {
       response.generalError(res, "Otp verification failed");
       return false;
     }
     ///update business request
-    const customer= await businessCustomerServices.addBusinessCustomerRequest({mobileNo:value.mobileNo,status:"Verified"});
-    response.success(res, "Business Customer Service Request Submitted!",customer);
+    const customer = await businessCustomerServices.addBusinessCustomerRequest({
+      mobileNo: value.mobileNo,
+      status: "Verified",
+    });
+    response.success(
+      res,
+      "Business Customer Service Request Submitted!",
+      customer
+    );
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
@@ -77,44 +95,68 @@ const verifyBusinessCustomerrequest = async (req, res, next) => {
 const saveBusinessCustomerprofile = async (req, res, next) => {
   try {
     const bodyData = req.body;
+    const UserID = req.user.user_id;
     const imageUrl = "";
-   //validator
-   const value = await businessCustomerValidator.saveCustomerProfile.validateAsync(bodyData);
+    //validator
+    const value =
+      await businessCustomerValidator.saveCustomerProfile.validateAsync(
+        bodyData
+      );
     if (req.file) {
       imageUrl = req.file.path || "";
     }
-   ///update user
-   await userServices.updateUser(
-    {
-      first_name: value.firstname,
-      middle_name: value.middlename,
-      last_name: value.lastname,
-      email: value.email,
-    },
-    req.user.user_id
-  );
-  ///create new user profile
-  await userProfileServices.addUserProfile({
-    user_id: req.user.user_id,
-    avtar: value.avtar || "",
-    image_url: imageUrl,
-    whatsapp_number: value.whatsappNumber,
-    alternate_mobile: value.alternateMobile,
-  });
-  ///create new user address
-  await userAddressServices.addUserAddress({
-    user_id: req.user.user_id,
-    address_type: "user_address",
-    address_line_1: value.addressLine1,
-    address_line_2: value.addressLine2,
-    city_id: value.cityId,
-    state_id: value.stateId,
-    postcode: value.postcode,
-  });
+    ///update user
+    await userServices.updateUser(
+      {
+        first_name: value.firstname,
+        middle_name: value.middlename,
+        last_name: value.lastname,
+        email: value.email,
+      },
+      req.user.user_id
+    );
+    ///create new user profile
+    await userProfileServices.addUserProfile({
+      user_id: req.user.user_id,
+      avtar: value.avtar || "",
+      image_url: imageUrl,
+      whatsapp_number: value.whatsappNumber,
+      alternate_mobile: value.alternateMobile,
+    });
+    ///create new user address
+    await userAddressServices.addUserAddress({
+      user_id: req.user.user_id,
+      address_type: "user_address",
+      address_line_1: value.addressLine1,
+      address_line_2: value.addressLine2,
+      city_id: value.cityId,
+      state_id: value.stateId,
+      postcode: value.postcode,
+    });
+    // get business request data
+    const businessRequestData =
+      await businessCustomerServices.getBusinessCustomerRequest(
+        req.user.mobile_no
+      );
+    ////Get all business agreement by company type
+    const businessAgreement =
+      await businessCustomerServices.getBusinessAgreement(
+        businessRequestData.company_type
+      );
+    ///Update Comapny agreement document
+    businessAgreement.forEach((aggrement) => {
+      businessCustomerServices.uploadBusinessAgreementDocument({
+        user_id: UserID,
+        agreement_document_id: aggrement.id,
+        uploaded_agreement_document: null,
+      });
+    });
 
-  ///Update Comapny agreement document
-    
-    response.success(res, "Your Business Customer Profile has been Updated!",customer);
+    response.success(
+      res,
+      "Your Business Customer Profile has been Updated!",
+      customer
+    );
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
@@ -126,31 +168,38 @@ const saveBusinessCustomerShopDetails = async (req, res, next) => {
   try {
     const bodyData = req.body;
     const imageUrl = "";
-   //validator
-   const value = await businessCustomerValidator.saveCustomerProfile.validateAsync(bodyData);
+    //validator
+    const value =
+      await businessCustomerValidator.saveCustomerProfile.validateAsync(
+        bodyData
+      );
     if (req.file) {
       imageUrl = req.file.path || "";
     }
-  ///create new user profile
-  await userProfileServices.addUserProfile({
-    user_id: req.user.user_id,
-    bussiness_name: value.businessName,
-    bussiness_card: imageUrl,
-    whatsapp_number: value.whatsappNumber,
-    bussiness_email:value.businessEmail,
-    bussiness_yearly_turnover:value.yearlyTurnOver,
-    bussiness_monthaly_turnover:value.monthalyTurnOver,
-    bussiness_alternate_mobile: value.alternateMobile,
-  });
-  ///create new user address
-  await userAddressServices.addUserAddress({
-    user_id: req.user.user_id,
-    address_type: "business_address",
-    address_line_1: value.businessAddress,
-    postcode: value.businessZipCode,
-  });
-    
-    response.success(res, "Your Business Customer Shop Details has been Updated!",customer);
+    ///create new user profile
+    await userProfileServices.addUserProfile({
+      user_id: req.user.user_id,
+      bussiness_name: value.businessName,
+      bussiness_card: imageUrl,
+      whatsapp_number: value.whatsappNumber,
+      bussiness_email: value.businessEmail,
+      bussiness_yearly_turnover: value.yearlyTurnOver,
+      bussiness_monthaly_turnover: value.monthalyTurnOver,
+      bussiness_alternate_mobile: value.alternateMobile,
+    });
+    ///create new user address
+    await userAddressServices.addUserAddress({
+      user_id: req.user.user_id,
+      address_type: "business_address",
+      address_line_1: value.businessAddress,
+      postcode: value.businessZipCode,
+    });
+
+    response.success(
+      res,
+      "Your Business Customer Shop Details has been Updated!",
+      customer
+    );
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
@@ -160,8 +209,10 @@ const saveBusinessCustomerShopDetails = async (req, res, next) => {
 // get business customer user profile
 const getBusinessCustomerProfile = async (req, res, next) => {
   try {
-   const customer=await  userProfileServices.getUserProfilebyUserID(req.user.user_id);
-    response.success(res, "Your Business Customer Profile!",customer);
+    const customer = await userProfileServices.getUserProfilebyUserID(
+      req.user.user_id
+    );
+    response.success(res, "Your Business Customer Profile!", customer);
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
@@ -172,10 +223,10 @@ const getBusinessCustomerProfile = async (req, res, next) => {
 //Skip Business Customer Kyc
 const skipBusinessCustomerKyc = async (req, res, next) => {
   try {
-     ///update user
-     await userServices.updateUser(
+    ///update user
+    await userServices.updateUser(
       {
-       status:"Active"
+        status: "Active",
       },
       req.user.user_id
     );
@@ -243,9 +294,46 @@ const saveManualKycFile = async (req, res, next) => {
   }
 };
 // download link agreement 
-
+const getUserBusinessAgreement = async (req, res, next) => {
+  try {
+    const customer = await businessCustomerServices.getUploadedBusinessAgreementDocument(
+      req.user.user_id
+    );
+    response.success(res, "Your Business Agreement Documents!", customer);
+  } catch (error) {
+    logger.log("info", error.message);
+    console.log(error);
+    response.generalError(res, error.message);
+  }
+};
 //upload agreement document
-
+const uploadUserBusinessAgreement = async (req, res, next) => {
+  try {
+    let uploadedAgreementDocument = "";
+    const value = await businessCustomerValidator.uploadBusinessAgreement.validateAsync(
+      {
+        agreementDocumentId:req.body.agreementDocumentId
+      }
+    );
+    if (req.files) {
+      uploadedAgreementDocument = req.files.agreementDocument[0].path;
+    }
+    const customer = await businessCustomerServices.uploadBusinessAgreementDocument(
+      {
+        user_id:req.user.user_id,
+        agreement_document_id:value.agreementDocumentId,
+        uploaded_agreement_document:uploadedAgreementDocument,
+        status:"pending"
+      }
+    );
+    
+    response.success(res, "Your Business Agreement Documents!", customer);
+  } catch (error) {
+    logger.log("info", error.message);
+    console.log(error);
+    response.generalError(res, error.message);
+  }
+};
 
 module.exports = {
   addNewBusinessCustomerrequest,
@@ -254,5 +342,7 @@ module.exports = {
   saveBusinessCustomerShopDetails,
   getBusinessCustomerProfile,
   skipBusinessCustomerKyc,
-  saveManualKycFile
+  saveManualKycFile,
+  getUserBusinessAgreement,
+  uploadUserBusinessAgreement
 };
