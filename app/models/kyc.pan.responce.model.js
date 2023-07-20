@@ -20,9 +20,9 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: "",
     },
     full_name_split: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
+      type: DataTypes.JSON,
       allowNull: true,
-      defaultValue: [""],
+      defaultValue: [],
     },
     masked_aadhaar: {
       type: DataTypes.STRING,
@@ -30,45 +30,15 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: "",
     },
     address: {
-      line_1: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        defaultValue: "",
+      type: DataTypes.STRING, 
+      allowNull: true,
+      defaultValue: JSON.stringify({"":""}), 
+      get() {
+        const rawValue = this.getDataValue('address');
+        return rawValue ? JSON.parse(rawValue) : {};
       },
-      line_2: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        defaultValue: "",
-      },
-      street_name: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        defaultValue: "",
-      },
-      zip: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        defaultValue: "",
-      },
-      city: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        defaultValue: "",
-      },
-      state: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        defaultValue: "",
-      },
-      country: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        defaultValue: "",
-      },
-      full: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        defaultValue: "",
+      set(value) {
+        this.setDataValue('address', JSON.stringify(value));
       },
     },
     email: {

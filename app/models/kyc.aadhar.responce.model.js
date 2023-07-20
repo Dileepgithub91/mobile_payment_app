@@ -9,41 +9,15 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
     },
     address: {
-      loc: {
-        type: DataTypes.STRING,
-        allowNull: true,
+      type: DataTypes.STRING, // Use TEXT type to store JSON-like data
+      allowNull: true,
+      defaultValue: JSON.stringify({"":""}), // Default value as an empty JSON object
+      get() {
+        const rawValue = this.getDataValue('address');
+        return rawValue ? JSON.parse(rawValue) : {};
       },
-      country: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      house: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      subdist: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      vtc: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      po: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      state: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      street: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      dist: {
-        type: DataTypes.STRING,
-        allowNull: true,
+      set(value) {
+        this.setDataValue('address', JSON.stringify(value));
       },
     },
     aadhaar_number: {

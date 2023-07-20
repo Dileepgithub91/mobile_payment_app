@@ -124,7 +124,7 @@ const getResendOtp = async (req, res, next) => {
       return false;
     }
     const passotp = Math.floor(100000 + Math.random() * 900000);
-    await authServices.updateRegistrationUser({ otp: passotp }, user.id);
+    const registeredUser =await authServices.updateRegistrationUser({ otp: passotp }, user.id);
     ///api to send otp
     await dataGenService.sendOtp(value.mobileNo, registeredUser.otp);
     response.success(res, "Your otp have been sent");
@@ -214,7 +214,7 @@ const verifyForgetPasswordOtp = async (req, res, next) => {
     response.success(
       res,
       "A email for change password has been sent to your registered email!",
-      { user, token }
+      { registeredUser }
     );
   } catch (error) {
     logger.log("info", error.message);

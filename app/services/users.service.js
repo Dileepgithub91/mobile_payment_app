@@ -7,7 +7,7 @@ const userToken = db.user_token;
 const addUser = async (body) => {
   try {
     const mobileNo = body.mobile_no;
-    const user = await users.findAll({
+    let user = await users.findAll({
       where: {
         mobile_no: mobileNo,
       },

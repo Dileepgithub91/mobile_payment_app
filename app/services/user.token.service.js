@@ -6,7 +6,7 @@ const userToken = db.user_token;
 const addUserToken = async (body) => {
   try {
     const userID=body.user_id;
-    const user=await userToken.findAll({
+    let user=await userToken.findAll({
       where:{
         user_id:userID
       }

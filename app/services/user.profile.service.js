@@ -6,7 +6,7 @@ const userProfile = db.user_profile;
 const addUserProfile = async (body) => {
   try {
     const userID = body.user_id;
-    const user = await userProfile.findAll({
+    let user = await userProfile.findAll({
       where: {
         user_id: userID,
       },
