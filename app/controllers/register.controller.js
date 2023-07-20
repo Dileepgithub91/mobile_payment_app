@@ -84,6 +84,7 @@ const verifyRegisterOtp = async (req, res, next) => {
     );
     //generate 8 length
     const password = await HelperFunction.generateStrongPassword(8);
+    console.log(`password ${password}`);
     const hashedPassword = await bcrypt.hash(password, 10);
     //add new user
     const user = await userServices.addUser({
@@ -94,12 +95,12 @@ const verifyRegisterOtp = async (req, res, next) => {
     });
     //generate token
     const token = await HelperFunction.genAuthToken(
-      user.user_id,
+      user[0].user_id,
       deviceType,
       ipAddress
     );
     await userTokenServices.addUserToken({
-      user_id: user.user_id,
+      user_id: user[0].user_id,
       token: token,
     });
     response.success(res, "User Registered Successfully!", { user, token });

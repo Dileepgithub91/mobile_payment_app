@@ -60,7 +60,7 @@ const saveManualKycFile = async (req, res, next) => {
     let AadharFront = "";
     let AadharBack = "";
     let PanImage = "";
-    let kycLevel = 1;
+    let kycLevel = null;
     let adhaarKycStatus = "null";
     let panKycStatus = "null";
     if (req.files) {
@@ -68,14 +68,14 @@ const saveManualKycFile = async (req, res, next) => {
       AadharBack = req.files.backAdhar[0].path;
       PanImage = req.files.pan[0].path;
     }
-    AadharFront === "" && AadharBack === "" ? {} : kycLevel + 1;
+    AadharFront === "" && AadharBack === "" ? {} : kycLevel="1";
     AadharFront === "" && AadharBack === ""
       ? {}
       : (adhaarKycStatus = "pending");
-    PanImage === "" ? {} : kycLevel + 1;
+    PanImage === "" ? {} : kycLevel="2";
     PanImage === "" ? {} : (panKycStatus = "pending");
     ///update user profile
-    await userProfileServices.updateUser(
+    await userProfileServices.updateUserProfilebyUserID(
       {
         kyc_level: kycLevel,
       },
@@ -83,6 +83,7 @@ const saveManualKycFile = async (req, res, next) => {
     );
     ///update User Kyc files
     await userKycDetailsServices.addUserKycDetails({
+      user_id:req.user.user_id,
       adhaar_image_front: AadharFront,
       adhaar_image_back: AadharBack,
       pan_image: PanImage,
@@ -133,7 +134,11 @@ const getUserProfile = async (req, res, next) => {
     const userProfile = await userProfileServices.getUserProfilebyUserID(
       userId
     );
-    response.success(res, "User Profile Updated!", userProfile);
+    const userLogin = await userServices.getUserByUserId(
+      userId
+    );
+    const user={...userLogin.user,...userProfile.dataValues};
+    response.success(res, "User Profile Updated!", user);
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);

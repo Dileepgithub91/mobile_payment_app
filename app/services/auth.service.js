@@ -82,6 +82,7 @@ const verifyRegistrationotp = async ({mobileNo,otp}) => {
 
 const updateRegistrationUser = async (updateBody, id) => {
   try {
+    console.log(id);
     const user = await registration_verification.update(updateBody, {
       where: {
         id: id,

@@ -12,18 +12,25 @@ const addUser = async (body) => {
         mobile_no: mobileNo,
       },
     });
-    if (user.length == 0) {
+    if (user.length === 0) {
+      console.log(hit)
       body.user_id = Math.floor(1000 + Math.random() * 9000);
       body.role = "user";
       body.status = "Inactive";
       user = await users.create(body);
     } else {
-      delete body.mobile_no;
-      user = await users.update(body, {
-        where: {
-          mobile_no: mobileNo,
+       await users.update(
+        {
+          first_name: body.first_name,
+          last_name:  body.last_name,
+          password: body.password,
         },
-      });
+        {
+          where: {
+            user_id: user[0].user_id,
+          },
+        }
+      );
     }
 
     return user;
