@@ -6,13 +6,15 @@ const userProfile = db.user_profile;
 const addUserProfile = async (body) => {
   try {
     const userID = body.user_id;
-    let user = await userProfile.findAll({
+    let finduser = await userProfile.findAll({
       where: {
         user_id: userID,
       },
     });
-    if (user.length == 0) {
-      user = await userProfile.create(body);
+    let user = finduser[0].dataValues;
+    if (finduser.length == 0) {
+      let saveduser = await userProfile.create(body);
+      user =saveduser.dataValues;
     } else {
       delete body.user_id;
       await userProfile.update(body, {

@@ -6,11 +6,13 @@ const userAddresses = db.user_addresses;
 const addUserAddress = async (body) => {
   try {
     const userId = body.user_id;
-    let user = await userAddresses.findAll({
+    let finduser = await userAddresses.findAll({
       where: { user_id: userId ,address_type: "user_address"},
     });
-    if (user.length == 0) {
-      user = await userAddresses.create(body);
+    let user = finduser[0].dataValues;
+    if (finduser.length == 0) {
+      let saveduser = await userAddresses.create(body);
+      user=saveduser.dataValues;
     } else {
       delete body.user_id;
       await userAddresses.update(body, {

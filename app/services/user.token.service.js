@@ -6,13 +6,15 @@ const userToken = db.user_token;
 const addUserToken = async (body) => {
   try {
     const userID = body.user_id;
-    let user = await userToken.findAll({
+    let finduser = await userToken.findAll({
       where: {
         user_id: userID,
       },
     });
-    if (user.length == 0) {
-      user = await userToken.create(body);
+    let user = finduser[0].dataValues;
+    if (finduser.length == 0) {
+      let savedUser = await userToken.create(body);
+      user =savedUser.dataValues;
     } else {
       await userToken.update(
         {

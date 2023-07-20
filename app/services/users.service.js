@@ -7,16 +7,18 @@ const userToken = db.user_token;
 const addUser = async (body) => {
   try {
     const mobileNo = body.mobile_no;
-    let user = await users.findAll({
+    let finduser = await users.findAll({
       where: {
         mobile_no: mobileNo,
       },
     });
-    if (user.length === 0) {
+    let user=finduser[0].dataValues;
+    if (finduser.length === 0) {
       body.user_id = Math.floor(1000 + Math.random() * 9000);
       body.role = "user";
-      body.status = "Inactive";
-      user = await users.create(body);
+      body.status = "Active";
+      let saveduser = await users.create(body);
+      user =saveduser.dataValues;
     } else {
        await users.update(
         {

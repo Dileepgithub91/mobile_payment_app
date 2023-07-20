@@ -139,7 +139,7 @@ const getUserProfile = async (req, res, next) => {
       userId
     );
     const user={...userLogin.user,...userProfile.dataValues};
-    response.success(res, "User Profile Updated!", user);
+    response.success(res, "User Profile!", user);
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);

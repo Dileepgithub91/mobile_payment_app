@@ -95,12 +95,12 @@ const verifyRegisterOtp = async (req, res, next) => {
     });
     //generate token
     const token = await HelperFunction.genAuthToken(
-      user[0].user_id,
+      user.user_id,
       deviceType,
       ipAddress
     );
     await userTokenServices.addUserToken({
-      user_id: user[0].user_id,
+      user_id: user.user_id,
       token: token,
     });
     response.success(res, "User Registered Successfully!", { user, token });
