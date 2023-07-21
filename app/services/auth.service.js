@@ -1,33 +1,86 @@
+const moment = require("moment");
 const db = require("../models");
 
 //Create Main Model
 const registration_verification = db.registration_verification;
 
-const addRegistrationUser = async ({ mobileNo }) => {
+// validate otp before generation
+const validateOtpExpireBeforeGeneration = async (registeredUser) => {
+  const endDate = moment(new Date());
+  const startDate = moment(registeredUser.createdAt);
+  
+  let retriesValue = parseInt(registeredUser.resend_tries);
+   ///checking if blocked
+  let blockDate = registeredUser.blocked_untill;
+  if (blockDate) {
+    let acBlockDate =moment(new Date(blockDate));
+    let diffInDay = endDate.diff(acBlockDate, "hours");
+    if(diffInDay<13){
+      throw new Error("You have used up your otp limit, try again tomorrow!");
+    }
+  }
+  ///Check no of tries
+  if (retriesValue < 3 ) {
+    retriesValue = retriesValue + 1;
+  } else {
+    await registration_verification.update(
+      {
+        resend_tries: 0,
+        blocked_untill: new Date().toISOString()
+      },
+      {
+        where: {
+          mobile_no: registeredUser.mobile_no,verification_type:registeredUser.verification_type
+
+        },
+      }
+    );
+    throw new Error("You have used up your otp limit, try again tomorrow!");
+  }
+ 
+  
+  /// checking Expiration
+  const diffInMinutes = endDate.diff(startDate, "minutes");
+  if (diffInMinutes < 3) {
+    return { otp: registeredUser.otp, retriesValue };
+  }
+  let otp = Math.floor(100000 + Math.random() * 900000);
+  return { otp, retriesValue };
+};
+
+const addRegistrationUser = async ({ mobileNo ,verificationType}) => {
   try {
-    const passotp = Math.floor(100000 + Math.random() * 900000);
+    let passotp;
+    let registeredUser;
     let findRegisteredUser = await registration_verification.findAll({
       where: {
-        mobile_no: mobileNo,
+        mobile_no: mobileNo,verification_type:verificationType
       },
     });
-    let registeredUser = findRegisteredUser[0].dataValues;
     if (findRegisteredUser.length == 0) {
+      passotp = Math.floor(100000 + Math.random() * 900000);
       let SavedRegisteredUser = await registration_verification.create({
         mobile_no: mobileNo,
         otp: passotp,
+        verification_type:verificationType
       });
       registeredUser = SavedRegisteredUser.dataValues;
-    } else {
-      await registration_verification.update(
-        { mobile_no: mobileNo, otp: passotp },
-        {
-          where: {
-            mobile_no: mobileNo,
-          },
-        }
-      );
+      return registeredUser;
     }
+    registeredUser = findRegisteredUser ? findRegisteredUser[0].dataValues : "";
+    passotp = await validateOtpExpireBeforeGeneration(registeredUser);
+    await registration_verification.update(
+      {
+        otp: passotp.otp,
+        resend_tries: passotp.retriesValue,
+        no_of_retries:"0",
+      },
+      {
+        where: {
+          mobile_no: mobileNo,verification_type:registeredUser.verification_type
+        },
+      }
+    );
     return registeredUser;
   } catch (error) {
     throw error;
@@ -44,53 +97,10 @@ const findRegistrationUser = async (query) => {
   }
 };
 
-const verifyRegistrationotp = async ({ mobileNo, otp }) => {
+const updateRegistrationUser = async (updateBody, query) => {
   try {
-    const now = new Date().toISOString();
-    const user = await registration_verification.findAll({
-      where: {
-        mobile_no: mobileNo,
-      },
-    });
-    const registeredUser = user[0].dataValues;
-    const blockedDate = new Date(registeredUser.blocked_untill);
-    //check if the user has not been blocked besacuse of exceeded otp limit i.e. 3
-    if (blockedDate >= now) {
-      throw new Error("You have Used up your otp tries,try again later");
-    }
-
-    const updatedRetriesValue = parseInt(registeredUser.no_of_retries) + 1;
-    //check if the otp is correct
-    if (registeredUser.otp !== otp) {
-      await authServices.updateRegistrationUser(
-        { no_of_retries: updatedRetriesValue },
-        registeredUser.id
-      );
-      throw new Error("Invalid Otp!, enter correct otp.");
-    }
-    //check if the user has not exceeded otp limit i.e. 3
-    if (updatedRetriesValue >= 3) {
-      await authServices.updateRegistrationUser(
-        { no_of_retries: 0, blocked_untill: now },
-        registeredUser.id
-      );
-      throw new Error(
-        "You have exceeded no of tries for otp,you can try again tomorrow"
-      );
-    }
-    return registeredUser;
-  } catch (error) {
-    throw error;
-  }
-};
-
-const updateRegistrationUser = async (updateBody, id) => {
-  try {
-    console.log(id);
     const user = await registration_verification.update(updateBody, {
-      where: {
-        id: id,
-      },
+      where: query,
     });
     return user[0];
   } catch (error) {
@@ -102,5 +112,4 @@ module.exports = {
   addRegistrationUser,
   findRegistrationUser,
   updateRegistrationUser,
-  verifyRegistrationotp,
 };

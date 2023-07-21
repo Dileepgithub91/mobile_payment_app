@@ -12,6 +12,14 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       defaultValue:"0"
     },
+    resend_tries: {
+      type: DataTypes.STRING,
+      defaultValue:"0"
+    },
+    verification_type: {
+      type: DataTypes.STRING,
+      defaultValue:"default"
+    },
     ip_address: {
       type: DataTypes.STRING,
     },
