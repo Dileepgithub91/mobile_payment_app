@@ -61,6 +61,60 @@ const addNewBusinessCustomerRequest = async (req, res, next) => {
     response.generalError(res, error.message);
   }
 };
+const resendBusinessCustomerRequestOtp = async (req, res, next) => {
+  try {
+    const { mobileNo, otp } = req.body;
+    ///validate input
+    const value =
+      await otpVerificationValidator.register_otp_verify.validateAsync({
+        mobileNo: mobileNo,
+        otp: otp,
+      });
+    //verify otp
+    const businessRequset= await businessCustomerServices.getBusinessCustomerRequest(mobileNo);
+    if(businessRequset.status !="notVerified"){
+      logger.log("info", "Business Request not found!");
+      response.validatationError(res, "Business Request not found!");
+      return false;
+    }
+    const regesteredUser = await authServices.findRegistrationUser({mobile_no:mobileNo,verification_type:"business"});
+    const updatedRetriesValue = parseInt(regesteredUser.no_of_retries) + 1;
+    //check if the user has not exceeded otp limit i.e. 3
+    if (updatedRetriesValue >= 3) {
+      logger.log(
+        "info",
+        "You have exceeded no of tries for otp,you can resend otp"
+      );
+      response.validatationError(res, "You have exceeded no of tries for otp,you can resend otp.");
+      return false;
+    }
+  //check if the otp is correct
+  if (regesteredUser.otp !== otp) {
+    await authServices.updateRegistrationUser(
+      { no_of_retries: updatedRetriesValue },
+      {id:regesteredUser.id, verification_type:"business"}
+    );
+    logger.log("info", "Invalid Otp!, enter correct otp.");
+    response.validatationError(res, "Invalid Otp!, enter correct otp.");
+    return false;
+  }
+    ///update business request
+    const customer = await businessCustomerServices.addBusinessCustomerRequest({
+      mobile_no: value.mobileNo,
+      status: "Verified",
+    });
+    customer.status="Verified";
+    response.success(
+      res,
+      "Business Customer Service Request Submitted!",
+      customer
+    );
+  } catch (error) {
+    logger.log("info", error.message);
+    console.log(error);
+    response.generalError(res, error.message);
+  }
+};
 const verifyBusinessCustomerRequest = async (req, res, next) => {
   try {
     const { mobileNo, otp } = req.body;
@@ -356,6 +410,7 @@ const uploadUserBusinessAgreement = async (req, res, next) => {
 
 module.exports = {
   addNewBusinessCustomerRequest,
+  resendBusinessCustomerRequestOtp,
   verifyBusinessCustomerRequest,
   saveBusinessCustomerprofile,
   saveBusinessCustomerShopDetails,

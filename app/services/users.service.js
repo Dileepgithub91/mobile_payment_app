@@ -28,7 +28,7 @@ const addUser = async (body) => {
         },
         {
           where: {
-            user_id: user[0].user_id,
+            user_id: user.user_id,
           },
         }
       );

@@ -2,7 +2,7 @@ const moment = require("moment");
 const db = require("../models");
 
 //Create Main Model
-const registration_verification = db.registration_verification;
+const otp_verification = db.otp_verification;
 
 // validate otp before generation
 const validateOtpExpireBeforeGeneration = async (registeredUser) => {
@@ -23,7 +23,7 @@ const validateOtpExpireBeforeGeneration = async (registeredUser) => {
   if (retriesValue < 3 ) {
     retriesValue = retriesValue + 1;
   } else {
-    await registration_verification.update(
+    await otp_verification.update(
       {
         resend_tries: 0,
         blocked_untill: new Date().toISOString()
@@ -52,14 +52,14 @@ const addRegistrationUser = async ({ mobileNo ,verificationType}) => {
   try {
     let passotp;
     let registeredUser;
-    let findRegisteredUser = await registration_verification.findAll({
+    let findRegisteredUser = await otp_verification.findAll({
       where: {
         mobile_no: mobileNo,verification_type:verificationType
       },
     });
     if (findRegisteredUser.length == 0) {
       passotp = Math.floor(100000 + Math.random() * 900000);
-      let SavedRegisteredUser = await registration_verification.create({
+      let SavedRegisteredUser = await otp_verification.create({
         mobile_no: mobileNo,
         otp: passotp,
         verification_type:verificationType
@@ -69,7 +69,7 @@ const addRegistrationUser = async ({ mobileNo ,verificationType}) => {
     }
     registeredUser = findRegisteredUser ? findRegisteredUser[0].dataValues : "";
     passotp = await validateOtpExpireBeforeGeneration(registeredUser);
-    await registration_verification.update(
+    await otp_verification.update(
       {
         otp: passotp.otp,
         resend_tries: passotp.retriesValue,
@@ -88,7 +88,7 @@ const addRegistrationUser = async ({ mobileNo ,verificationType}) => {
 };
 const findRegistrationUser = async (query) => {
   try {
-    const user = await registration_verification.findAll({
+    const user = await otp_verification.findAll({
       where: query,
     });
     return user[0];
@@ -99,7 +99,7 @@ const findRegistrationUser = async (query) => {
 
 const updateRegistrationUser = async (updateBody, query) => {
   try {
-    const user = await registration_verification.update(updateBody, {
+    const user = await otp_verification.update(updateBody, {
       where: query,
     });
     return user[0];
