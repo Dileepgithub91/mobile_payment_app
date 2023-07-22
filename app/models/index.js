@@ -33,6 +33,7 @@ db.company_agreement_uploaded_document = require("./company.agreement.upload.doc
 db.kyc_pan_detail = require("./kyc.pan.response.model")(sequelize, DataTypes);
 db.kyc_aadhar_detail = require("./kyc.aadhar.response.model")(sequelize, DataTypes);
 db.kyc_gst_detail = require("./kyc.gst.response.model")(sequelize, DataTypes);
+db.api_provider_setting = require("./api.provider.setting.model")(sequelize, DataTypes);
 
 db.sequelize.sync({ force: false }).then(() => {
   console.log("yes re-sync done!");

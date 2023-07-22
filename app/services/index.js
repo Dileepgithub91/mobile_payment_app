@@ -2,6 +2,7 @@ module.exports = {
     databaseService: require('./database'),
     dataGenService: require('./datagen.service'),
     surepassService: require('./surepass.service'),
+    pinePerkService: require('./pineperks.service'),
     kycService: require('./kyc.service'),
     emailService: require('./email.services'),
     authServices: require('./auth.service'),

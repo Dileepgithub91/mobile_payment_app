@@ -1,5 +1,6 @@
 module.exports.SUREPASS_ENDPOINT = "https://sandbox.surepass.io";
 module.exports.DATAGENIT_ENDPOINT = "https://api.datagenit.com";
+module.exports.PINEPERKS_ENDPOINT = "https://apiuat.pineperks.in";
 
 exports.responseMessages = {
   userNotFound: "User not found.",
