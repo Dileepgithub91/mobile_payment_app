@@ -28,14 +28,14 @@ const generateHeaders = async () => {
 
     const headers = {
       "X-PinePerks-UserName": getToken[0].user_name,
-      "X-PinePerks-Token": getToken[0].user_access_token,
+      "X-PinePerks-Token": getToken[0].user_password,
       "Content-Type": "application/json",
     };
 
     const url = `${PINEPERKS_ENDPOINT}/auth/V2/generate/token`;
     const response = await client.get(url, headers);
     await apiProviderSetting.update(
-      {
+      { 
         access_token:response.data.accessToken,
         token_expiry_date:response.data.tokenExpiryDate
       },
