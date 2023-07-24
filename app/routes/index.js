@@ -6,6 +6,8 @@ const registerRoute = require('./register.route');
 const publicRoute = require('./public.route');
 const userRoute = require('./user.route');
 const customerRoute = require('./customer.route');
+const pinePerksRoute = require('./giftcard.pineperks.route');
+const qwikcilverRoute = require('./giftcard.qwikcilver.route');
 
 const routesIndex = [
     {
@@ -23,6 +25,14 @@ const routesIndex = [
     {
         path:'/customer',
         route: customerRoute,
+    },
+    {
+        path:'/pineperks',
+        route: pinePerksRoute,
+    },
+    {
+        path:'/qwikcilver',
+        route: qwikcilverRoute,
     }
 ] 
 

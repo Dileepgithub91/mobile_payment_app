@@ -196,7 +196,7 @@ const GetCardOrderStatus = async ({ requsetId }) => {
     }
     return {
       success: false,
-      message: "Scheme fetched Failed, try again!",
+      message: "card Order Status fetching Failed, try again!",
       data: e,
     };
   }

@@ -112,8 +112,34 @@ const getCategories = async () => {
   }
 };
 
+//Get category
+const getCategoriesDetails = async ({categoryId}) => {
+  try {
+    const url = `${QWIKCILVER_ENDPOINT}/rest/v3/catalog/categories/${categoryId}`;
+    const headers = await generateTokens("", url, get);
+    const response = await client.get(url, headers);
+    return {
+      success: true,
+      message: "Categories details fetched SuccessFully!",
+      data: response.data,
+    };
+  } catch (e) {
+    if (e.error == "FORBIDDEN" && e.status == "403") {
+      return {
+        success: false,
+        message: "Service is not available now, try again after some time!",
+      };
+    }
+    return {
+      success: false,
+      message: "Categories details fetched Failed, try again!",
+      data: e,
+    };
+  }
+};
+
 //Get Product List
-const getProductList = async (categoryId, offset = null, limit = null) => {
+const getProductList = async ({categoryId, offset = null, limit = null}) => {
   try {
     const url = `${QWIKCILVER_ENDPOINT}/rest/v3/catalog/categories/${categoryId}/products?offset=${offset}&limit=${limit}`;
     const headers = await generateTokens("", url, get);
@@ -139,7 +165,7 @@ const getProductList = async (categoryId, offset = null, limit = null) => {
 };
 
 //Get Product Details
-const getProductDetails = async (productId) => {
+const getProductDetails = async ({productId}) => {
   try {
     const url = `${QWIKCILVER_ENDPOINT}/rest/v3/catalog/products/${productId}`;
     const headers = await generateTokens("", url, get);
@@ -201,7 +227,7 @@ const bankBeneficiaryValidation = async (
     }
     return {
       success: false,
-      message: "Beneficiary Validation fetched Failed, try again!",
+      message: "Beneficiary Validation Failed, try again!",
       data: e,
     };
   }
@@ -249,48 +275,10 @@ const upiBeneficiaryValidation = async (
 };
 
 //Create an order api
-const createAnOrderApi = async (
-  address,
-  billing,
-  isConsolidated,
-  payments,
-  orderType,
-  refno,
-  remarks,
-  deliveryMode,
-  egvDeliveryType,
-  products,
-  otp,
-  coBrandImageId,
-  cardnumber,
-  outletName,
-  shipping,
-  syncOnly,
-  couponCode,
-  deliveryMode
-) => {
+const createAnOrderApi = async (bodyData) => {
   try {
     const url = `${QWIKCILVER_ENDPOINT}/rest/v3/orders`;
-    const body = {
-      address: address,
-      billing: billing,
-      isConsolidated: isConsolidated,
-      payments: payments,
-      orderType: orderType,
-      deliveryMode: deliveryMode,
-      egvDeliveryType: egvDeliveryType,
-      products: products,
-      remarks: remarks,
-      otp: otp,
-      coBrandImageId: coBrandImageId,
-      cardnumber: cardnumber,
-      outletName: outletName,
-      refno: refno,
-      couponCode: couponCode,
-      shipping: shipping,
-      syncOnly: syncOnly,
-      deliveryMode: deliveryMode,
-    };
+    const body = bodyData;
     const headers = await generateTokens(body, url, get);
     const response = await client.post(url, body, headers);
     return {
@@ -314,7 +302,7 @@ const createAnOrderApi = async (
 };
 
 //Get Order Details Api
-const getOrderDetailsAPi = async (orderId) => {
+const getOrderDetailsAPi = async ({orderId}) => {
   try {
     const url = `${QWIKCILVER_ENDPOINT}/rest/v3/orders/${orderId}`;
     const headers = await generateTokens("", url, get);
@@ -366,7 +354,7 @@ const getOrderListAPi = async () => {
 };
 
 //Get Order Status Api
-const getOrderStatusAPi = async (refno) => {
+const getOrderStatusAPi = async ({refno}) => {
   try {
     const url = `${QWIKCILVER_ENDPOINT}/rest/v3/order/${refno}/status`;
     const headers = await generateTokens("", url, get);
@@ -392,7 +380,7 @@ const getOrderStatusAPi = async (refno) => {
 };
 
 //Get Activated Card APi
-const getActivatedCardApi = async (orderId, offset = null, limit = null) => {
+const getActivatedCardApi = async ({orderId, offset = null, limit = null}) => {
   try {
     const url = `${QWIKCILVER_ENDPOINT}/rest/v3/order/${orderId}/cards/?offset=${offset}&limit=${limit}`;
     const headers = await generateTokens("", url, get);
@@ -418,7 +406,7 @@ const getActivatedCardApi = async (orderId, offset = null, limit = null) => {
 };
 
 //Get Activated Card APi
-const getCardBalance = async (cardNumber, pin = null, sku = null) => {
+const getCardBalance = async ({cardNumber, pin = null, sku = null}) => {
   try {
     const url = `${QWIKCILVER_ENDPOINT}/rest/v3/balance`;
     const body = {
@@ -449,7 +437,7 @@ const getCardBalance = async (cardNumber, pin = null, sku = null) => {
 };
 
 // Order Resend APi
-const orderResendAPi = async (incrementId, cards) => {
+const orderResendAPi = async ({incrementId, cards}) => {
   try {
     const url = `${QWIKCILVER_ENDPOINT}/rest/v3/orders/${incrementId}/resend`;
     const body = { cards };
@@ -476,33 +464,10 @@ const orderResendAPi = async (incrementId, cards) => {
 };
 
 //Order ReVerse Api
-const orderReverseApi = async (
-  address,
-  billing,
-  payments,
-  refno,
-  products,
-  outletName,
-  orderType,
-  syncOnly,
-  couponCode,
-  deliveryMode
-) => {
+const orderReverseApi = async (bodyData) => {
   try {
     const url = `${QWIKCILVER_ENDPOINT}/rest/v3/orders/reverse`;
-    const body = {
-      address: address,
-      billing: billing,
-      payments: payments,
-      refno: refno,
-      products: products,
-      outletName: outletName,
-      orderType: orderType,
-      shipping: shipping,
-      syncOnly: syncOnly,
-      couponCode: couponCode,
-      deliveryMode: deliveryMode,
-    };
+    const body = bodyData;
     const headers = await generateTokens(body, url, get);
     const response = await client.post(url, body, headers);
     return {
@@ -526,7 +491,7 @@ const orderReverseApi = async (
 };
 
 //Transection History
-const transectionHistoryApi = async (startDate,endDate,limit,offset,cards) => {
+const transectionHistoryApi = async ({startDate,endDate,limit,offset,cards}) => {
   try {
     const url = `${QWIKCILVER_ENDPOINT}/rest/v3/transaction/history`;
     const body = {
@@ -560,6 +525,7 @@ const transectionHistoryApi = async (startDate,endDate,limit,offset,cards) => {
 
 module.exports = {
   getCategories,
+  getCategoriesDetails,
   getProductList,
   getProductDetails,
   bankBeneficiaryValidation,
