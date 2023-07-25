@@ -190,7 +190,10 @@ const getCategoriesDetails = async ({ categoryId }) => {
 //Get Product List
 const getProductList = async ({ categoryId, offset = null, limit = null }) => {
   try {
-    const url = `${QWIKCILVER_ENDPOINT}/rest/v3/catalog/categories/${categoryId}/products?offset=${offset}&limit=${limit}`;
+    let url =`${QWIKCILVER_ENDPOINT}/rest/v3/catalog/categories/${categoryId}/products`;
+    if(offset&&limit){
+      url =`${QWIKCILVER_ENDPOINT}/rest/v3/catalog/categories/${categoryId}/products?offset=${offset}&limit=${limit}`;
+    }
     const headers = await generateTokens("", url, "GET");
     const response = await client.get(url, headers);
     return {
