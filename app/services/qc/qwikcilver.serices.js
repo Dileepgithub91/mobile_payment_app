@@ -330,6 +330,7 @@ const upiBeneficiaryValidation = async (
 const createAnOrderApi = async (bodyData) => {
   try {
     const url = `${QWIKCILVER_ENDPOINT}/rest/v3/orders`;
+    console.log(bodyData);
     const body = bodyData;
     const headers = await generateTokens(body, url, "POST");
     const response = await client.post(url, body, headers);
