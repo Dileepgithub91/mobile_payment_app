@@ -15,7 +15,7 @@ const getCardSchema = async (req, res, next) => {
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
-    response.generalError(res, error.message);
+    response.generalError(res, error.message,error);
   }
 };
 
@@ -33,7 +33,7 @@ const saveNewInstantDigitalCard = async (req, res, next) => {
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
-    response.generalError(res, error.message);
+    response.generalError(res, error.message,error);
   }
 };
 
@@ -51,7 +51,7 @@ const saveNewBulkDigitalCard = async (req, res, next) => {
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
-    response.generalError(res, error.message);
+    response.generalError(res, error.message,error);
   }
 };
 
@@ -69,7 +69,7 @@ const getCardOrderStatus = async (req, res, next) => {
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
-    response.generalError(res, error.message);
+    response.generalError(res, error.message,error);
   }
 };
 
@@ -87,7 +87,7 @@ const getCardBalance = async (req, res, next) => {
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
-    response.generalError(res, error.message);
+    response.generalError(res, error.message,error);
   }
 };
 
@@ -105,7 +105,7 @@ const getCardDetails = async (req, res, next) => {
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
-    response.generalError(res, error.message);
+    response.generalError(res, error.message,error);
   }
 };
 
@@ -123,7 +123,7 @@ const getCardTransectionHistory = async (req, res, next) => {
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
-    response.generalError(res, error.message);
+    response.generalError(res, error.message,error);
   }
 };
 
@@ -141,7 +141,7 @@ const updateCardTransectionLimit = async (req, res, next) => {
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
-    response.generalError(res, error.message);
+    response.generalError(res, error.message,error);
   }
 };
 
@@ -159,7 +159,7 @@ const updateCustomerCardStatus = async (req, res, next) => {
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
-    response.generalError(res, error.message);
+    response.generalError(res, error.message,error);
   }
 };
 
@@ -177,7 +177,7 @@ const updateCustomerCardStatusByAdmin = async (req, res, next) => {
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
-    response.generalError(res, error.message);
+    response.generalError(res, error.message,error);
   }
 };
 

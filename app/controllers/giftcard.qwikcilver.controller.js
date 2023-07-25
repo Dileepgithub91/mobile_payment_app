@@ -13,7 +13,7 @@ const getCategories = async (req, res, next) => {
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
-    response.generalError(res, error.message);
+    response.generalError(res, error.message,error);
   }
 };
 const getCategoriesdetails = async (req, res, next) => {
@@ -26,7 +26,7 @@ const getCategoriesdetails = async (req, res, next) => {
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
-    response.generalError(res, error.message);
+    response.generalError(res, error.message,error);
   }
 };
 
@@ -40,7 +40,7 @@ const getProductList = async (req, res, next) => {
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
-    response.generalError(res, error.message);
+    response.generalError(res, error.message,error);
   }
 };
 const getProductDetails = async (req, res, next) => {
@@ -53,7 +53,7 @@ const getProductDetails = async (req, res, next) => {
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
-    response.generalError(res, error.message);
+    response.generalError(res, error.message,error);
   }
 };
 const bankBeneficiaryValidation = async (req, res, next) => {
@@ -66,7 +66,7 @@ const bankBeneficiaryValidation = async (req, res, next) => {
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
-    response.generalError(res, error.message);
+    response.generalError(res, error.message,error);
   }
 };
 const upiBeneficiaryValidation = async (req, res, next) => {
@@ -79,7 +79,7 @@ const upiBeneficiaryValidation = async (req, res, next) => {
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
-    response.generalError(res, error.message);
+    response.generalError(res, error.message,error);
   }
 };
 const createAnOrderForGiftCard = async (req, res, next) => {
@@ -92,7 +92,7 @@ const createAnOrderForGiftCard = async (req, res, next) => {
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
-    response.generalError(res, error.message);
+    response.generalError(res, error.message,error);
   }
 };
 const getOrderDetailsAPi = async (req, res, next) => {
@@ -105,7 +105,7 @@ const getOrderDetailsAPi = async (req, res, next) => {
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
-    response.generalError(res, error.message);
+    response.generalError(res, error.message,error);
   }
 };
 const getOrderListAPi = async (req, res, next) => {
@@ -118,7 +118,7 @@ const getOrderListAPi = async (req, res, next) => {
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
-    response.generalError(res, error.message);
+    response.generalError(res, error.message,error);
   }
 };
 const getOrderStatusAPi = async (req, res, next) => {
@@ -131,7 +131,7 @@ const getOrderStatusAPi = async (req, res, next) => {
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
-    response.generalError(res, error.message);
+    response.generalError(res, error.message,error);
   }
 };
 const getActivatedCardApi = async (req, res, next) => {
@@ -144,7 +144,7 @@ const getActivatedCardApi = async (req, res, next) => {
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
-    response.generalError(res, error.message);
+    response.generalError(res, error.message,error);
   }
 };
 const getCardBalance = async (req, res, next) => {
@@ -157,7 +157,7 @@ const getCardBalance = async (req, res, next) => {
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
-    response.generalError(res, error.message);
+    response.generalError(res, error.message,error);
   }
 };
 const orderResendAPi = async (req, res, next) => {
@@ -170,7 +170,7 @@ const orderResendAPi = async (req, res, next) => {
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
-    response.generalError(res, error.message);
+    response.generalError(res, error.message,error);
   }
 };
 const orderReverseApi = async (req, res, next) => {
@@ -183,7 +183,7 @@ const orderReverseApi = async (req, res, next) => {
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
-    response.generalError(res, error.message);
+    response.generalError(res, error.message,error);
   }
 };
 const transectionHistoryApi = async (req, res, next) => {
@@ -196,7 +196,7 @@ const transectionHistoryApi = async (req, res, next) => {
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
-    response.generalError(res, error.message);
+    response.generalError(res, error.message,error);
   }
 };
 

@@ -6,9 +6,9 @@ const db = require("../models");
 //Create Main Model
 // const KycPanDetails = db.kyc_pan_detail;
  
-const getCategories = async (bodyData) => {
+const getCategories = async () => {
   try {
-    const card = await qwikCilverService.getCategories(bodyData);
+    const card = await qwikCilverService.getCategories();
     return card;
   } catch (error) {
     logger.log("info", error);
