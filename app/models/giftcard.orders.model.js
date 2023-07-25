@@ -1,32 +1,43 @@
 module.exports = (sequelize, DataTypes) => {
-  const ApiProviderSetting = sequelize.define("api_provider_setting", {
-    provider: {
+  const giftcardOrders = sequelize.define("giftcard_orders", {
+    order_id: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    user_name: {
+    address: {
+      type: DataTypes.JSON,
+      allowNull: false,
+    },
+    billing: {
+      type: DataTypes.JSON,
+      allowNull: false,
+    },
+    isConsolidated: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+    payments: {
+      type: DataTypes.ARRAY(DataTypes.JSON),
+      allowNull: false,
+    },
+    orderType: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    user_password: {
+    refno: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    access_token: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      defaultValue:"0"
-    },
-    token_expiry_date: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      defaultValue:"0"
-    },
-    client_id: {
+    remarks: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    client_secret: {
+    deliveryMode: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    refno: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -36,5 +47,5 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: "active",
     },
   });
-  return ApiProviderSetting;
+  return giftcardOrders;
 };
