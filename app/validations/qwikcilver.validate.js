@@ -10,6 +10,8 @@ module.exports.getOrderDetailsValidator = Joi.object({
   orderId: Joi.string().required(),
 });
 module.exports.getCardBalanceValidator = Joi.object({
+  pin: Joi.string().required(),
+  sku: Joi.string(),
   cardNumber: Joi.string().required(),
 });
 module.exports.getOrderStatusValidator = Joi.object({
@@ -148,82 +150,79 @@ module.exports.newGiftCardOrderValidator = Joi.object({
   deliveryMode: Joi.string(),
 });
 
-
 const addressSchema = Joi.object({
-    salutation: Joi.string(),
-    firstname: Joi.string().required(),
-    lastname: Joi.string(),
-    email: Joi.string().email(),
-    telephone: Joi.string().pattern(/^\+\d{12}$/),
-    line1: Joi.string().required(),
-    line2: Joi.string(),
-    city: Joi.string(),
-    region: Joi.string(),
-    country: Joi.string().required(),
-    postcode: Joi.string().required(),
-    code: Joi.string(),
-    billToThis: Joi.boolean()
-  });
+  salutation: Joi.string(),
+  firstname: Joi.string().required(),
+  lastname: Joi.string(),
+  email: Joi.string().email(),
+  telephone: Joi.string().pattern(/^\+\d{12}$/),
+  line1: Joi.string().required(),
+  line2: Joi.string(),
+  city: Joi.string(),
+  region: Joi.string(),
+  country: Joi.string().required(),
+  postcode: Joi.string().required(),
+  code: Joi.string(),
+  billToThis: Joi.boolean(),
+});
 const billingSchema = Joi.object({
-    salutation: Joi.string(),
-    firstname: Joi.string().required(),
-    lastname: Joi.string(),
-    email: Joi.string().email(),
-    telephone: Joi.string().pattern(/^\+\d{12}$/),
-    line1: Joi.string().required(),
-    line2: Joi.string(),
-    city: Joi.string(),
-    region: Joi.string(),
-    country: Joi.string().required(),
-    postcode: Joi.string().required(),
-    code: Joi.string(),
-    company: Joi.boolean()
-  });
+  salutation: Joi.string(),
+  firstname: Joi.string().required(),
+  lastname: Joi.string(),
+  email: Joi.string().email(),
+  telephone: Joi.string().pattern(/^\+\d{12}$/),
+  line1: Joi.string().required(),
+  line2: Joi.string(),
+  city: Joi.string(),
+  region: Joi.string(),
+  country: Joi.string().required(),
+  postcode: Joi.string().required(),
+  code: Joi.string(),
+  company: Joi.boolean(),
+});
 
-  const paymentSchema = Joi.object({
-    code: Joi.string().required(),
-    amount: Joi.number().required()
-  });
+const paymentSchema = Joi.object({
+  code: Joi.string().required(),
+  amount: Joi.number().required(),
+});
 
-  const productSchema = Joi.object({
-    sku: Joi.string().required(),
-    price: Joi.number().required(),
-    qty: Joi.number().required(),
-    currency: Joi.number().required(),
-    giftMessage: Joi.string().allow('').optional(),
-    theme: Joi.string(),
-    cardNumber: Joi.string().required(),
-    trackData: Joi.string(),
-    coBrandImageId: Joi.string(),
-    packaging: Joi.string()
-  });
-  module.exports.reverseOrderValidator = Joi.object({
-    address: addressSchema.required(),
-    billing: billingSchema.required(),
-    payments: Joi.array().items(paymentSchema).required(),
-    refno: Joi.string().required(),
-    products: Joi.array().items(productSchema).required(),
-    outletName: Joi.string().required(),
-    orderType: Joi.string().required(),
-    shipping: Joi.object({
-      method: Joi.string().required()
-    }),
-    syncOnly: Joi.boolean(),
-    couponCode: Joi.string(),
-    deliveryMode: Joi.string()
-  });
+const productSchema = Joi.object({
+  sku: Joi.string().required(),
+  price: Joi.number().required(),
+  qty: Joi.number().required(),
+  currency: Joi.number().required(),
+  giftMessage: Joi.string().allow("").optional(),
+  theme: Joi.string(),
+  cardNumber: Joi.string().required(),
+  trackData: Joi.string(),
+  coBrandImageId: Joi.string(),
+  packaging: Joi.string(),
+});
+module.exports.reverseOrderValidator = Joi.object({
+  address: addressSchema.required(),
+  billing: billingSchema.required(),
+  payments: Joi.array().items(paymentSchema).required(),
+  refno: Joi.string().required(),
+  products: Joi.array().items(productSchema).required(),
+  outletName: Joi.string().required(),
+  orderType: Joi.string().required(),
+  shipping: Joi.object({
+    method: Joi.string().required(),
+  }),
+  syncOnly: Joi.boolean(),
+  couponCode: Joi.string(),
+  deliveryMode: Joi.string(),
+});
 
-  const cardfortransectionSchema = Joi.object({
-    cardNumber: Joi.string().max(50).required(),
-    pin: Joi.string().max(25).required()
-  });
+const cardfortransectionSchema = Joi.object({
+  cardNumber: Joi.string().max(50).required(),
+  pin: Joi.string().max(25).required(),
+});
 
-  module.exports.transectionHistoryValidator = Joi.object({
-    startDate: Joi.string().isoDate().required(),
-    endDate: Joi.string().isoDate().required(),
-    limit: Joi.number().integer().required(),
-    offset: Joi.number().integer().required(),
-    cards: Joi.array().items(cardfortransectionSchema).required()
-  });
-
-  
+module.exports.transectionHistoryValidator = Joi.object({
+  startDate: Joi.string().isoDate().required(),
+  endDate: Joi.string().isoDate().required(),
+  limit: Joi.number().integer().required(),
+  offset: Joi.number().integer().required(),
+  cards: Joi.array().items(cardfortransectionSchema).required(),
+});
