@@ -99,7 +99,6 @@ const generateTokens = async (data, url, getORPost) => {
     //   };
     // }
     const response = await generateNewToken(getToken[0].dataValues);
-    console.log(response);
     console.log(createSignature(
       data,
       url,
@@ -119,7 +118,7 @@ const generateTokens = async (data, url, getORPost) => {
     // );
     return {
       dateAtClient: moment().millisecond(0).toISOString(),
-      Authorization: `Bearer ${response.data.token} `,
+      Authorization: `Bearer ${response} `,
       signature: createSignature(
         data,
         url,
