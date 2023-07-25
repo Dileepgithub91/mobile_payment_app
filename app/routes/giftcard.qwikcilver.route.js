@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.post('/get-categories-list', qwikcilverController.getCategories);
 router.post('/get-categories-details', qwikcilverController.getCategoriesdetails);
-router.post('/get-products-list', qwikcilverController.getCategoriesdetails);
+router.post('/get-products-list', qwikcilverController.getProductList);
 router.post('/get-product-details', qwikcilverController.getProductDetails);
 router.post('/bank-beneficiary-validation', qwikcilverController.bankBeneficiaryValidation);
 router.post('/upi-beneficiary-validation', qwikcilverController.upiBeneficiaryValidation);
