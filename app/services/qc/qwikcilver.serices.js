@@ -439,7 +439,11 @@ const getActivatedCardApi = async ({
   limit = null,
 }) => {
   try {
-    const url = `${QWIKCILVER_ENDPOINT}/rest/v3/order/${orderId}/cards/?offset=${offset}&limit=${limit}`;
+    let url = `${QWIKCILVER_ENDPOINT}/rest/v3/order/${orderId}/cards`;
+    if(offset &&limit){
+      url = `${QWIKCILVER_ENDPOINT}/rest/v3/order/${orderId}/cards/?offset=${offset}&limit=${limit}`;
+    }
+    
     const headers = await generateTokens("", url, "GET");
     const response = await client.get(url, headers);
     return {
