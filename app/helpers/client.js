@@ -1,7 +1,10 @@
 const axios = require('axios')
 
-const get = async (url) => {
-    return axios.get(url)
+const get = async (url,headers={}) => {
+    const config = {
+        headers
+    };
+    return axios.get(url,config)
 }
 
 const post = async (url, data={}, headers={}) => {
