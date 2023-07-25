@@ -220,9 +220,9 @@ const cardfortransectionSchema = Joi.object({
 });
 
 module.exports.transectionHistoryValidator = Joi.object({
-  startDate: Joi.string().isoDate().required(),
-  endDate: Joi.string().isoDate().required(),
-  limit: Joi.number().integer().required(),
-  offset: Joi.number().integer().required(),
+  startDate: Joi.string().isoDate(),
+  endDate: Joi.string().isoDate(),
+  limit: Joi.number().integer(),
+  offset: Joi.number().integer(),
   cards: Joi.array().items(cardfortransectionSchema).required(),
 });
