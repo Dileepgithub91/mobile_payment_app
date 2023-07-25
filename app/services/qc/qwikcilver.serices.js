@@ -8,7 +8,6 @@ const { QWIKCILVER_ENDPOINT } = require("../../core/constants");
 const apiProviderSetting = db.api_provider_setting;
 
 const generateNewToken = async (savedToken) => {
-  console.log(savedToken);
   /////Verify client
   let headers ={
     "Content-Type": "application/json"
@@ -20,7 +19,6 @@ const generateNewToken = async (savedToken) => {
   };
   const url1 = `${QWIKCILVER_ENDPOINT}/oauth2/verify`;
   const verifyResponse = await client.post(url1,data, headers);
-  console.log(verifyResponse);
   /////Verify client
    data = {
     clientId: savedToken.client_id,
@@ -31,14 +29,13 @@ const generateNewToken = async (savedToken) => {
   const url2 = `${QWIKCILVER_ENDPOINT}/oauth2/token`;
 
   const response = await client.post(url2,data, headers);
-  console.log(response);
   return response.data.token;
 };
 
 //generate token
 const generateTokens = async (data, url, getORPost) => {
   try {
-    const startDate = moment(new Date());
+    // const startDate = moment(new Date());
     // const getToken = await apiProviderSetting.findAll({
     //   where: {
     //     provider: "qwikcilver",
@@ -75,34 +72,40 @@ const generateTokens = async (data, url, getORPost) => {
         },
       },
     ];
-    if (getToken.length == 0) {
-      throw new Error("keys of api provider not found");
-    }
-    const endDate = moment(getToken[0].token_expiry_date);
-    const diffInDays = endDate.diff(startDate, "days");
-    if (diffInDays < 0) {
-      console.log(
-        createSignature(
-          data,
-          url,
-          getORPost,
-          getToken[0].dataValues.client_secret
-        )
-      );
-      return {
-        dateAtClient: moment().millisecond(0).toISOString(),
-        Authorization: `Bearer ${getToken[0].dataValues.access_token} `,
-        signature: createSignature(
-          data,
-          url,
-          getORPost,
-          getToken[0].dataValues.client_secret
-        ),
-        "Content-Type": "application/json",
-      };
-    }
+    // if (getToken.length == 0) {
+    //   throw new Error("keys of api provider not found");
+    // }
+    // const endDate = moment(getToken[0].token_expiry_date);
+    // const diffInDays = endDate.diff(startDate, "days");
+    // if (diffInDays < 0) {
+    //   console.log(
+    //     createSignature(
+    //       data,
+    //       url,
+    //       getORPost,
+    //       getToken[0].dataValues.client_secret
+    //     )
+    //   );
+    //   return {
+    //     dateAtClient: moment().millisecond(0).toISOString(),
+    //     Authorization: `Bearer ${getToken[0].dataValues.access_token} `,
+    //     signature: createSignature(
+    //       data,
+    //       url,
+    //       getORPost,
+    //       getToken[0].dataValues.client_secret
+    //     ),
+    //     "Content-Type": "application/json",
+    //   };
+    // }
     const response = await generateNewToken(getToken[0].dataValues);
-
+    console.log(response);
+    console.log(createSignature(
+      data,
+      url,
+      getORPost,
+      getToken[0].client_secret
+    ));
     // await apiProviderSetting.update(
     //   {
     //     access_token: response.data.accessToken,
@@ -116,7 +119,7 @@ const generateTokens = async (data, url, getORPost) => {
     // );
     return {
       dateAtClient: moment().millisecond(0).toISOString(),
-      Authorization: `Bearer ${response.data.accessToken} `,
+      Authorization: `Bearer ${response.data.token} `,
       signature: createSignature(
         data,
         url,
