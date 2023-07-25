@@ -99,13 +99,6 @@ const generateTokens = async (data, url, getORPost) => {
     //   };
     // }
     const response = await generateNewToken(getToken[0].dataValues);
-    console.log(createSignature(
-      data,
-      url,
-      getORPost,
-      getToken[0].dataValues.client_secret
-    ));
-    console.log(moment().millisecond(0).toISOString());
     // await apiProviderSetting.update(
     //   {
     //     access_token: response.data.accessToken,
@@ -146,9 +139,7 @@ const generateTokens = async (data, url, getORPost) => {
 const getCategories = async () => {
   try {
     const url = `${QWIKCILVER_ENDPOINT}/rest/v3/catalog/categories`;
-    console.log(url);
     const headers = await generateTokens("", url, "GET");
-    console.log(headers);
     const response = await client.get(url, headers);
     return {
       success: true,

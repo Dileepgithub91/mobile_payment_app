@@ -45,7 +45,7 @@ const getProductList = async (bodyData) => {
 const getProductDetails = async (bodyData) => {
   try {
     const value =
-      await qwikCilverValidator.getCategoryDetailsValidator.validateAsync(
+      await qwikCilverValidator.getProductDetailsValidator.validateAsync(
         bodyData
       );
     const card = await qwikCilverService.getProductDetails(value);
