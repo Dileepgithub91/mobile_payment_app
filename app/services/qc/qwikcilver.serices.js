@@ -8,6 +8,7 @@ const { QWIKCILVER_ENDPOINT } = require("../../core/constants");
 const apiProviderSetting = db.api_provider_setting;
 
 const generateNewToken = async (savedToken) => {
+  console.log(savedToken);
   /////Verify client
   const headers1 = {
     clientId: savedToken.client_id,
@@ -17,6 +18,7 @@ const generateNewToken = async (savedToken) => {
 
   const url1 = `${QWIKCILVER_ENDPOINT}/oauth2/verify`;
   const verifyResponse = await client.get(url1, headers1);
+  console.log(verifyResponse);
   /////Verify client
   const headers2 = {
     clientId: savedToken.client_id,
@@ -26,6 +28,7 @@ const generateNewToken = async (savedToken) => {
   const url2 = `${QWIKCILVER_ENDPOINT}/oauth2/token`;
 
   const response = await client.get(url2, headers2);
+  console.log(response);
   return response.data.token;
 };
 
@@ -75,6 +78,14 @@ const generateTokens = async (data, url, getORPost) => {
     const endDate = moment(getToken[0].token_expiry_date);
     const diffInDays = endDate.diff(startDate, "days");
     if (diffInDays < 0) {
+      console.log(
+        createSignature(
+          data,
+          url,
+          getORPost,
+          getToken[0].dataValues.client_secret
+        )
+      );
       return {
         dateAtClient: moment().millisecond(0).toISOString(),
         Authorization: `Bearer ${getToken[0].dataValues.access_token} `,
@@ -82,7 +93,7 @@ const generateTokens = async (data, url, getORPost) => {
           data,
           url,
           getORPost,
-          getToken[0].client_secret
+          getToken[0].dataValues.client_secret
         ),
         "Content-Type": "application/json",
       };
@@ -118,7 +129,10 @@ const generateTokens = async (data, url, getORPost) => {
       );
     }
     console.log(e);
-    throw {message:new Error("An Error Occured,contact your provioder!!"),data:e};
+    throw {
+      message: new Error("An Error Occured,contact your provioder!!"),
+      data: e,
+    };
   }
 };
 
@@ -126,7 +140,9 @@ const generateTokens = async (data, url, getORPost) => {
 const getCategories = async () => {
   try {
     const url = `${QWIKCILVER_ENDPOINT}/rest/v3/catalog/categories`;
+    console.log(url);
     const headers = await generateTokens("", url, "GET");
+    console.log(headers);
     const response = await client.get(url, headers);
     return {
       success: true,
@@ -178,7 +194,7 @@ const getCategoriesDetails = async ({ categoryId }) => {
 const getProductList = async ({ categoryId, offset = null, limit = null }) => {
   try {
     const url = `${QWIKCILVER_ENDPOINT}/rest/v3/catalog/categories/${categoryId}/products?offset=${offset}&limit=${limit}`;
-    const headers = await generateTokens("", url, GET);
+    const headers = await generateTokens("", url, "GET");
     const response = await client.get(url, headers);
     return {
       success: true,
@@ -204,7 +220,7 @@ const getProductList = async ({ categoryId, offset = null, limit = null }) => {
 const getProductDetails = async ({ productId }) => {
   try {
     const url = `${QWIKCILVER_ENDPOINT}/rest/v3/catalog/products/${productId}`;
-    const headers = await generateTokens("", url, GET);
+    const headers = await generateTokens("", url, "GET");
     const response = await client.get(url, headers);
     return {
       success: true,
