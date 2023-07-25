@@ -33,46 +33,82 @@ const generateNewToken = async (savedToken) => {
 const generateTokens = async (data, url, getORPost) => {
   try {
     const startDate = moment(new Date());
-    const getToken = await apiProviderSetting.findAll({
-      where: {
-        provider: "qwikcilver",
+    // const getToken = await apiProviderSetting.findAll({
+    //   where: {
+    //     provider: "qwikcilver",
+    //   },
+    // });
+    // console.log(getToken);
+    let getToken = [
+      {
+        dataValues: {
+          id: 1,
+          provider: "qwikcilver",
+          user_name: "selectkaroapisandbox@woohoo.in",
+          user_password: "woohoo123",
+          access_token: "0",
+          token_expiry_date: "0",
+          client_id: "88d7346c8674587bc95f8fbde2e33acd",
+          client_secret: "1a33c6118d1e0c74f7a012991d0e4e39",
+          status: "active",
+          createdAt: "2023-07-21T10:18:04.000Z",
+          updatedAt: "2023-07-21T10:18:04.000Z",
+        },
+        _previousDataValues: {
+          id: 1,
+          provider: "qwikcilver",
+          user_name: "selectkaroapisandbox@woohoo.in",
+          user_password: "woohoo123",
+          access_token: "0",
+          token_expiry_date: "0",
+          client_id: "88d7346c8674587bc95f8fbde2e33acd",
+          client_secret: "1a33c6118d1e0c74f7a012991d0e4e39",
+          status: "active",
+          createdAt: "2023-07-21T10:18:04.000Z",
+          updatedAt: "2023-07-21T10:18:04.000Z",
+        },
       },
-    });
+    ];
+    if (getToken.length == 0) {
+      throw new Error("keys of api provider not found");
+    }
     const endDate = moment(getToken[0].token_expiry_date);
     const diffInDays = endDate.diff(startDate, "days");
     if (diffInDays < 0) {
       return {
-        dateAtClient: datetime.datetime
-          .now()
-          .astimezone()
-          .replace((microsecond = 0))
-          .isoformat(),
+        dateAtClient: moment().millisecond(0).toISOString(),
         Authorization: `Bearer ${getToken[0].dataValues.access_token} `,
-        signature: createSignature(data, url, getORPost,getToken[0].client_secret),
+        signature: createSignature(
+          data,
+          url,
+          getORPost,
+          getToken[0].client_secret
+        ),
         "Content-Type": "application/json",
       };
     }
     const response = await generateNewToken(getToken[0].dataValues);
 
-    await apiProviderSetting.update(
-      {
-        access_token: response.data.accessToken,
-        token_expiry_date: new Date().toISOString(),
-      },
-      {
-        where: {
-          provider: "qwikcilver",
-        },
-      }
-    );
+    // await apiProviderSetting.update(
+    //   {
+    //     access_token: response.data.accessToken,
+    //     token_expiry_date: new Date().toISOString(),
+    //   },
+    //   {
+    //     where: {
+    //       provider: "qwikcilver",
+    //     },
+    //   }
+    // );
     return {
-      dateAtClient: datetime.datetime
-        .now()
-        .astimezone()
-        .replace((microsecond = 0))
-        .isoformat(),
+      dateAtClient: moment().millisecond(0).toISOString(),
       Authorization: `Bearer ${response.data.accessToken} `,
-      signature: createSignature(data, url, getORPost,getToken[0].client_secret),
+      signature: createSignature(
+        data,
+        url,
+        getORPost,
+        getToken[0].client_secret
+      ),
       "Content-Type": "application/json",
     };
   } catch (e) {
@@ -82,7 +118,7 @@ const generateTokens = async (data, url, getORPost) => {
       );
     }
     console.log(e);
-    throw new Error("An Error Occured,contact your provioder!!");
+    throw {message:new Error("An Error Occured,contact your provioder!!"),data:e};
   }
 };
 
@@ -90,7 +126,7 @@ const generateTokens = async (data, url, getORPost) => {
 const getCategories = async () => {
   try {
     const url = `${QWIKCILVER_ENDPOINT}/rest/v3/catalog/categories`;
-    const headers = await generateTokens("", url, get);
+    const headers = await generateTokens("", url, "GET");
     const response = await client.get(url, headers);
     return {
       success: true,
@@ -113,10 +149,10 @@ const getCategories = async () => {
 };
 
 //Get category
-const getCategoriesDetails = async ({categoryId}) => {
+const getCategoriesDetails = async ({ categoryId }) => {
   try {
     const url = `${QWIKCILVER_ENDPOINT}/rest/v3/catalog/categories/${categoryId}`;
-    const headers = await generateTokens("", url, get);
+    const headers = await generateTokens("", url, "GET");
     const response = await client.get(url, headers);
     return {
       success: true,
@@ -139,10 +175,10 @@ const getCategoriesDetails = async ({categoryId}) => {
 };
 
 //Get Product List
-const getProductList = async ({categoryId, offset = null, limit = null}) => {
+const getProductList = async ({ categoryId, offset = null, limit = null }) => {
   try {
     const url = `${QWIKCILVER_ENDPOINT}/rest/v3/catalog/categories/${categoryId}/products?offset=${offset}&limit=${limit}`;
-    const headers = await generateTokens("", url, get);
+    const headers = await generateTokens("", url, GET);
     const response = await client.get(url, headers);
     return {
       success: true,
@@ -165,10 +201,10 @@ const getProductList = async ({categoryId, offset = null, limit = null}) => {
 };
 
 //Get Product Details
-const getProductDetails = async ({productId}) => {
+const getProductDetails = async ({ productId }) => {
   try {
     const url = `${QWIKCILVER_ENDPOINT}/rest/v3/catalog/products/${productId}`;
-    const headers = await generateTokens("", url, get);
+    const headers = await generateTokens("", url, GET);
     const response = await client.get(url, headers);
     return {
       success: true,
@@ -211,7 +247,7 @@ const bankBeneficiaryValidation = async (
       telephone: telephone,
       refno: refno,
     };
-    const headers = await generateTokens(body, url, get);
+    const headers = await generateTokens(body, url, POST);
     const response = await client.post(url, body, headers);
     return {
       success: true,
@@ -302,7 +338,7 @@ const createAnOrderApi = async (bodyData) => {
 };
 
 //Get Order Details Api
-const getOrderDetailsAPi = async ({orderId}) => {
+const getOrderDetailsAPi = async ({ orderId }) => {
   try {
     const url = `${QWIKCILVER_ENDPOINT}/rest/v3/orders/${orderId}`;
     const headers = await generateTokens("", url, get);
@@ -354,7 +390,7 @@ const getOrderListAPi = async () => {
 };
 
 //Get Order Status Api
-const getOrderStatusAPi = async ({refno}) => {
+const getOrderStatusAPi = async ({ refno }) => {
   try {
     const url = `${QWIKCILVER_ENDPOINT}/rest/v3/order/${refno}/status`;
     const headers = await generateTokens("", url, get);
@@ -380,7 +416,11 @@ const getOrderStatusAPi = async ({refno}) => {
 };
 
 //Get Activated Card APi
-const getActivatedCardApi = async ({orderId, offset = null, limit = null}) => {
+const getActivatedCardApi = async ({
+  orderId,
+  offset = null,
+  limit = null,
+}) => {
   try {
     const url = `${QWIKCILVER_ENDPOINT}/rest/v3/order/${orderId}/cards/?offset=${offset}&limit=${limit}`;
     const headers = await generateTokens("", url, get);
@@ -406,7 +446,7 @@ const getActivatedCardApi = async ({orderId, offset = null, limit = null}) => {
 };
 
 //Get Activated Card APi
-const getCardBalance = async ({cardNumber, pin = null, sku = null}) => {
+const getCardBalance = async ({ cardNumber, pin = null, sku = null }) => {
   try {
     const url = `${QWIKCILVER_ENDPOINT}/rest/v3/balance`;
     const body = {
@@ -437,7 +477,7 @@ const getCardBalance = async ({cardNumber, pin = null, sku = null}) => {
 };
 
 // Order Resend APi
-const orderResendAPi = async ({incrementId, cards}) => {
+const orderResendAPi = async ({ incrementId, cards }) => {
   try {
     const url = `${QWIKCILVER_ENDPOINT}/rest/v3/orders/${incrementId}/resend`;
     const body = { cards };
@@ -491,7 +531,13 @@ const orderReverseApi = async (bodyData) => {
 };
 
 //Transection History
-const transectionHistoryApi = async ({startDate,endDate,limit,offset,cards}) => {
+const transectionHistoryApi = async ({
+  startDate,
+  endDate,
+  limit,
+  offset,
+  cards,
+}) => {
   try {
     const url = `${QWIKCILVER_ENDPOINT}/rest/v3/transaction/history`;
     const body = {

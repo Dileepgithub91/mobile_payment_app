@@ -16,6 +16,9 @@ const generateHeaders = async () => {
         provider: "pineperks",
       },
     });
+    if(getToken.length==0){
+      throw new Error("keys of api provider not found");
+    }
     const endDate = moment(getToken[0].token_expiry_date);
     const diffInDays = endDate.diff(startDate, "days");
     if (diffInDays <0) {
