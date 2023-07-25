@@ -561,13 +561,12 @@ const transectionHistoryApi = async ({
 }) => {
   try {
     const url = `${QWIKCILVER_ENDPOINT}/rest/v3/transaction/history`;
-    const body = {
-      startDate: new Date(startDate).toISOString(),
-      endDate: new Date(endDate).toISOString(),
-      limit: parseInt(limit),
-      offset: parseInt(offset),
-      cards: cards,
-    };
+    const body = {};
+    startDate?body.startDate=new Date(startDate).toISOString():{}
+    endDate?body.endDate= new Date(endDate).toISOString():{}
+    limit?body.limit=parseInt(limit):{}
+    offset?body.offset= parseInt(offset):{}
+    body.cards= cards
     const headers = await generateTokens(body, url, "POST");
     const response = await client.post(url, body, headers);
     return {
