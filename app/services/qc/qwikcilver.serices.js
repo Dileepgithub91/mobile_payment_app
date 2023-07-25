@@ -263,7 +263,7 @@ const bankBeneficiaryValidation = async (
       telephone: telephone,
       refno: refno,
     };
-    const headers = await generateTokens(body, url, POST);
+    const headers = await generateTokens(body, url, "POST");
     const response = await client.post(url, body, headers);
     return {
       success: true,
@@ -304,7 +304,7 @@ const upiBeneficiaryValidation = async (
       telephone: telephone,
       refno: refno,
     };
-    const headers = await generateTokens(body, url, get);
+    const headers = await generateTokens(body, url, "POST");
     const response = await client.post(url, body, headers);
     return {
       success: true,
@@ -331,7 +331,7 @@ const createAnOrderApi = async (bodyData) => {
   try {
     const url = `${QWIKCILVER_ENDPOINT}/rest/v3/orders`;
     const body = bodyData;
-    const headers = await generateTokens(body, url, get);
+    const headers = await generateTokens(body, url, "POST");
     const response = await client.post(url, body, headers);
     return {
       success: true,
@@ -357,7 +357,7 @@ const createAnOrderApi = async (bodyData) => {
 const getOrderDetailsAPi = async ({ orderId }) => {
   try {
     const url = `${QWIKCILVER_ENDPOINT}/rest/v3/orders/${orderId}`;
-    const headers = await generateTokens("", url, get);
+    const headers = await generateTokens("", url, "GET");
     const response = await client.get(url, headers);
     return {
       success: true,
@@ -383,7 +383,7 @@ const getOrderDetailsAPi = async ({ orderId }) => {
 const getOrderListAPi = async () => {
   try {
     const url = `${QWIKCILVER_ENDPOINT}/rest/v3/orders`;
-    const headers = await generateTokens("", url, get);
+    const headers = await generateTokens("", url, "GET");
     const response = await client.get(url, headers);
     return {
       success: true,
@@ -409,7 +409,7 @@ const getOrderListAPi = async () => {
 const getOrderStatusAPi = async ({ refno }) => {
   try {
     const url = `${QWIKCILVER_ENDPOINT}/rest/v3/order/${refno}/status`;
-    const headers = await generateTokens("", url, get);
+    const headers = await generateTokens("", url, "GET");
     const response = await client.get(url, headers);
     return {
       success: true,
@@ -439,7 +439,7 @@ const getActivatedCardApi = async ({
 }) => {
   try {
     const url = `${QWIKCILVER_ENDPOINT}/rest/v3/order/${orderId}/cards/?offset=${offset}&limit=${limit}`;
-    const headers = await generateTokens("", url, get);
+    const headers = await generateTokens("", url, "GET");
     const response = await client.get(url, headers);
     return {
       success: true,
@@ -470,7 +470,7 @@ const getCardBalance = async ({ cardNumber, pin = null, sku = null }) => {
       pin: pin,
       sku: sku,
     };
-    const headers = await generateTokens(body, url, get);
+    const headers = await generateTokens(body, url, "POST");
     const response = await client.post(url, body, headers);
     return {
       success: true,
@@ -497,7 +497,7 @@ const orderResendAPi = async ({ incrementId, cards }) => {
   try {
     const url = `${QWIKCILVER_ENDPOINT}/rest/v3/orders/${incrementId}/resend`;
     const body = { cards };
-    const headers = await generateTokens(body, url, get);
+    const headers = await generateTokens(body, url, "POST");
     const response = await client.post(url, body, headers);
     return {
       success: true,
@@ -524,7 +524,7 @@ const orderReverseApi = async (bodyData) => {
   try {
     const url = `${QWIKCILVER_ENDPOINT}/rest/v3/orders/reverse`;
     const body = bodyData;
-    const headers = await generateTokens(body, url, get);
+    const headers = await generateTokens(body, url, "POST");
     const response = await client.post(url, body, headers);
     return {
       success: true,
@@ -563,7 +563,7 @@ const transectionHistoryApi = async ({
       offset: parseInt(offset),
       cards: cards,
     };
-    const headers = await generateTokens(body, url, get);
+    const headers = await generateTokens(body, url, "POST");
     const response = await client.post(url, body, headers);
     return {
       success: true,
