@@ -10,7 +10,7 @@ module.exports.getOrderDetailsValidator = Joi.object({
   orderId: Joi.string().required(),
 });
 module.exports.getCardBalanceValidator = Joi.object({
-  pin: Joi.string().allow("").required(),
+  pin: Joi.string().allow("").allow(null),
   sku: Joi.string(),
   cardNumber: Joi.string().required(),
 });
