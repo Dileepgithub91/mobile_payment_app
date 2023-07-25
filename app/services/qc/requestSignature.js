@@ -6,10 +6,6 @@ const signature_genarator = (
   requestHttpMethod,
   clientSecret
 ) => {
-  console.log( requestBody,
-    absApiUrl,
-    requestHttpMethod,
-    clientSecret)
   /**
    * JSON encoded API request body parameters. This should be empty object in-case of API HTTP method is GET & DELETE
    */

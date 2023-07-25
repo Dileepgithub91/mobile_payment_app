@@ -81,7 +81,7 @@ module.exports.newGiftCardOrderValidator = Joi.object({
     company: Joi.string(),
     gstn: Joi.string(),
     code: Joi.string(),
-  }).required(),
+  }),
 
   isConsolidated: Joi.boolean(),
 
