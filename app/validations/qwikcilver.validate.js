@@ -97,13 +97,13 @@ module.exports.newGiftCardOrderValidator = Joi.object({
     )
     .required(),
 
-  orderType: Joi.string().valid("PAYOUT").required(),
+  orderType: Joi.string().valid("PAYOUT"),
 
   refno: Joi.string().required(),
   remarks: Joi.string().required(),
 
   deliveryMode: Joi.string().required(),
-  egvDeliveryType: Joi.string().required(),
+  egvDeliveryType: Joi.string(),
 
   products: Joi.array()
     .items(
@@ -135,12 +135,12 @@ module.exports.newGiftCardOrderValidator = Joi.object({
     .required(),
 
   otp: Joi.string(),
-  coBrandImageId: Joi.string().required(),
+  coBrandImageId: Joi.string(),
   cardnumber: Joi.string(),
-  outletName: Joi.string().required(),
+  outletName: Joi.string(),
 
   shipping: Joi.object({
-    method: Joi.string().required(),
+    method: Joi.string(),
   }),
 
   syncOnly: Joi.boolean(),
