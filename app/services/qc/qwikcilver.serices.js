@@ -10,24 +10,26 @@ const apiProviderSetting = db.api_provider_setting;
 const generateNewToken = async (savedToken) => {
   console.log(savedToken);
   /////Verify client
-  const headers1 = {
+  let headers = {
     clientId: savedToken.client_id,
     username: savedToken.user_name,
     password: savedToken.user_password,
   };
-
+  console.log(headers);
   const url1 = `${QWIKCILVER_ENDPOINT}/oauth2/verify`;
-  const verifyResponse = await client.get(url1, headers1);
+  const verifyResponse = await client.get(url1, headers);
   console.log(verifyResponse);
   /////Verify client
-  const headers2 = {
+   headers = {
     clientId: savedToken.client_id,
     clientSecret: savedToken.client_secret,
     authorizationCode: verifyResponse.data.authorizationCode,
   };
+  console.log(headers);
+  
   const url2 = `${QWIKCILVER_ENDPOINT}/oauth2/token`;
 
-  const response = await client.get(url2, headers2);
+  const response = await client.get(url2, headers);
   console.log(response);
   return response.data.token;
 };
