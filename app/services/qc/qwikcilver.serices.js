@@ -103,8 +103,9 @@ const generateTokens = async (data, url, getORPost) => {
       data,
       url,
       getORPost,
-      getToken[0].client_secret
+      getToken[0].dataValues.client_secret
     ));
+    console.log(moment().millisecond(0).toISOString());
     // await apiProviderSetting.update(
     //   {
     //     access_token: response.data.accessToken,
@@ -123,7 +124,7 @@ const generateTokens = async (data, url, getORPost) => {
         data,
         url,
         getORPost,
-        getToken[0].client_secret
+        getToken[0].dataValues.client_secret
       ),
       "Content-Type": "application/json",
     };
