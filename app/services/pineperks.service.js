@@ -119,26 +119,17 @@ const getScheme = async () => {
 };
 
 //Instant Digital card Issue
-const InstantDigitalCardIssue = async ({
-  externalRequestId,
-  cardSchemeId,
-  customerName,
-  mobileNumber,
-  email,
-  amount,
-  externalCardIdentifier,
-  orderDescription,
-}) => {
+const InstantDigitalCardIssue = async (reqBody) => {
   try {
     const data = {
-      externalRequestId: externalRequestId,
-      cardSchemeId: parseInt(cardSchemeId),
-      customerName: customerName,
-      mobileNumber: parseInt(mobileNumber),
-      email: email,
-      amount: parseInt(amount),
-      externalCardIdentifier: externalCardIdentifier,
-      orderDescription: orderDescription,
+      externalRequestId: reqBody.externalRequestId,
+      cardSchemeId: parseInt(reqBody.cardSchemeId),
+      customerName: reqBody.customerName,
+      mobileNumber: parseInt(reqBody.mobileNumber),
+      email: reqBody.email,
+      amount: parseInt(reqBody.amount),
+      externalCardIdentifier: reqBody.externalCardIdentifier,
+      orderDescription: reqBody.orderDescription,
     };
     console.log(data);
     const headers = await generateHeaders();
