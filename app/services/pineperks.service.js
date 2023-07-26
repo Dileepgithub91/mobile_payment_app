@@ -126,8 +126,8 @@ const InstantDigitalCardIssue = async (reqBody) => {
     const headers = await generateHeaders();
     const url = `${PINEPERKS_ENDPOINT}/card/order/V1/instant/issue/digital`;
     const response = await client.post(url, data, headers);
-    if(response.data.responseCode===304){
-      throw response.data.responseMessage
+    if(response.data.responseCode!=0 ||response.data.responseMessage !="Success"){
+      throw response;
     }
     return {
       success: true,
