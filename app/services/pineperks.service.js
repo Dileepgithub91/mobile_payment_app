@@ -217,7 +217,7 @@ const BulkDigitalIssue = async ({
 const GetCardOrderStatus = async ({ requsetId }) => {
   try {
     const headers = await generateHeaders();
-    const url = `${PINEPERKS_ENDPOINT}card/order/V2/status/${requsetId}`;
+    const url = `${PINEPERKS_ENDPOINT}/card/order/V2/status/${requsetId}`;
     const response = await client.get(url, headers);
     return {
       success: true,
