@@ -4,7 +4,7 @@ const pinePerksErrorHandler=(error)=>{
     console.log("error from handler");
     console.log(error);
     console.log("error from handler data");
-    console.log(error.data);
+    console.log(error.response.data);
     return error.message;
 }
 
