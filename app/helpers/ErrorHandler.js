@@ -48,8 +48,8 @@ const qwikCilverErrorHandler = (error) => {
   console.log(error);
   if (error.response) {
     if (
-      error.response.data.status == 403 ||
-      error.response.data.error == "FORBIDDEN"
+      error.response.status == 403 ||
+      error.response.statusText == "Forbidden"
     ) {
       return {
         status: 403,
