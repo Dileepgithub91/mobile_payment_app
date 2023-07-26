@@ -101,7 +101,7 @@ const qwikCilverErrorHandler = (error) => {
       };
     }
     if (
-      error.response.data.code == 5140 
+      error.response.data.code == 5140 ||error.response.data.code==5141
     ) {
       return {
         status: 400,
