@@ -48,7 +48,7 @@ module.exports.validateCustomerCardStatusUpdateByAdmin = Joi.object({
 module.exports.validateUpdateCardTransection = Joi.object({
   referenceNumber: Joi.number().integer().required(),
   isEcommTransactionEnabled: Joi.string().allow(null).optional(),
-  ecommTransactionLimit: Joi.string().integer().allow(null).optional(),
+  ecommTransactionLimit: Joi.string().allow(null).optional(),
   isPOSTransactionEnabled: Joi.string().required(),
   posTransactionLimit: Joi.string().required(),
   isContactlessTransactionEnabled: Joi.string().required(),
