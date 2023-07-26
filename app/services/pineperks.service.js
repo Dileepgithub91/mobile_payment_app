@@ -1,6 +1,7 @@
 const moment = require("moment");
 const db = require("../models");
 const { client } = require("../helpers");
+const {pinePerksErrorHandler} =require("../helpers/ErrorHandler");
 const env = require("../env");
 const { PINEPERKS_ENDPOINT } = require("../core/constants");
 
@@ -104,17 +105,8 @@ const getScheme = async () => {
       data: response.data,
     };
   } catch (e) {
-    if (e.error == "FORBIDDEN" && e.status == "403") {
-      return {
-        success: false,
-        message: "Service is not available now, try again after some time!",
-      };
-    }
-    return {
-      success: false,
-      message: "Scheme fetched Failed, try again!",
-      data: e,
-    };
+   const error = pinePerksErrorHandler(e);
+    throw error;
   }
 };
 

@@ -1,13 +1,36 @@
 module.exports = (sequelize, DataTypes) => {
     const giftCardProducts = sequelize.define("giftcard_products", {
-      user_id: {
+      sku: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      token: {
+      name: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
+      },
+      currency: {
+        type: DataTypes.JSON,
+        allowNull: true,
+      },
+      url: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      minPrice: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      maxPrice: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      price: {
+        type: DataTypes.JSON,
+        allowNull: true,
+      },
+      images: {
+        type: DataTypes.JSON,
+        allowNull: true,
       },
       status: {
         type: DataTypes.STRING,
