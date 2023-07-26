@@ -78,10 +78,9 @@ const generateHeaders = async () => {
     //     },
     //   }
     // );
-    console.log(response)
     return {
         "X-PinePerks-UserName": getToken[0].dataValues.user_name,
-        "X-PinePerks-Token": response.data.token,
+        "X-PinePerks-Token": response.data.accessToken,
         "Content-Type": "application/json",
       };
   } catch (e) {
@@ -98,6 +97,7 @@ const getScheme = async () => {
     const headers = await generateHeaders();
     const url = `${PINEPERKS_ENDPOINT}/card/config/V3/scheme`;
     const response = await client.get(url, headers);
+    console.log(response);
     return {
       success: true,
       message: "Scheme fetched SuccessFully!",
