@@ -143,9 +143,12 @@ const InstantDigitalCardIssue = async ({
     const headers = await generateHeaders();
     const url = `${PINEPERKS_ENDPOINT}/card/order/V1/instant/issue/digital`;
     const response = await client.post(url, data, headers);
+    if(response.data.responseCode!=304){
+      throw response.data.responseMessage
+    }
     return {
       success: true,
-      message: "Token Generated SuccessFully!",
+      message: "Instant Digital Card Isssued SuccessFully!",
       data: response.data,
     };
   } catch (e) {
@@ -157,7 +160,7 @@ const InstantDigitalCardIssue = async ({
     }
     return {
       success: false,
-      message: "Token Generation Failed, try again!",
+      message: "Instant Digital Card Isssue Failed, try again!",
       data: e,
     };
   }
@@ -240,6 +243,7 @@ const GetCardOrderStatus = async ({ requsetId }) => {
 const GetCardBalance = async ({ giftCardId }) => {
   try {
     const headers = await generateHeaders();
+    console.log(giftCardId);
     const url = `${PINEPERKS_ENDPOINT}/card/profile/V1/balance/${giftCardId}`;
     const response = await client.get(url, headers);
     return {
