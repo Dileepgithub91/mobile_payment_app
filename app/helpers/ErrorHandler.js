@@ -57,6 +57,11 @@ const qwikCilverErrorHandler = (error) => {
         message: "Authentication Failed , Access Restricted",
       };
     }
+    return {
+        status: error.data.response.status,
+        code:  error.data.response.statusText,
+        message: "An errro occured, Please Contact Provider!",
+      };
   }
   if (error.response) {
     if (
