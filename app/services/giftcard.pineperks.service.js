@@ -39,7 +39,7 @@ const issueInstantDigitalCard = async (reqBody) => {
 
 const bulkDigitalCardIssue = async (reqBody) => {
   try {
-    const value = pinePerksValidator.validateBulkDigital.validateAsync(reqBody);
+    const value = await pinePerksValidator.validateBulkDigital.validateAsync(reqBody);
     const card = await pinePerkService.BulkDigitalIssue(value);
     return card;
   } catch (error) {
@@ -51,7 +51,7 @@ const bulkDigitalCardIssue = async (reqBody) => {
 const getCardOrderStatus = async (reqBody) => {
   try {
     const value =
-      pinePerksValidator.validateCardOrderStatus.validateAsync(reqBody);
+      await pinePerksValidator.validateCardOrderStatus.validateAsync(reqBody);
     const card = await pinePerkService.GetCardOrderStatus(value);
     return card;
   } catch (error) {
@@ -61,9 +61,7 @@ const getCardOrderStatus = async (reqBody) => {
 };
 const getCardBalance = async (reqBody) => {
   try {
-    console.log(reqBody);
-    const value = pinePerksValidator.validateCardbalance.validateAsync(reqBody);
-    console.log(value);
+    const value = await pinePerksValidator.validateCardbalance.validateAsync(reqBody);
     const card = await pinePerkService.GetCardBalance(value);
     return card;
   } catch (error) {
@@ -85,7 +83,7 @@ const getCardDetails = async (reqBody) => {
 
 const getCardTransectionHistory = async (reqBody) => {
   try {
-    const value = pinePerksValidator.validateCardbalance.validateAsync(reqBody);
+    const value = await pinePerksValidator.validateCardbalance.validateAsync(reqBody);
     const card = await pinePerkService.GetCardTransectionHistory(value);
     return card;
   } catch (error) {
@@ -96,7 +94,7 @@ const getCardTransectionHistory = async (reqBody) => {
 const updateCardTransectionLimit = async (reqBody) => {
   try {
     const value =
-      pinePerksValidator.validateUpdateCardTransection.validateAsync(reqBody);
+    await pinePerksValidator.validateUpdateCardTransection.validateAsync(reqBody);
     const card = await pinePerkService.UpdateCardTransectionLimit(value);
     return card;
   } catch (error) {
@@ -108,7 +106,7 @@ const updateCardTransectionLimit = async (reqBody) => {
 const updateCustomerCardStatus = async (reqBody) => {
   try {
     const value =
-    pinePerksValidator.validateCustomerCardStatusUpdate.validateAsync(reqBody);
+    await pinePerksValidator.validateCustomerCardStatusUpdate.validateAsync(reqBody);
     const card = await pinePerkService.UpdateCustomerCardStatus(value);
     return card;
   } catch (error) {
@@ -120,7 +118,7 @@ const updateCustomerCardStatus = async (reqBody) => {
 const updateCustomerCardStatusByAdmin = async (reqBody) => {
   try {
     const value =
-    pinePerksValidator.validateCustomerCardStatusUpdateByAdmin.validateAsync(reqBody);
+    await pinePerksValidator.validateCustomerCardStatusUpdateByAdmin.validateAsync(reqBody);
     const card = await pinePerkService.UpdateCustomerCardStatusByAdmin(
       value
     );
