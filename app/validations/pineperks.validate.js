@@ -21,14 +21,14 @@ module.exports.validateInstantDigital = Joi.object({
   email: Joi.string(),
   amount: Joi.string(),
   externalCardIdentifier: Joi.string(),
-  orderDescription: Joi.string(),
+  orderDescription: Joi.string().allow(null).allow(""),
 });
 
 module.exports.validateBulkDigital = Joi.object({
   cardDetailList: Joi.array().items(cardDetailSchema).min(1).required(),
   externalRequestId: Joi.string(),
   cardSchemeId: Joi.number().required(),
-  orderDescription: Joi.string(),
+  orderDescription: Joi.string().allow(null).allow(""),
 });
 module.exports.validateCardOrderStatus = Joi.object({
   requsetId: Joi.string().required(),
