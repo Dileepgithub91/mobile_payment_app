@@ -1,11 +1,11 @@
 
 const pinePerksErrorHandler=(error)=>{
-    const status =error.status;
-    console.log("error from handler");
-    console.log(error);
-    console.log("error from handler data");
+    const errorStatus =error.response.data;
+    if(errorStatus.status==403 ||errorStatus.error =="FORBIDDEN"){
+        return "Authentication Failed , Access Restricted";
+    }
     console.log(error.response.data);
-    return error.message;
+    return errorStatus.message;
 }
 
 const qwikCilverErrorHandler=(error)=>{
