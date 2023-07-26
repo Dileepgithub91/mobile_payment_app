@@ -19,7 +19,7 @@ const getCardSchema = async () => {
 const issueInstantDigitalCard = async (reqBody) => {
   try {
     const value =
-      pinePerksValidator.validateInstantDigital.validateAsync(reqBody);
+      await pinePerksValidator.validateInstantDigital.validateAsync(reqBody);
       console.log(value);
     const card = await pinePerkService.InstantDigitalCardIssue(value);
     return card;
