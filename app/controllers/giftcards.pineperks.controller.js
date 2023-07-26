@@ -27,7 +27,7 @@ const saveNewInstantDigitalCard = async (req, res, next) => {
     }
     response.success(
       res,
-      "New Instant Digital Card Created!",
+      newCard.message,
       newCard
     );
   } catch (error) {
