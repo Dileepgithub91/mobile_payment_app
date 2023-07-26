@@ -79,7 +79,7 @@ const qwikCilverErrorHandler = (error) => {
       return {
         status: 400,
         code: "BAD_REQUEST",
-        message: "Invalid Product Id!",
+        message: "Invalid Product Id, products with id does not exists!",
       };
     }
     if (
@@ -88,7 +88,34 @@ const qwikCilverErrorHandler = (error) => {
       return {
         status: 400,
         code: "BAD_REQUEST",
-        message: "Invalid Order Id, Order ",
+        message: "Invalid Order Id, Order With id does not exists!",
+      };
+    }
+    if (
+      error.response.data.code == 6049 
+    ) {
+      return {
+        status: 400,
+        code: "BAD_REQUEST",
+        message: "Balance Enquiry Failed,Either Card Number or Card Pin is Incorrect!",
+      };
+    }
+    if (
+      error.response.data.code == 5140 
+    ) {
+      return {
+        status: 400,
+        code: "BAD_REQUEST",
+        message: "Either Card Number or Card Pin is Incorrect!",
+      };
+    }
+    if (
+      error.response.data.code == 6047 
+    ) {
+      return {
+        status: 400,
+        code: "BAD_REQUEST",
+        message: "Balance Enquiry Failed, Incorrect sku!",
       };
     }
     return {
