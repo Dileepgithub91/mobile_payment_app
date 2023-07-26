@@ -1,5 +1,6 @@
 const moment = require("moment");
 const db = require("../../models");
+const {qwikCilverErrorHandler} =require("../../helpers/ErrorHandler");
 const createSignature = require("./requestSignature");
 const { client } = require("../../helpers");
 const { QWIKCILVER_ENDPOINT } = require("../../core/constants");
@@ -147,17 +148,8 @@ const getCategories = async () => {
       data: response.data,
     };
   } catch (e) {
-    if (e.error == "FORBIDDEN" && e.status == "403") {
-      return {
-        success: false,
-        message: "Service is not available now, try again after some time!",
-      };
-    }
-    return {
-      success: false,
-      message: "Categories fetched Failed, try again!",
-      data: e,
-    };
+    const error = qwikCilverErrorHandler(e);
+    throw error;
   }
 };
 
@@ -173,17 +165,8 @@ const getCategoriesDetails = async ({ categoryId }) => {
       data: response.data,
     };
   } catch (e) {
-    if (e.error == "FORBIDDEN" && e.status == "403") {
-      return {
-        success: false,
-        message: "Service is not available now, try again after some time!",
-      };
-    }
-    return {
-      success: false,
-      message: "Categories details fetched Failed, try again!",
-      data: e,
-    };
+    const error = qwikCilverErrorHandler(e);
+    throw error;
   }
 };
 
@@ -202,17 +185,8 @@ const getProductList = async ({ categoryId, offset = null, limit = null }) => {
       data: response.data,
     };
   } catch (e) {
-    if (e.error == "FORBIDDEN" && e.status == "403") {
-      return {
-        success: false,
-        message: "Service is not available now, try again after some time!",
-      };
-    }
-    return {
-      success: false,
-      message: "Product List fetched Failed, try again!",
-      data: e,
-    };
+    const error = qwikCilverErrorHandler(e);
+    throw error;
   }
 };
 
@@ -228,17 +202,8 @@ const getProductDetails = async ({ productId }) => {
       data: response.data,
     };
   } catch (e) {
-    if (e.error == "FORBIDDEN" && e.status == "403") {
-      return {
-        success: false,
-        message: "Service is not available now, try again after some time!",
-      };
-    }
-    return {
-      success: false,
-      message: "Product Deatils fetched Failed, try again!",
-      data: e,
-    };
+    const error = qwikCilverErrorHandler(e);
+    throw error;
   }
 };
 
@@ -271,17 +236,8 @@ const bankBeneficiaryValidation = async (
       data: response.data,
     };
   } catch (e) {
-    if (e.error == "FORBIDDEN" && e.status == "403") {
-      return {
-        success: false,
-        message: "Service is not available now, try again after some time!",
-      };
-    }
-    return {
-      success: false,
-      message: "Beneficiary Validation Failed, try again!",
-      data: e,
-    };
+    const error = qwikCilverErrorHandler(e);
+    throw error;
   }
 };
 
@@ -312,17 +268,8 @@ const upiBeneficiaryValidation = async (
       data: response.data,
     };
   } catch (e) {
-    if (e.error == "FORBIDDEN" && e.status == "403") {
-      return {
-        success: false,
-        message: "Service is not available now, try again after some time!",
-      };
-    }
-    return {
-      success: false,
-      message: "Beneficiary Validation fetched Failed, try again!",
-      data: e,
-    };
+    const error = qwikCilverErrorHandler(e);
+    throw error;
   }
 };
 
@@ -340,17 +287,8 @@ const createAnOrderApi = async (bodyData) => {
       data: response.data,
     };
   } catch (e) {
-    if (e.error == "FORBIDDEN" && e.status == "403") {
-      return {
-        success: false,
-        message: "Service is not available now, try again after some time!",
-      };
-    }
-    return {
-      success: false,
-      message: "Creating Order fetched Failed, try again!",
-      data: e,
-    };
+    const error = qwikCilverErrorHandler(e);
+    throw error;
   }
 };
 
@@ -366,17 +304,8 @@ const getOrderDetailsAPi = async ({ orderId }) => {
       data: response.data,
     };
   } catch (e) {
-    if (e.error == "FORBIDDEN" && e.status == "403") {
-      return {
-        success: false,
-        message: "Service is not available now, try again after some time!",
-      };
-    }
-    return {
-      success: false,
-      message: "Order Deatils fetched Failed, try again!",
-      data: e,
-    };
+    const error = qwikCilverErrorHandler(e);
+    throw error;
   }
 };
 
@@ -392,17 +321,8 @@ const getOrderListAPi = async () => {
       data: response.data,
     };
   } catch (e) {
-    if (e.error == "FORBIDDEN" && e.status == "403") {
-      return {
-        success: false,
-        message: "Service is not available now, try again after some time!",
-      };
-    }
-    return {
-      success: false,
-      message: "Order List fetched Failed, try again!",
-      data: e,
-    };
+    const error = qwikCilverErrorHandler(e);
+    throw error;
   }
 };
 
@@ -418,17 +338,8 @@ const getOrderStatusAPi = async ({ refno }) => {
       data: response.data,
     };
   } catch (e) {
-    if (e.error == "FORBIDDEN" && e.status == "403") {
-      return {
-        success: false,
-        message: "Service is not available now, try again after some time!",
-      };
-    }
-    return {
-      success: false,
-      message: "Order Status fetched Failed, try again!",
-      data: e,
-    };
+    const error = qwikCilverErrorHandler(e);
+    throw error;
   }
 };
 
@@ -452,17 +363,8 @@ const getActivatedCardApi = async ({
       data: response.data,
     };
   } catch (e) {
-    if (e.error == "FORBIDDEN" && e.status == "403") {
-      return {
-        success: false,
-        message: "Service is not available now, try again after some time!",
-      };
-    }
-    return {
-      success: false,
-      message: "Activated Card fetched Failed, try again!",
-      data: e,
-    };
+    const error = qwikCilverErrorHandler(e);
+    throw error;
   }
 };
 
@@ -483,17 +385,8 @@ const getCardBalance = async ({ cardNumber, pin = null, sku = null }) => {
       data: response.data,
     };
   } catch (e) {
-    if (e.error == "FORBIDDEN" && e.status == "403") {
-      return {
-        success: false,
-        message: "Service is not available now, try again after some time!",
-      };
-    }
-    return {
-      success: false,
-      message: "Card balance fetched Failed, try again!",
-      data: e,
-    };
+    const error = qwikCilverErrorHandler(e);
+    throw error;
   }
 };
 
@@ -510,17 +403,8 @@ const orderResendAPi = async ({ incrementId, cards }) => {
       data: response.data,
     };
   } catch (e) {
-    if (e.error == "FORBIDDEN" && e.status == "403") {
-      return {
-        success: false,
-        message: "Service is not available now, try again after some time!",
-      };
-    }
-    return {
-      success: false,
-      message: "Order Resend Failed, try again!",
-      data: e,
-    };
+    const error = qwikCilverErrorHandler(e);
+    throw error;
   }
 };
 
@@ -537,17 +421,8 @@ const orderReverseApi = async (bodyData) => {
       data: response.data,
     };
   } catch (e) {
-    if (e.error == "FORBIDDEN" && e.status == "403") {
-      return {
-        success: false,
-        message: "Service is not available now, try again after some time!",
-      };
-    }
-    return {
-      success: false,
-      message: "Reverse Order Failed, try again!",
-      data: e,
-    };
+    const error = qwikCilverErrorHandler(e);
+    throw error;
   }
 };
 
@@ -575,17 +450,8 @@ const transectionHistoryApi = async ({
       data: response.data,
     };
   } catch (e) {
-    if (e.error == "FORBIDDEN" && e.status == "403") {
-      return {
-        success: false,
-        message: "Service is not available now, try again after some time!",
-      };
-    }
-    return {
-      success: false,
-      message: "Transection History Failed to fetch, try again!",
-      data: e,
-    };
+    const error = qwikCilverErrorHandler(e);
+    throw error; 
   }
 };
 
