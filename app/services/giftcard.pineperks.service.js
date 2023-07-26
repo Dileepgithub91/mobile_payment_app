@@ -87,7 +87,7 @@ const getCardTransectionHistory = async (reqBody) => {
     const card = await pinePerkService.GetCardTransectionHistory(value);
     return card;
   } catch (error) {
-    logger.log("info", error);
+    logger.log("info", error); 
     throw error;
   }
 };

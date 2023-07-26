@@ -11,46 +11,77 @@ const apiProviderSetting = db.api_provider_setting;
 const generateHeaders = async () => {
   try {
     const startDate = moment(new Date());
-    const getToken = await apiProviderSetting.findAll({
-      where: {
-        provider: "pineperks",
+    // const getToken = await apiProviderSetting.findAll({
+    //   where: {
+    //     provider: "pineperks",
+    //   },
+    // });
+    const getToken = [
+      {
+        dataValues: {
+          id: 1,
+          provider: "pineperks",
+          user_name: "I/XXPYExw8z6P0Wm9LArNg==",
+          user_password: "fb94c0b6d9db4aa1b41d4d95e718f5b7",
+          access_token: "0",
+          token_expiry_date: "0",
+          client_id: "0",
+          client_secret: "0",
+          status: "active",
+          createdAt: "2023-07-21T10:18:04.000Z",
+          updatedAt: "2023-07-21T10:18:04.000Z",
+        },
+        _previousDataValues: {
+          id: 1,
+          provider: "pineperks",
+          user_name: "I/XXPYExw8z6P0Wm9LArNg==",
+          user_password: "fb94c0b6d9db4aa1b41d4d95e718f5b7",
+          access_token: "0",
+          token_expiry_date: "0",
+          client_id: "0",
+          client_secret: "0",
+          status: "active",
+          createdAt: "2023-07-21T10:18:04.000Z",
+          updatedAt: "2023-07-21T10:18:04.000Z",
+        },
       },
-    });
-    if(getToken.length==0){
-      throw new Error("keys of api provider not found");
-    }
-    const endDate = moment(getToken[0].token_expiry_date);
-    const diffInDays = endDate.diff(startDate, "days");
-    if (diffInDays <0) {
-      return {
-        "X-PinePerks-UserName": getToken[0].user_name,
-        "X-PinePerks-Token": getToken[0].access_token,
-        "Content-Type": "application/json",
-      };
-    }
+    ];
+    // if(getToken.length==0){
+    //   throw new Error("keys of api provider not found");
+    // }
+    // const endDate = moment(getToken[0].token_expiry_date);
+    // const diffInDays = endDate.diff(startDate, "days");
+    // if (diffInDays <0) {
+    //   return {
+    //     "X-PinePerks-UserName": getToken[0].user_name,
+    //     "X-PinePerks-Token": getToken[0].access_token,
+    //     "Content-Type": "application/json",
+    //   };
+    // }
 
     const headers = {
-      "X-PinePerks-UserName": getToken[0].user_name,
-      "X-PinePerks-Token": getToken[0].user_password,
+      "X-PinePerks-UserName": getToken[0].dataValues.user_name,
+      "X-PinePerks-Token": getToken[0].dataValues.user_password,
       "Content-Type": "application/json",
     };
 
     const url = `${PINEPERKS_ENDPOINT}/auth/V2/generate/token`;
     const response = await client.get(url, headers);
-    await apiProviderSetting.update(
-      { 
-        access_token:response.data.accessToken,
-        token_expiry_date:response.data.tokenExpiryDate
-      },
-      {
-        where: {
-          provider: "pineperks",
-        },
-      }
-    );
+    // await apiProviderSetting.update(
+    //   { 
+    //     access_token:response.data.accessToken,
+    //     token_expiry_date:response.data.tokenExpiryDate
+    //   },
+    //   {
+    //     where: {
+    //       provider: "pineperks",
+    //     },
+    //   }
+    // );
+    console.log(response)
     return {
-        "X-PinePerks-UserName": getToken[0].user_name,
-        "X-PinePerks-Token": response.data.accessToken,
+        "X-PinePerks-UserName": getToken[0].dataValues.user_name,
+        "X-PinePerks-Token": response.data.token,
         "Content-Type": "application/json",
       };
   } catch (e) {
