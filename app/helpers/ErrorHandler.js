@@ -3,7 +3,7 @@ const pinePerksErrorHandler = (error) => {
   if (errorStatus.status == 403 || errorStatus.error == "FORBIDDEN") {
     return "Authentication Failed , Access Restricted";
   }
-  console.log(error.response.data);
+  console.log(error);
   return {
     status: errorStatus.status,
     code: errorStatus.error,
