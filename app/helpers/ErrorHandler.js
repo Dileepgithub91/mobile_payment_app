@@ -14,10 +14,24 @@ const pinePerksErrorHandler = (error) => {
                 message: error.data.responseMessage,
               }
           }
+          return  {
+            status: error.data.responseCode,
+            code: "BAD_REQUEST",
+            message: error.data.responseMessage,
+          };  
     }
    if(error.response){
     if (error.response.data.status == 403 || error.response.data.error == "FORBIDDEN") {
-        return "Authentication Failed , Access Restricted";
+        return {
+            status: 403,
+            code: "FORBIDDEN",
+            message: "Authentication Failed , Access Restricted",
+          }
+      }
+      return {
+        status: error.response.data.status,
+        code: error.response.data.error,
+        message: error.response.data.message,
       }
    }
   return  {

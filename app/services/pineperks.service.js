@@ -98,7 +98,9 @@ const getScheme = async () => {
     const headers = await generateHeaders();
     const url = `${PINEPERKS_ENDPOINT}/card/config/V3/scheme`;
     const response = await client.get(url, headers);
-    console.log(response);
+    if(response.data.responseCode!=0 ||response.data.responseMessage !="Success"){
+      throw response;
+    }
     return {
       success: true,
       message: "Scheme fetched SuccessFully!",
@@ -167,23 +169,17 @@ const BulkDigitalIssue = async ({
     const headers = await generateHeaders();
     const url = `${PINEPERKS_ENDPOINT}/card/order/V1/bulk/issue/digital`;
     const response = await client.post(url, data, headers);
+    if(response.data.responseCode!=0 ||response.data.responseMessage !="Success"){
+      throw response;
+    }
     return {
       success: true,
       message: "Bulk Digital Card Issued SuccessFully!",
       data: response.data,
     };
   } catch (e) {
-    if (e.error == "FORBIDDEN" && e.status == "403") {
-      return {
-        success: false,
-        message: "Service is not available now, try again after some time!",
-      };
-    }
-    return {
-      success: false,
-      message: "Bulk Digital Card Issue Failed, try again!",
-      data: e,
-    };
+    const error = pinePerksErrorHandler(e);
+    throw error;
   }
 };
 
@@ -193,23 +189,17 @@ const GetCardOrderStatus = async ({ requsetId }) => {
     const headers = await generateHeaders();
     const url = `${PINEPERKS_ENDPOINT}/card/order/V2/status/${requsetId}`;
     const response = await client.get(url, headers);
+    if(response.data.responseCode!=0 ||response.data.responseMessage !="Success"){
+      throw response;
+    }
     return {
       success: true,
       message: "card Order Status fetched SuccessFully!",
       data: response.data,
     };
   } catch (e) {
-    if (e.error == "FORBIDDEN" && e.status == "403") {
-      return {
-        success: false,
-        message: "Service is not available now, try again after some time!",
-      };
-    }
-    return {
-      success: false,
-      message: "card Order Status fetching Failed, try again!",
-      data: e,
-    };
+    const error = pinePerksErrorHandler(e);
+    throw error;
   }
 };
 
@@ -217,26 +207,19 @@ const GetCardOrderStatus = async ({ requsetId }) => {
 const GetCardBalance = async ({ giftCardId }) => {
   try {
     const headers = await generateHeaders();
-    console.log(giftCardId);
     const url = `${PINEPERKS_ENDPOINT}/card/profile/V1/balance/${giftCardId}`;
     const response = await client.get(url, headers);
+    if(response.data.responseCode!=0 ||response.data.responseMessage !="Success"){
+      throw response;
+    }
     return {
       success: true,
       message: "Card Balance fetched SuccessFully!",
       data: response.data,
     };
   } catch (e) {
-    if (e.error == "FORBIDDEN" && e.status == "403") {
-      return {
-        success: false,
-        message: "Service is not available now, try again after some time!",
-      };
-    }
-    return {
-      success: false,
-      message: "Card Balance Failed, try again!",
-      data: e,
-    };
+    const error = pinePerksErrorHandler(e);
+    throw error;
   }
 };
 
@@ -246,23 +229,17 @@ const GetCardDetails = async ({ giftCardId }) => {
     const headers = await generateHeaders();
     const url = `${PINEPERKS_ENDPOINT}/card/profile/V1/attribute/${giftCardId}`;
     const response = await client.get(url, headers);
+    if(response.data.responseCode!=0 ||response.data.responseMessage !="Success"){
+      throw response;
+    }
     return {
       success: true,
       message: "Card Balance fetched SuccessFully!",
       data: response.data,
     };
   } catch (e) {
-    if (e.error == "FORBIDDEN" && e.status == "403") {
-      return {
-        success: false,
-        message: "Service is not available now, try again after some time!",
-      };
-    }
-    return {
-      success: false,
-      message: "Card Balance Failed, try again!",
-      data: e,
-    };
+    const error = pinePerksErrorHandler(e);
+    throw error;
   }
 };
 
@@ -272,23 +249,17 @@ const GetCardTransectionHistory = async ({ giftCardId }) => {
     const headers = await generateHeaders();
     const url = `${PINEPERKS_ENDPOINT}/card/profile/V1/transaction/${giftCardId}`;
     const response = await client.get(url, headers);
+    if(response.data.responseCode!=0 ||response.data.responseMessage !="Success"){
+      throw response;
+    }
     return {
       success: true,
       message: "Card Transection History fetched SuccessFully!",
       data: response.data,
     };
   } catch (e) {
-    if (e.error == "FORBIDDEN" && e.status == "403") {
-      return {
-        success: false,
-        message: "Service is not available now, try again after some time!",
-      };
-    }
-    return {
-      success: false,
-      message: "Card Transection History Failed, try again!",
-      data: e,
-    };
+    const error = pinePerksErrorHandler(e);
+    throw error;
   }
 };
 
@@ -315,23 +286,17 @@ const UpdateCardTransectionLimit = async ({
     const headers = await generateHeaders();
     const url = `${PINEPERKS_ENDPOINT}/card/profile/V1/transaction/limit/update`;
     const response = await client.post(url, data, headers);
+    if(response.data.responseCode!=0 ||response.data.responseMessage !="Success"){
+      throw response;
+    }
     return {
       success: true,
       message: "Card Transection limit Updated SuccessFully!",
       data: response.data,
     };
   } catch (e) {
-    if (e.error == "FORBIDDEN" && e.status == "403") {
-      return {
-        success: false,
-        message: "Service is not available now, try again after some time!",
-      };
-    }
-    return {
-      success: false,
-      message: "Card Transection limit Failed to updated, try again!",
-      data: e,
-    };
+    const error = pinePerksErrorHandler(e);
+    throw error;
   }
 };
 
@@ -345,23 +310,17 @@ const UpdateCustomerCardStatus = async ({ referenceNumber, cardStatus }) => {
     const headers =await generateHeaders();
     const url = `${PINEPERKS_ENDPOINT}/card/profile/V2/customer/status/update`;
     const response = await client.post(url, data, headers);
+    if(response.data.responseCode!=0 ||response.data.responseMessage !="Success"){
+      throw response;
+    }
     return {
       success: true,
       message: "Update Card Status Updated SuccessFully!",
       data: response.data,
     };
   } catch (e) {
-    if (e.error == "FORBIDDEN" && e.status == "403") {
-      return {
-        success: false,
-        message: "Service is not available now, try again after some time!",
-      };
-    }
-    return {
-      success: false,
-      message: "Update Card Status Failed to updated, try again!",
-      data: e,
-    };
+    const error = pinePerksErrorHandler(e);
+    throw error;
   }
 };
 
@@ -380,6 +339,9 @@ const UpdateCustomerCardStatusByAdmin = async ({
     const headers = await generateHeaders();
     const url = `${PINEPERKS_ENDPOINT}/card/profile/V2/admin/status/update`;
     const response = await client.post(url, data, headers);
+    if(response.data.responseCode!=0 ||response.data.responseMessage !="Success"){
+      throw response;
+    }
     return {
       success: true,
       message: "Update Card Status Updated SuccessFully!",
