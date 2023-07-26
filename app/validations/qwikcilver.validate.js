@@ -216,7 +216,7 @@ module.exports.reverseOrderValidator = Joi.object({
 
 const cardfortransectionSchema = Joi.object({
   cardNumber: Joi.string().max(50).required(),
-  pin: Joi.string().allow("").max(25).required(),
+  pin: Joi.string().allow("").max(25),
 });
 
 module.exports.transectionHistoryValidator = Joi.object({

@@ -194,7 +194,7 @@ const transectionHistoryApi = async (req, res, next) => {
     }
     response.success(res, "Transection History have been fetched!", transections);
   } catch (error) {
-    logger.log("info", error.message);
+    logger.log("info", error);
     console.log(error);
     response.generalError(res, error.message,error);
   }
