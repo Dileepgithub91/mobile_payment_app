@@ -72,7 +72,7 @@ const getCardBalance = async (reqBody) => {
 
 const getCardDetails = async (reqBody) => {
   try {
-    const value = pinePerksValidator.validateCardbalance.validateAsync(reqBody);
+    const value = await pinePerksValidator.validateCardbalance.validateAsync(reqBody);
     const card = await pinePerkService.GetCardDetails(value);
     return card;
   } catch (error) {
