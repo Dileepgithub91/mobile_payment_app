@@ -1,16 +1,22 @@
 const pinePerksErrorHandler = (error) => {
-  const errorStatus = error.response.data;
-  if (errorStatus.status == 403 || errorStatus.error == "FORBIDDEN") {
-    return "Authentication Failed , Access Restricted";
-  }
-  if(error.data.responseCode===318){
-    return error.data.responseMessage;
-  }
-  console.log(error);
-  return {
-    status: errorStatus.status,
-    code: errorStatus.error,
-    message: errorStatus.message,
+    if(error.data){
+        if(error.data.responseCode===318){
+            return{
+                status: error.data.responseCode,
+                code: errorStatus.error,
+                message: error.data.responseMessage,
+              }
+          }
+    }
+   if(error.response){
+    if (error.response.data.status == 403 || error.response.data.error == "FORBIDDEN") {
+        return "Authentication Failed , Access Restricted";
+      }
+   }
+  return  {
+    status: 500,
+    code: "INTERNAL ERROR",
+    message: "An Error Occured, Please Contact provider!",
   };
 };
 
