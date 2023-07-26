@@ -1,7 +1,8 @@
 const pinePerksErrorHandler=(error)=>{
-    const status =error.status;
+    const status =error.data.status;
+    console.log("error from handler");
     console.log(error);
-    return error.message;
+    return error.data.message;
 }
 
 const qwikCilverErrorHandler=(error)=>{
