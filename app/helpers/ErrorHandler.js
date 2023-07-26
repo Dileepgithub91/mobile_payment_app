@@ -3,8 +3,8 @@ const pinePerksErrorHandler=(error)=>{
     const status =error.status;
     console.log("error from handler");
     console.log(error);
-    console.log(error.code);
-    console.log(error.request);
+    console.log("error from handler data");
+    console.log(error.data);
     return error.message;
 }
 
