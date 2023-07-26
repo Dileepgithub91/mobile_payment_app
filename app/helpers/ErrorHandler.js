@@ -64,7 +64,17 @@ const qwikCilverErrorHandler = (error) => {
       return {
         status: 400,
         code: "BAD_REQUEST",
-        message: error.response.data.message,
+        message: "Invalid Category Id!",
+      };
+    }
+    if (
+      error.response.data.code == 1303 ||
+      error.response.data.error == "FORBIDDEN"
+    ) {
+      return {
+        status: 400,
+        code: "BAD_REQUEST",
+        message: "Invalid Product Id!",
       };
     }
     return {
