@@ -61,7 +61,9 @@ const getCardOrderStatus = async (reqBody) => {
 };
 const getCardBalance = async (reqBody) => {
   try {
+    console.log(reqBody);
     const value = pinePerksValidator.validateCardbalance.validateAsync(reqBody);
+    console.log(value);
     const card = await pinePerkService.GetCardBalance(value);
     return card;
   } catch (error) {
