@@ -45,10 +45,8 @@ const pinePerksErrorHandler = (error) => {
 };
 
 const qwikCilverErrorHandler = (error) => {
-  console.log(error);
-  console.log(error.config);
   console.log(error.data.config);
-  if (error.response) {
+  if (error.data) {
     if (
       error.response.status == 403 ||
       error.response.statusText == "Forbidden"
@@ -59,9 +57,10 @@ const qwikCilverErrorHandler = (error) => {
         message: "Authentication Failed , Access Restricted",
       };
     }
+  }
+  if (error.response) {
     if (
-      error.response.data.code == 6652 ||
-      error.response.data.error == "FORBIDDEN"
+      error.response.data.code == 6652 
     ) {
       return {
         status: 400,
@@ -70,8 +69,7 @@ const qwikCilverErrorHandler = (error) => {
       };
     }
     if (
-      error.response.data.code == 1303 ||
-      error.response.data.error == "FORBIDDEN"
+      error.response.data.code == 1303 
     ) {
       return {
         status: 400,
