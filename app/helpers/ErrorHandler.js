@@ -82,9 +82,18 @@ const qwikCilverErrorHandler = (error) => {
         message: "Invalid Product Id!",
       };
     }
+    if (
+      error.response.data.code == 5320 
+    ) {
+      return {
+        status: 400,
+        code: "BAD_REQUEST",
+        message: "Invalid Order Id, Order ",
+      };
+    }
     return {
-      status: error.response.data.status,
-      code: error.response.data.error,
+      status: error.response.data.code,
+      code: "BAD_REQUEST",
       message: error.response.data.message,
     };
   }
