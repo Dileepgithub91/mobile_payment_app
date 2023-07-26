@@ -336,7 +336,7 @@ const UpdateCardTransectionLimit = async ({
       isPOSTransactionEnabled: isPOSTransactionEnabled,
       posTransactionLimit: posTransactionLimit,
       isContactlessTransactionEnabled: isContactlessTransactionEnabled,
-      contactlessTransactionLimit: parseInt(contactlessTransactionLimit),
+      contactlessTransactionLimit: contactlessTransactionLimit,
     };
     const headers = await generateHeaders();
     const url = `${PINEPERKS_ENDPOINT}/card/profile/V1/transaction/limit/update`;
