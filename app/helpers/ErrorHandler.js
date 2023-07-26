@@ -57,6 +57,16 @@ const qwikCilverErrorHandler = (error) => {
         message: "Authentication Failed , Access Restricted",
       };
     }
+    if (
+      error.response.data.code == 6652 ||
+      error.response.data.error == "FORBIDDEN"
+    ) {
+      return {
+        status: 400,
+        code: "BAD_REQUEST",
+        message: error.response.data.message,
+      };
+    }
     return {
       status: error.response.data.status,
       code: error.response.data.error,
