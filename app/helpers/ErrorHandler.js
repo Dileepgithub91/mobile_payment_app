@@ -7,6 +7,12 @@ const pinePerksErrorHandler = (error) => {
                 code: "Dubilcate",
                 message: error.data.responseMessage,
               }
+          }else if(error.data.responseCode===53){
+            return{
+                status: error.data.responseCode,
+                code: "BAD_REQUEST",
+                message: error.data.responseMessage,
+              }
           }
     }
    if(error.response){
