@@ -330,14 +330,12 @@ const UpdateCardTransectionLimit = async ({
 }) => {
   try {
     const data = {
-      referenceNumber: parseInt(referenceNumber),
+      referenceNumber: referenceNumber,
       isEcommTransactionEnabled: isEcommTransactionEnabled,
       ecommTransactionLimit: ecommTransactionLimit,
-      isPOSTransactionEnabled: parseInt(isPOSTransactionEnabled),
-      posTransactionLimit: parseInt(posTransactionLimit),
-      isContactlessTransactionEnabled: parseInt(
-        isContactlessTransactionEnabled
-      ),
+      isPOSTransactionEnabled: isPOSTransactionEnabled,
+      posTransactionLimit: posTransactionLimit,
+      isContactlessTransactionEnabled: isContactlessTransactionEnabled,
       contactlessTransactionLimit: parseInt(contactlessTransactionLimit),
     };
     const headers = await generateHeaders();
