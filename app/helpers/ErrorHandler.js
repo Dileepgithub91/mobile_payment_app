@@ -3,7 +3,7 @@ const pinePerksErrorHandler = (error) => {
         if(error.data.responseCode===318){
             return{
                 status: error.data.responseCode,
-                code: errorStatus.error,
+                code: "Dubilcate",
                 message: error.data.responseMessage,
               }
           }
