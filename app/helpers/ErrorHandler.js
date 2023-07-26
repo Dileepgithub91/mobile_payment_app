@@ -46,7 +46,8 @@ const pinePerksErrorHandler = (error) => {
 
 const qwikCilverErrorHandler = (error) => {
   console.log(error);
-  console.log(error.response);
+  console.log(error.config);
+  console.log(error.data.config);
   if (error.response) {
     if (
       error.response.status == 403 ||
