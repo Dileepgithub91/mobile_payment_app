@@ -1,4 +1,5 @@
 const pinePerksErrorHandler = (error) => {
+    console.log(error);
     if(error.data){
         if(error.data.responseCode===318){
             return{
