@@ -395,17 +395,19 @@ const UpdateCustomerCardStatusByAdmin = async ({
       data: response.data,
     };
   } catch (e) {
-    if (e.error == "FORBIDDEN" && e.status == "403") {
-      return {
-        success: false,
-        message: "Service is not available now, try again after some time!",
-      };
-    }
-    return {
-      success: false,
-      message: "Update Card Status Failed to updated, try again!",
-      data: e,
-    };
+    const error = pinePerksErrorHandler(e);
+    throw error;
+    // if (e.error == "FORBIDDEN" && e.status == "403") {
+    //   return {
+    //     success: false,
+    //     message: "Service is not available now, try again after some time!",
+    //   };
+    // }
+    // return {
+    //   success: false,
+    //   message: "Update Card Status Failed to updated, try again!",
+    //   data: e,
+    // };
   }
 };
 
