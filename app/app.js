@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require("express");
+const cors =require("cors");
 const morgan = require('morgan')
 const passport = require('passport');
 const { jwtStrategy } = require('./middleware/passport');
@@ -9,6 +10,7 @@ const port = 3000;
 const app = express();
 app.use(morgan('dev'));
 
+app.use(cors());
 // PARSING
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
