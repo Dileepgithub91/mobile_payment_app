@@ -13,7 +13,9 @@ const updateUserProfile = async (req, res, next) => {
   try {
     const bodyData = req.body;
     let imageUrl = "";
+    console.log(req.body);
     const value = await Validator.saveUserProfile.validateAsync(bodyData);
+    console.log(value);
     if (req.file) {
       imageUrl = req.file.path || "";
     }
