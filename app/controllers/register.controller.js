@@ -49,7 +49,7 @@ const verifyRegisterOtp = async (req, res, next) => {
       mobile_no: value.mobileNo,
       verification_type:"register"
     });
-    if(registeredUser){
+    if(!registeredUser){
       response.validatationError(res, "Registration does not Exists!");
     }
     const updatedRetriesValue = parseInt(registeredUser.no_of_retries) + 1;
