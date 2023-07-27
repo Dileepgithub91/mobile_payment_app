@@ -49,7 +49,9 @@ const verifyRegisterOtp = async (req, res, next) => {
       mobile_no: value.mobileNo,
       verification_type:"register"
     });
-
+    if(registeredUser){
+      response.success(res, "Registration does not Exists!");
+    }
     const updatedRetriesValue = parseInt(registeredUser.no_of_retries) + 1;
     //check if the user has not exceeded otp limit i.e. 3
     if (updatedRetriesValue > 3) {
