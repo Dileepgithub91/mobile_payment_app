@@ -7,12 +7,12 @@ const userToken = db.user_token;
 const addUser = async (body) => {
   try {
     const mobileNo = body.mobile_no;
+    let user;
     let finduser = await users.findAll({
       where: {
         mobile_no: mobileNo,
       },
     });
-    let user=finduser[0].dataValues;
     if (finduser.length === 0) {
       body.user_id = Math.floor(1000 + Math.random() * 9000);
       body.role = "user";
@@ -20,6 +20,7 @@ const addUser = async (body) => {
       let saveduser = await users.create(body);
       user =saveduser.dataValues;
     } else {
+      user =finduser[0].dataValues
        await users.update(
         {
           first_name: body.first_name,

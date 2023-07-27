@@ -5,15 +5,17 @@ const userKycDetails = db.user_kyc_details;
 
 const addUserKycDetails = async (body) => {
   try {
+    let user ;
     const userId = body.user_id;
     let finduser = await userKycDetails.findAll({
       where: { user_id: userId },
     });
-    let user = finduser[0].dataValues;
+     
     if (finduser.length == 0) {
       let savedUser = await userKycDetails.create(body);
       user =savedUser.dataValues;
     } else {
+      user = finduser[0].dataValues;
       delete body.user_id;
       await userKycDetails.update(body, {
         where: { user_id: userId },

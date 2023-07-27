@@ -5,15 +5,16 @@ const userAddresses = db.user_addresses;
 
 const addUserAddress = async (body) => {
   try {
+    let user;
     const userId = body.user_id;
     let finduser = await userAddresses.findAll({
       where: { user_id: userId ,address_type: "user_address"},
     });
-    let user = finduser[0].dataValues;
     if (finduser.length == 0) {
       let saveduser = await userAddresses.create(body);
       user=saveduser.dataValues;
     } else {
+      user = finduser[0].dataValues;
       delete body.user_id;
       await userAddresses.update(body, {
         where: { user_id: userId },

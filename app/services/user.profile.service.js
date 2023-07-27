@@ -5,17 +5,19 @@ const userProfile = db.user_profile;
 
 const addUserProfile = async (body) => {
   try {
+    let user;
     const userID = body.user_id;
     let finduser = await userProfile.findAll({
       where: {
         user_id: userID,
       },
     });
-    let user = finduser[0].dataValues;
+   
     if (finduser.length == 0) {
       let saveduser = await userProfile.create(body);
       user =saveduser.dataValues;
     } else {
+      user = finduser[0].dataValues;
       delete body.user_id;
       await userProfile.update(body, {
         where: {
