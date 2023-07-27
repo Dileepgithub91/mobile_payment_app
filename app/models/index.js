@@ -5,9 +5,12 @@ const env = require("../env");
 //   dialect:"mysql",
 //   operatorsAliases: false,
 // });
+const config = require('config');
+const dir = config.get('sqlite.logFileDir');
+console.log(dir);
 const sequelize = new Sequelize({
     dialect: 'sqlite',
-  storage:env("DB_STORAGE"), // 'C:\Users\Kanhaiya\Documents\SqliteDatabase\sqlite-tools-win32-x86-3420000.select_karo',
+  storage:dir, // 'C:\Users\Kanhaiya\Documents\SqliteDatabase\sqlite-tools-win32-x86-3420000.select_karo',
 });
 
 sequelize
