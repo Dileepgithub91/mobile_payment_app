@@ -5,6 +5,7 @@ module.exports = {
     pinePerkService: require('./giftcard.pineperks.service'),
     qwikCilverService: require('./giftcard.qwikcilver.service'),
     kycService: require('./kyc.service'),
+    worldService: require('./world.service'),
     emailService: require('./email.services'),
     authServices: require('./auth.service'),
     userServices: require('./users.service'),

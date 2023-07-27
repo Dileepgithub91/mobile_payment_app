@@ -4,6 +4,6 @@
     "logFileName": "app.log"
   },
   "sqlite": {
-    "logFileDir": "logs/select_karo.db"
+    "logFileDir": "logs/select_karo1.db"
   }
 }

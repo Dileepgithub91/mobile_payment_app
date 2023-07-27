@@ -1,17 +1,17 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const env = require("../env");
-// const sequelize = new Sequelize(env("DB_NAME"), env("DB_USER"), env("DB_PASS"), {
-//   host: env("DB_HOST"),
-//   dialect:"mysql",
-//   operatorsAliases: false,
-// });
-const config = require('config');
-const dir = config.get('sqlite.logFileDir');
-console.log(dir);
-const sequelize = new Sequelize({
-    dialect: 'sqlite',
-  storage:dir, // 'C:\Users\Kanhaiya\Documents\SqliteDatabase\sqlite-tools-win32-x86-3420000.select_karo',
+const sequelize = new Sequelize(env("DB_NAME"), env("DB_USER"), env("DB_PASS"), {
+  host: env("DB_HOST"),
+  dialect:"mysql",
+  operatorsAliases: false,
 });
+// const config = require('config');
+// const dir = config.get('sqlite.logFileDir');
+// console.log(dir);
+// const sequelize = new Sequelize({
+//     dialect: 'sqlite',
+//   storage:dir, // 'C:\Users\Kanhaiya\Documents\SqliteDatabase\sqlite-tools-win32-x86-3420000.select_karo',
+// });
 
 sequelize
   .authenticate()
@@ -28,6 +28,9 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 db.users = require("./users.model")(sequelize, DataTypes);
+db.Country = require("./countery.model")(sequelize, DataTypes);
+db.State = require("./state.model")(sequelize, DataTypes);
+db.City = require("./city.model")(sequelize, DataTypes);
 db.user_roles = require("./user.roles.model")(sequelize, DataTypes);
 db.user_addresses = require("./user.addresses.model")(sequelize, DataTypes);
 db.user_kyc_details = require("./user.kyc.details.model")(sequelize, DataTypes);
