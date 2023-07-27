@@ -92,7 +92,7 @@ const verifyRegisterOtp = async (req, res, next) => {
       user_id: user.user_id,
       token: token,
     });
-    response.success(res, "User Registered Successfully!", { user, token });
+    response.success(res, "User Registered Successfully!", { user, token ,password});
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
