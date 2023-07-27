@@ -50,7 +50,7 @@ const verifyRegisterOtp = async (req, res, next) => {
       verification_type:"register"
     });
     if(registeredUser){
-      response.success(res, "Registration does not Exists!");
+      response.validatationError(res, "Registration does not Exists!");
     }
     const updatedRetriesValue = parseInt(registeredUser.no_of_retries) + 1;
     //check if the user has not exceeded otp limit i.e. 3
