@@ -39,7 +39,12 @@ const verifyRegisterOtp = async (req, res, next) => {
       mobileNo: mobileNo,
       otp: otp,
     });
-    ///find user
+  //check if user Exists
+  const userExist =await userServices.getUserByMobile(value.mobileNo);
+    if(userExist.length!=0){
+      response.success(res, "User already Exists!",user=userExist);
+    }
+    ///find registered user
     const registeredUser = await authServices.findRegistrationUser({
       mobile_no: value.mobileNo,
       verification_type:"register"

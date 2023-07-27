@@ -92,7 +92,7 @@ module.exports.newGiftCardOrderValidator = Joi.object({
       Joi.object({
         code: Joi.string().required(),
         amount: Joi.number().positive().required(),
-        poNumber: Joi.string().required(),
+        poNumber: Joi.string(),
         poDate: Joi.string().isoDate(),
         mode: Joi.string(),
       })
