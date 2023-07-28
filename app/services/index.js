@@ -9,6 +9,7 @@ module.exports = {
     emailService: require('./email.services'),
     authServices: require('./auth.service'),
     userServices: require('./users.service'),
+    giftCardServices: require('./gift.cards.service'),
     userProfileServices: require('./user.profile.service'),
     userAddressServices: require('./user.addresses.service'),
     userKycDetailsServices: require('./user.kyc.details.service'),

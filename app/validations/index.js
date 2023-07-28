@@ -4,4 +4,5 @@ module.exports = {
     businessCustomerValidator: require('./business.customer.validate'),
     pinePerksValidator: require('./pineperks.validate'),
     qwikCilverValidator: require('./qwikcilver.validate'),
+    giftCardValidator: require('./giftcard.validate'),
 }
