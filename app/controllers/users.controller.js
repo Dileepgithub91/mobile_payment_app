@@ -157,6 +157,9 @@ const getManualKycdocument = async (req, res, next) => {
     const userKycdata = await userKycDetailsServices.getUserKycDetailsByUserId(
       userId
     );
+    if(userKycdata.length){
+      throw new Error("User Kyc Data not found!");
+    }
     const userKyc=userKycdata[0].dataValues;
     if(userKyc.adhaar_kyc_status=="Verified"){
       aadharKyc= await kycService.getAadharVerificationData(userId);
