@@ -2,9 +2,8 @@ const { Sequelize, DataTypes } = require("sequelize");
 const env = require("../env");
 // console.log("selectkaro_web_db", "root", "<[ZP5x,X", env("DB_HOST"));
 const sequelize = new Sequelize("selectkaro_web_db", "root", "<[ZP5x,X", {
-  host: env("DB_HOST"),
-  dialect: "mysql",
-  operatorsAliases: false,
+  host: "127.0.0.1",
+  dialect: "mysql"
 });
 // const config = require('config');
 // const dir = config.get('sqlite.logFileDir');
