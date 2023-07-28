@@ -242,8 +242,8 @@ const kycAadharVerificationOtp = async (req, res, next) => {
     //update zip city and state
     await userAddressServices.updateUserAddress(
       {
-        state_id: aadharData.data.address.state,
-        city_id :aadharData.data.address.dist
+        state_id: aadharData.data.data.address.state,
+        city_id :aadharData.data.data.address.dist
 
       },
       req.user.user_id
@@ -255,8 +255,10 @@ const kycAadharVerificationOtp = async (req, res, next) => {
       },
       req.user.user_id
     );
+    const verifyData=aadharData.data.data;
+    verifyData.user_id =req.user.user_id;
      //save pan responce
-     await kycService.SaveAadharVerificationData(aadharData.data);
+     await kycService.SaveAadharVerificationData(verifyData);
     response.success(res, "User Kyc Gst Verification Successfull!");
   } catch (error) {
     logger.log("info", error);
