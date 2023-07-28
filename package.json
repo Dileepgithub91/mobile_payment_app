@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon app/app.js",
+    "start_p": "node app/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
