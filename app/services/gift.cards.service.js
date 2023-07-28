@@ -31,12 +31,12 @@ const SaveGiftCardProducts = async (bodyData) => {
 };
 const getGiftCardProducts = async ({ pageNumber, limitPerPage }) => {
   try {
-    const limitPerPage = parseInt(limitPerPage) || 10;
-    const pageNumber = parseInt(pageNumber) || 1;
+    const limitPage = parseInt(limitPerPage) || 10;
+    const pageNo = parseInt(pageNumber) || 1;
 
-    const offset = (pageNumber - 1) * limitPerPage;
+    const offset = (pageNo - 1) * limitPage;
     const giftCard = await giftCardProducts.findAll({
-      limit: limitPerPage,
+      limit: limitPage,
       offset: offset,
     });
     return giftCard;
