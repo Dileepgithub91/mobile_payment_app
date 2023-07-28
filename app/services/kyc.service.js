@@ -1,4 +1,4 @@
-const { surepassService } = require("../services");
+const  surepassService  = require("./surepass.service");
 const logger = require("../logger");
 const db = require("../models");
 
@@ -96,7 +96,8 @@ const verifyPan = async (pan) => {
 ///Aadhar Verification
 const generateAadharOtp = async (aadhar) => {
   try {
-    const response = await surepassService.generateAadharOtp(aadhar);
+    console.log(aadhar);
+    const response =await surepassService.generateAadharOtp(aadhar);
     if (!response.success) {
       throw response;
     }
