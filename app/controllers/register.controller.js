@@ -155,7 +155,7 @@ const sendForgetPasswordOtp = async (req, res, next) => {
     });
     ///api to send otp
     await dataGenService.sendOtp(value.mobileNo, registeredUser.otp);
-    response.success(res, "Your otp have been sent");
+    response.success(res, "Your otp have been sent",registeredUser);
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
@@ -182,7 +182,7 @@ const reSendForgetPasswordOtp = async (req, res, next) => {
     });
     ///api to send otp
     await dataGenService.sendOtp(value.mobileNo, registeredUser.otp);
-    response.success(res, "Your otp have been sent");
+    response.success(res, "Your otp have been sent",registeredUser);
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);

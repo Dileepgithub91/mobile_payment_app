@@ -16,11 +16,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      minPrice: {
+      min_price: {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      maxPrice: {
+      max_price: {
         type: DataTypes.STRING,
         allowNull: true,
       },
