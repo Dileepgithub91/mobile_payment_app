@@ -190,8 +190,8 @@ const kycPanVerification = async (req, res, next) => {
     //update zip city and state
     await userAddressServices.updateUserAddress(
       {
-        postcode: panData.data.address.zip,
-        state_id: panData.data.address.state,
+        postcode: panData.data.data.address.zip,
+        state_id: panData.data.data.address.state,
       },
       req.user.user_id
     );
@@ -202,8 +202,11 @@ const kycPanVerification = async (req, res, next) => {
       },
       req.user.user_id
     );
+    const kycdata =panData.data.data;
+    kycdata.user_id =req.user.user_id;
     //save pan responce
-    await kycService.SavePanVerificationData(panData.data);
+   const verifydata = await kycService.SavePanVerificationData(kycdata);
+   console.log(verifydata);
     response.success(res, "User Kyc Pan Verification Successfull!");
   } catch (error) {
     logger.log("info", error);
