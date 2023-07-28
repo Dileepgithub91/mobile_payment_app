@@ -259,7 +259,7 @@ const kycAadharVerificationOtp = async (req, res, next) => {
     verifyData.user_id =req.user.user_id;
      //save pan responce
      await kycService.SaveAadharVerificationData(verifyData);
-    response.success(res, "User Kyc Gst Verification Successfull!");
+    response.success(res, "Aadhar Verification Successfull!");
   } catch (error) {
     logger.log("info", error);
     console.log(error);
