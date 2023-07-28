@@ -53,7 +53,8 @@ const addNewBusinessCustomerRequest = async (req, res, next) => {
     response.success(
       res,
       "Your otp to verify business request has been sent!",
-      customer
+      customer,
+      registeredUser
     );
   } catch (error) {
     logger.log("info", error.message);
