@@ -53,8 +53,8 @@ const addNewBusinessCustomerRequest = async (req, res, next) => {
     response.success(
       res,
       "Your otp to verify business request has been sent!",
-      customer,
-      registeredUser
+      {...customer,...registeredUser},
+      
     );
   } catch (error) {
     logger.log("info", error.message);
@@ -64,51 +64,37 @@ const addNewBusinessCustomerRequest = async (req, res, next) => {
 };
 const resendBusinessCustomerRequestOtp = async (req, res, next) => {
   try {
-    const { mobileNo, otp } = req.body;
+    const { mobileNo } = req.body;
     ///validate input
     const value =
-      await otpVerificationValidator.register_otp_verify.validateAsync({
-        mobileNo: mobileNo,
-        otp: otp,
+      await otpVerificationValidator.register_otp.validateAsync({
+        mobileNo: mobileNo
       });
     //verify otp
     const businessRequset= await businessCustomerServices.getBusinessCustomerRequest(mobileNo);
-    if(businessRequset.status !="notVerified"){
+
+    if(!businessRequset){
       logger.log("info", "Business Request not found!");
       response.validatationError(res, "Business Request not found!");
       return false;
     }
-    const regesteredUser = await authServices.findRegistrationUser({mobile_no:mobileNo,verification_type:"business"});
-    const updatedRetriesValue = parseInt(regesteredUser.no_of_retries) + 1;
-    //check if the user has not exceeded otp limit i.e. 3
-    if (updatedRetriesValue >= 3) {
-      logger.log(
-        "info",
-        "You have exceeded no of tries for otp,you can resend otp"
-      );
-      response.validatationError(res, "You have exceeded no of tries for otp,you can resend otp.");
+    if(businessRequset.status ==="Verified"){
+      logger.log("info", "Business Request is already verified!");
+      response.validatationError(res, "Business Request is already verified!");
       return false;
     }
-  //check if the otp is correct
-  if (regesteredUser.otp !== otp) {
-    await authServices.updateRegistrationUser(
-      { no_of_retries: updatedRetriesValue },
-      {id:regesteredUser.id, verification_type:"business"}
-    );
-    logger.log("info", "Invalid Otp!, enter correct otp.");
-    response.validatationError(res, "Invalid Otp!, enter correct otp.");
-    return false;
-  }
-    ///update business request
-    const customer = await businessCustomerServices.addBusinessCustomerRequest({
-      mobile_no: value.mobileNo,
-      status: "Verified",
+     //add new opt from register otp:
+     const registeredUser = await authServices.addRegistrationUser({
+      mobileNo: value.mobileNo,
+      verificationType:"business"
     });
-    customer.status="Verified";
+    ///api to send otp
+    await dataGenService.sendOtp(value.mobileNo, registeredUser.otp);
+   
     response.success(
       res,
-      "Business Customer Service Request Submitted!",
-      customer
+      "Business Customer Service Request otp resent!",
+      registeredUser
     );
   } catch (error) {
     logger.log("info", error.message);
