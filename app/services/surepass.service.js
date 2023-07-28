@@ -11,7 +11,7 @@ const verifyPan = async (pan) => {
       "Content-Type": "application/json",
     };
     const url = `${SUREPASS_ENDPOINT}/api/v1/pan/pan-comprehensive`;
-    const response = await client.get(url, data, headers);
+    const response = await client.post(url, data, headers);
     return {
       success: true,
       message: "Pan Verified Successfully!",
@@ -35,7 +35,7 @@ const generateAadharOtp = async (aadhar) => {
       "Content-Type": "application/json",
     };
     const url = `${SUREPASS_ENDPOINT}/api/v1/aadhaar-v2/generate-otp`;
-    const response = await client.get(url, data, headers);
+    const response = await client.post(url, data, headers);
 
     return {
       success: true,
@@ -59,7 +59,7 @@ const VerifyAadharOtp = async (ClientId, Otp) => {
       "Content-Type": "application/json",
     };
     const url = `${SUREPASS_ENDPOINT}/api/v1/aadhaar-v2/submit-otp`;
-    const response = await client.get(url, data, headers);
+    const response = await client.post(url, data, headers);
 
     return {
       success: true,
@@ -84,7 +84,7 @@ const verifyGst = async (gstNo) => {
       "Content-Type": "application/json",
     };
     const url = `${SUREPASS_ENDPOINT}/api/v1/corporate/gstin`;
-    const response = await client.get(url, data, headers);
+    const response = await client.post(url, data, headers);
 
     return {
       success: true,
