@@ -154,9 +154,10 @@ const getManualKycdocument = async (req, res, next) => {
     let aadharKyc={};
     let panKyc={};
     let gstKyc={};
-    const userKyc = await userKycDetailsServices.getUserKycDetailsByUserId(
+    const userKycdata = await userKycDetailsServices.getUserKycDetailsByUserId(
       userId
     );
+    const userKyc=userKycdata[0].dataValues;
     if(userKyc.adhaar_kyc_status=="Verified"){
       aadharKyc= await kycService.getAadharVerificationData(userId);
     }
