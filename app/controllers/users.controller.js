@@ -202,7 +202,7 @@ const getManualKycdocument = async (req, res, next) => {
       gstKyc = await kycService.getGSTVerificationData(userId);
     }
     let kycDetails = {
-      kycData :userKyc.dataValues,
+      kycData :userKyc,
       aadharData:aadharKyc,
       panData:panKyc,
       gstData:gstKyc,
