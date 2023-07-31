@@ -10,8 +10,12 @@ const KycDocumentUploader = require("../uploader/kyc.Doc.uploader");
 
 router.post("/save-user-profile",
   auth("updateOwn", "profile"),
-  AvatarUploader.single("ProfileImage"),
   userController.updateUserProfile
+);
+router.post("/upload-user-profile-image",
+  auth("updateOwn", "profile"),
+  AvatarUploader.single("ProfileImage"),
+  userController.uploadUserProfileImage
 );
 
 router.get("/get-user-profile",

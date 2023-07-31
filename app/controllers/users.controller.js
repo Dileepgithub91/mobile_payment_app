@@ -35,7 +35,6 @@ const updateUserProfile = async (req, res, next) => {
       avtar: value.avtar || "",
       image_url: imageUrl,
       whatsapp_number: value.whatsappNumber,
-      kyc_level:"0",
       alternate_mobile: value.alternateMobile,
       refferal_code: value.refferalCode,
     });
@@ -50,6 +49,24 @@ const updateUserProfile = async (req, res, next) => {
       postcode: value.postcode,
     });
     response.success(res, "User Profile Updated!");
+  } catch (error) {
+    logger.log("info", error.message);
+    console.log(error);
+    response.generalError(res, error.message);
+  }
+};
+
+const uploadUserProfileImage = async (req, res, next) => {
+  try {
+    let imageUrl = "";
+    if (req.file) {
+      imageUrl = req.file.path || "";
+    }
+    ///create new user profile
+    await userProfileServices.updateUserProfilebyUserID({
+      image_url: imageUrl
+    },req.user.user_id);
+    response.success(res, "User Profile image Updated!");
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
@@ -331,6 +348,7 @@ const kycGStVerification = async (req, res, next) => {
 
 module.exports = {
   updateUserProfile,
+  uploadUserProfileImage,
   getUserProfile,
   skipUserKyc,
   saveManualKycFile,
