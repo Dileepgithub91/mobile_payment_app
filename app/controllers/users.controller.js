@@ -12,8 +12,10 @@ const {
 const updateUserProfile = async (req, res, next) => {
   try {
     const bodyData = req.body;
-    const imageUrl = "";
+    let imageUrl = "";
+    console.log(req.body);
     const value = await Validator.saveUserProfile.validateAsync(bodyData);
+    console.log(value);
     if (req.file) {
       imageUrl = req.file.path || "";
     }
@@ -139,7 +141,7 @@ const getUserProfile = async (req, res, next) => {
       userId
     );
     const user={...userLogin.user,...userProfile.dataValues};
-    response.success(res, "User Profile Updated!", user);
+    response.success(res, "User Profile!", user);
   } catch (error) {
     logger.log("info", error.message);
     console.log(error);
@@ -152,9 +154,13 @@ const getManualKycdocument = async (req, res, next) => {
     let aadharKyc={};
     let panKyc={};
     let gstKyc={};
-    const userKyc = await userKycDetailsServices.getUserKycDetailsByUserId(
+    const userKycdata = await userKycDetailsServices.getUserKycDetailsByUserId(
       userId
     );
+    if(!userKycdata){
+      throw new Error("User Kyc Data not found!");
+    }
+    const userKyc=userKycdata[0].dataValues;
     if(userKyc.adhaar_kyc_status=="Verified"){
       aadharKyc= await kycService.getAadharVerificationData(userId);
     }
@@ -188,8 +194,8 @@ const kycPanVerification = async (req, res, next) => {
     //update zip city and state
     await userAddressServices.updateUserAddress(
       {
-        postcode: panData.data.address.zip,
-        state_id: panData.data.address.state,
+        postcode: panData.data.data.address.zip,
+        state_id: panData.data.data.address.state,
       },
       req.user.user_id
     );
@@ -200,8 +206,11 @@ const kycPanVerification = async (req, res, next) => {
       },
       req.user.user_id
     );
+    const kycdata =panData.data.data;
+    kycdata.user_id =req.user.user_id;
     //save pan responce
-    await kycService.SavePanVerificationData(panData.data);
+   const verifydata = await kycService.SavePanVerificationData(kycdata);
+   console.log(verifydata);
     response.success(res, "User Kyc Pan Verification Successfull!");
   } catch (error) {
     logger.log("info", error);
@@ -237,8 +246,8 @@ const kycAadharVerificationOtp = async (req, res, next) => {
     //update zip city and state
     await userAddressServices.updateUserAddress(
       {
-        state_id: aadharData.data.address.state,
-        city_id :aadharData.data.address.dist
+        state_id: aadharData.data.data.address.state,
+        city_id :aadharData.data.data.address.dist
 
       },
       req.user.user_id
@@ -250,9 +259,11 @@ const kycAadharVerificationOtp = async (req, res, next) => {
       },
       req.user.user_id
     );
+    const verifyData=aadharData.data.data;
+    verifyData.user_id =req.user.user_id;
      //save pan responce
-     await kycService.SaveAadharVerificationData(aadharData.data);
-    response.success(res, "User Kyc Gst Verification Successfull!");
+     await kycService.SaveAadharVerificationData(verifyData);
+    response.success(res, "Aadhar Verification Successfull!");
   } catch (error) {
     logger.log("info", error);
     console.log(error);

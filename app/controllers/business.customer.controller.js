@@ -11,9 +11,10 @@ const {
   userServices,
   userProfileServices,
   userKycDetailsServices,
+  dataGenService
 } = require("../services");
 
-const addNewBusinessCustomerrequest = async (req, res, next) => {
+const addNewBusinessCustomerRequest = async (req, res, next) => {
   try {
     const bodyData = req.body;
     //validator
@@ -44,6 +45,7 @@ const addNewBusinessCustomerrequest = async (req, res, next) => {
     //add new opt from register otp:
     const registeredUser = await authServices.addRegistrationUser({
       mobileNo: value.mobileNo,
+      verificationType:"business"
     });
     ///api to send otp
     await dataGenService.sendOtp(value.mobileNo, registeredUser.otp);
@@ -51,7 +53,8 @@ const addNewBusinessCustomerrequest = async (req, res, next) => {
     response.success(
       res,
       "Your otp to verify business request has been sent!",
-      customer
+      {...customer,...registeredUser},
+      
     );
   } catch (error) {
     logger.log("info", error.message);
@@ -59,7 +62,47 @@ const addNewBusinessCustomerrequest = async (req, res, next) => {
     response.generalError(res, error.message);
   }
 };
-const verifyBusinessCustomerrequest = async (req, res, next) => {
+const resendBusinessCustomerRequestOtp = async (req, res, next) => {
+  try {
+    const { mobileNo } = req.body;
+    ///validate input
+    const value =
+      await otpVerificationValidator.register_otp.validateAsync({
+        mobileNo: mobileNo
+      });
+    //verify otp
+    const businessRequset= await businessCustomerServices.getBusinessCustomerRequest(mobileNo);
+
+    if(!businessRequset){
+      logger.log("info", "Business Request not found!");
+      response.validatationError(res, "Business Request not found!");
+      return false;
+    }
+    if(businessRequset.status ==="Verified"){
+      logger.log("info", "Business Request is already verified!");
+      response.validatationError(res, "Business Request is already verified!");
+      return false;
+    }
+     //add new opt from register otp:
+     const registeredUser = await authServices.addRegistrationUser({
+      mobileNo: value.mobileNo,
+      verificationType:"business"
+    });
+    ///api to send otp
+    await dataGenService.sendOtp(value.mobileNo, registeredUser.otp);
+   
+    response.success(
+      res,
+      "Business Customer Service Request otp resent!",
+      registeredUser
+    );
+  } catch (error) {
+    logger.log("info", error.message);
+    console.log(error);
+    response.generalError(res, error.message);
+  }
+};
+const verifyBusinessCustomerRequest = async (req, res, next) => {
   try {
     const { mobileNo, otp } = req.body;
     ///validate input
@@ -69,16 +112,33 @@ const verifyBusinessCustomerrequest = async (req, res, next) => {
         otp: otp,
       });
     //verify otp
-    const regesteredUser = await authServices.verifyRegistrationotp(value);
-    if (!regesteredUser) {
-      response.generalError(res, "Otp verification failed");
+    const regesteredUser = await authServices.findRegistrationUser({mobile_no:mobileNo,verification_type:"business"});
+    const updatedRetriesValue = parseInt(regesteredUser.no_of_retries) + 1;
+    //check if the user has not exceeded otp limit i.e. 3
+    if (updatedRetriesValue >= 3) {
+      logger.log(
+        "info",
+        "You have exceeded no of tries for otp,you can resend otp"
+      );
+      response.validatationError(res, "You have exceeded no of tries for otp,you can resend otp.");
       return false;
     }
+  //check if the otp is correct
+  if (regesteredUser.otp !== otp) {
+    await authServices.updateRegistrationUser(
+      { no_of_retries: updatedRetriesValue },
+      {id:regesteredUser.id, verification_type:"business"}
+    );
+    logger.log("info", "Invalid Otp!, enter correct otp.");
+    response.validatationError(res, "Invalid Otp!, enter correct otp.");
+    return false;
+  }
     ///update business request
     const customer = await businessCustomerServices.addBusinessCustomerRequest({
-      mobileNo: value.mobileNo,
+      mobile_no: value.mobileNo,
       status: "Verified",
     });
+    customer.status="Verified";
     response.success(
       res,
       "Business Customer Service Request Submitted!",
@@ -96,7 +156,7 @@ const saveBusinessCustomerprofile = async (req, res, next) => {
   try {
     const bodyData = req.body;
     const UserID = req.user.user_id;
-    const imageUrl = "";
+    let imageUrl = "";
     //validator
     const value =
       await businessCustomerValidator.saveCustomerProfile.validateAsync(
@@ -167,7 +227,7 @@ const saveBusinessCustomerprofile = async (req, res, next) => {
 const saveBusinessCustomerShopDetails = async (req, res, next) => {
   try {
     const bodyData = req.body;
-    const imageUrl = "";
+    let imageUrl = "";
     //validator
     const value =
       await businessCustomerValidator.saveCustomerProfile.validateAsync(
@@ -336,8 +396,9 @@ const uploadUserBusinessAgreement = async (req, res, next) => {
 };
 
 module.exports = {
-  addNewBusinessCustomerrequest,
-  verifyBusinessCustomerrequest,
+  addNewBusinessCustomerRequest,
+  resendBusinessCustomerRequestOtp,
+  verifyBusinessCustomerRequest,
   saveBusinessCustomerprofile,
   saveBusinessCustomerShopDetails,
   getBusinessCustomerProfile,

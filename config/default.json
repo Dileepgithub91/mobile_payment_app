@@ -2,5 +2,8 @@
   "logger": {
     "logFileDir": "logs",
     "logFileName": "app.log"
+  },
+  "sqlite": {
+    "logFileDir": "logs/select_karo1.db"
   }
 }

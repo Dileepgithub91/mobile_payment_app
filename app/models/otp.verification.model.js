@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const registration_verification = sequelize.define("registration_verification", {
+  const otp_verification = sequelize.define("otp_verification", {
     mobile_no: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -11,6 +11,14 @@ module.exports = (sequelize, DataTypes) => {
     no_of_retries: {
       type: DataTypes.STRING,
       defaultValue:"0"
+    },
+    resend_tries: {
+      type: DataTypes.STRING,
+      defaultValue:"0"
+    },
+    verification_type: {
+      type: DataTypes.STRING,
+      defaultValue:"default"
     },
     ip_address: {
       type: DataTypes.STRING,
@@ -26,5 +34,5 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: "active",
     },
   });
-  return registration_verification;
+  return otp_verification;
 };

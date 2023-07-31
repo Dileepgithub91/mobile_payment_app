@@ -27,10 +27,11 @@ module.exports.validatationError = async (res,message="Validation Error", data=n
     res.status(code).json(response);
 }
 
-module.exports.generalError = async (res,message="Error", code=412) => {
+module.exports.generalError = async (res,message="Error",data={}, code=412) => {
     const response = {
         success: false,
-        message: message
+        message: message,
+        data:data
     }
 
     res.status(code).json(response);
