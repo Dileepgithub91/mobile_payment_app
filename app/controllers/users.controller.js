@@ -188,6 +188,7 @@ const getManualKycdocument = async (req, res, next) => {
     const userKycdata = await userKycDetailsServices.getUserKycDetailsByUserId(
       userId
     );
+    console.log(userKycdata);
     if (!userKycdata) {
       throw new Error("User Kyc Data not found!");
     }
