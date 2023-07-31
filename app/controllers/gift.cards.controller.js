@@ -16,6 +16,7 @@ const addNewGiftCardProduct = async (req, res, next) => {
       responcesError.push("no Product Found!");
     }
     await products.data.products.forEach(async (product) => {
+      console.log(product);
       //validator
       const value =
         await giftCardValidator.verifynewGiftCardProduct.validateAsync(product);
@@ -45,21 +46,21 @@ const addNewGiftCardProduct = async (req, res, next) => {
     }
 
     await pineCards.data.cardSchemeList.forEach(async (product) => {
+      console.log(product);
       //validator
       const value =
         await giftCardValidator.verifynewGiftCardSchema.validateAsync(product);
       ///update user
       const giftCard = await giftCardServices.SaveGiftCardProducts({
-        card_source:"pineperks",
-        card_id: value.cardSchemeId,
-        card_schema: value.schemeName,
+        provider_code: value.cardSchemeId,
         name: value.cardName,
-        external_card_identification: value.binInfo.identificationNumber,
-        min_price: value.binInfo.startRange,
+        category_id:"gift_card",
+        sub_category_id:"qwikcilver",
+        product_description:"",
+        priceType: "singleprice",
+        min_price:value.binInfo.startRange,
         max_price: value.binInfo.endRange,
-        expire_type: value.binInfo.expiryDurationType,
-        expire_duration: value.binInfo.expiryDuration,
-        images: { thumbnail: value.imageUrl },
+        image: value.imageUrl   
       });
       logger.log("info", giftCard);
       if (!giftCard.success) {
