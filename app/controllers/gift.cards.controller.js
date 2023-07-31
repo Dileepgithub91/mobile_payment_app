@@ -23,11 +23,13 @@ const addNewGiftCardProduct = async (req, res, next) => {
       const giftCard = await giftCardServices.SaveGiftCardProducts({
         provider_code: value.sku,
         name: value.name,
-        currency: value.currency,
-        url: value.url,
+        category_id:"gift_card",
+        sub_category_id:"qwikcilver",
+        product_description:"",
+        priceType: "singleprice",
         min_price: value.minPrice,
         max_price: value.maxPrice,
-        images: value.images,
+        image: value.images.thumbnail,
       });
       logger.log("info", giftCard);
       if (!giftCard.success) {

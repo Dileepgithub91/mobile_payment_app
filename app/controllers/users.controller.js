@@ -82,7 +82,6 @@ const saveManualKycFile = async (req, res, next) => {
     const checkKycStatus =
       await userKycDetailsServices.getUserKycDetailsByUserId(req.user.user_id);
     if (checkKycStatus) {
-     
       let checkDData = checkKycStatus.dataValues;
       if (
         checkDData.adhaar_kyc_status == "Verified" &&
@@ -192,7 +191,7 @@ const getManualKycdocument = async (req, res, next) => {
     if (!userKycdata) {
       throw new Error("User Kyc Data not found!");
     }
-    const userKyc = userKycdata[0].dataValues;
+    const userKyc = userKycdata.dataValues;
     if (userKyc.adhaar_kyc_status == "Verified") {
       aadharKyc = await kycService.getAadharVerificationData(userId);
     }
@@ -220,11 +219,16 @@ const kycPanVerification = async (req, res, next) => {
   try {
     const checkKycStatus =
       await userKycDetailsServices.getUserKycDetailsByUserId(req.user.user_id);
-    let checkDData = checkKycStatus[0].dataValues;
-    if (checkDData.pan_kyc_status == "Verified") {
-      response.success(res, "User Kyc has already completed!!");
-      return true;
-    }
+      if (checkKycStatus) {
+        let checkDData = checkKycStatus.dataValues;
+        if (
+          checkDData.adhaar_kyc_status == "Verified" &&
+          checkDData.pan_kyc_status == "Verified"
+        ) {
+          response.success(res, "User Kyc has already completed!!");
+          return true;
+        }
+      }
     const { pan } = req.body;
     const panData = await kycService.verifyPan(pan);
     //update kyc document
@@ -267,11 +271,16 @@ const kycAadharGenerateOtp = async (req, res, next) => {
   try {
     const checkKycStatus =
       await userKycDetailsServices.getUserKycDetailsByUserId(req.user.user_id);
-    let checkDData = checkKycStatus[0].dataValues;
-    if (checkDData.adhaar_kyc_status == "Verified") {
-      response.success(res, "User Kyc has already completed!!");
-      return true;
-    }
+      if (checkKycStatus) {
+        let checkDData = checkKycStatus.dataValues;
+        if (
+          checkDData.adhaar_kyc_status == "Verified" &&
+          checkDData.pan_kyc_status == "Verified"
+        ) {
+          response.success(res, "User Kyc has already completed!!");
+          return true;
+        }
+      }
     const { aadharNo } = req.body;
     const aadharData = await kycService.generateAadharOtp(aadharNo);
     response.success(
@@ -329,11 +338,16 @@ const kycGStVerification = async (req, res, next) => {
   try {
     const checkKycStatus =
       await userKycDetailsServices.getUserKycDetailsByUserId(req.user.user_id);
-    let checkDData = checkKycStatus[0].dataValues;
-    if (checkDData.gst_kyc_status == "Verified") {
-      response.success(res, "User Kyc has already completed!!");
-      return true;
-    }
+      if (checkKycStatus) {
+        let checkDData = checkKycStatus.dataValues;
+        if (
+          checkDData.adhaar_kyc_status == "Verified" &&
+          checkDData.pan_kyc_status == "Verified"
+        ) {
+          response.success(res, "User Kyc has already completed!!");
+          return true;
+        }
+      }
     const { gstNo } = req.body;
     const gstData = await kycService.verifyGst(gstNo);
     if (gstData.data.gstin_status != "Active") {
