@@ -238,6 +238,33 @@ const verifyForgetPasswordOtp = async (req, res, next) => {
     response.generalError(res, error.message);
   }
 };
+
+//////////not done yet
+const forgetPasswordChangePassword = async (req, res, next) => {
+  try {
+    const { mobileNo, newPassword, confirmPassword } = req.body;
+    const value =
+      await Validator.validateChangePassword.validateAsync(
+        req.body
+      );
+    const hashedPassword = await bcrypt.hash(value.newPassword, 10);
+    const findUser= await userServices.getUserByMobile(mobileNo);
+    if(!findUser){
+      throw new Error("User Not found");
+    }
+    const user = await userServices.updateUser(
+      {
+        password: hashedPassword,
+      },
+      findUser.user_id
+    );
+    response.success(res, "User Password Changed Successfully!", user);
+  } catch (error) {
+    logger.log("info", error.message);
+    console.log(error);
+    response.generalError(res, error.message);
+  }
+};
 const loginViaPassowrd = async (req, res, next) => {
   try {
     const { mobileNo, password, deviceType, ipAddress } = req.body;
@@ -282,5 +309,6 @@ module.exports = {
   loginViaPassowrd,
   sendForgetPasswordOtp,
   verifyForgetPasswordOtp,
-  reSendForgetPasswordOtp
+  reSendForgetPasswordOtp,
+  forgetPasswordChangePassword
 };

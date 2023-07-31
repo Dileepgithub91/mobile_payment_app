@@ -21,3 +21,19 @@ module.exports.verifynewGiftCardProduct = Joi.object({
     small: Joi.string(),
   }),
 });
+
+module.exports.verifynewGiftCardSchema = Joi.object({
+  cardSchemeId: Joi.string().required(),
+  schemeName: Joi.string().required(),
+  cardName: Joi.string().required(),
+  binInfo: Joi.object({
+    name: Joi.string(),
+    identificationNumber: Joi.string(),
+    startRange: Joi.string(),
+    endRange: Joi.string(),
+    expiryDurationType: Joi.string(),
+    expiryDuration: Joi.string(),
+  }),
+  isReloadable: Joi.number().required(),
+  imageUrl: Joi.number().required(),
+});

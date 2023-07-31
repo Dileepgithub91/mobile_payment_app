@@ -40,7 +40,21 @@ const updateUserAddress = async (bodyData, userId) => {
   }
 };
 
+const getUserAddress = async ( userId) => {
+  try {
+    const user = await userAddresses.findAll({
+      where: {
+        user_id: userId,
+      },
+    });
+    return user[0].dataValues;
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   addUserAddress,
   updateUserAddress,
+  getUserAddress
 };

@@ -1,8 +1,20 @@
 module.exports = (sequelize, DataTypes) => {
     const giftCardProducts = sequelize.define("giftcard_products", {
-      sku: {
+      card_source: {
         type: DataTypes.STRING,
         allowNull: false,
+      },
+      card_id: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      card_schema: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      external_card_identification: {
+        type: DataTypes.STRING,
+        allowNull: true,
       },
       name: {
         type: DataTypes.STRING,
@@ -24,9 +36,15 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      price: {
-        type: DataTypes.JSON,
+      expire_type: {
+        type: DataTypes.STRING,
         allowNull: true,
+        defaultValue:"0"
+      },
+      expire_duration: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        defaultValue:"0"
       },
       images: {
         type: DataTypes.JSON,
