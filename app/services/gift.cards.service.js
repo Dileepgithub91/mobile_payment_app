@@ -2,7 +2,7 @@ const logger = require("../logger");
 const db = require("../models");
 
 //Create Main Model
-const giftCardProducts = db.giftcard_products;
+const giftCardProducts = db.products;
 
 //Save Pan verification Data
 const SaveGiftCardProducts = async (bodyData) => {

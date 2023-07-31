@@ -21,8 +21,7 @@ const addNewGiftCardProduct = async (req, res, next) => {
         await giftCardValidator.verifynewGiftCardProduct.validateAsync(product);
       ///update user
       const giftCard = await giftCardServices.SaveGiftCardProducts({
-        card_source:"qwikcilver",
-        card_id: value.sku,
+        provider_code: value.sku,
         name: value.name,
         currency: value.currency,
         url: value.url,
