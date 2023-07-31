@@ -188,7 +188,6 @@ const getManualKycdocument = async (req, res, next) => {
     const userKycdata = await userKycDetailsServices.getUserKycDetailsByUserId(
       userId
     );
-    console.log(userKycdata);
     if (!userKycdata) {
       throw new Error("User Kyc Data not found!");
     }
@@ -203,10 +202,10 @@ const getManualKycdocument = async (req, res, next) => {
       gstKyc = await kycService.getGSTVerificationData(userId);
     }
     let kycDetails = {
-      ...userKyc.dataValues,
-      ...aadharKyc,
-      ...panKyc,
-      ...gstKyc,
+      kycData :userKyc.dataValues,
+      aadharData:aadharKyc,
+      panData:panKyc,
+      gstData:gstKyc,
     };
     response.success(res, "User Kyc data retrived!", kycDetails);
   } catch (error) {
