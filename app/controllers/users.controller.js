@@ -82,8 +82,8 @@ const saveManualKycFile = async (req, res, next) => {
     const checkKycStatus =
       await userKycDetailsServices.getUserKycDetailsByUserId(req.user.user_id);
     if (checkKycStatus) {
-      console.log(checkKycStatus);
-      let checkDData = checkKycStatus[0];
+     
+      let checkDData = checkKycStatus.dataValues;
       if (
         checkDData.adhaar_kyc_status == "Verified" &&
         checkDData.pan_kyc_status == "Verified"
