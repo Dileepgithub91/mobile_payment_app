@@ -5,14 +5,14 @@ module.exports.verifynewGiftCardProduct = Joi.object({
   name: Joi.string().required(),
   currency: Joi.object({
     code: Joi.string(),
-    symbol: Joi.string(),
+    symbol: Joi.string().allow(null),
     numericCode: Joi.string(),
   }),
   url: Joi.string().required(),
   minPrice: Joi.string().required(),
   maxPrice: Joi.string().required(),
   price: Joi.object({
-    cpg: Joi.string(),
+    cpg: Joi.array(),
   }),
   images: Joi.object({
     thumbnail: Joi.string(),
@@ -23,7 +23,7 @@ module.exports.verifynewGiftCardProduct = Joi.object({
 });
 
 module.exports.verifynewGiftCardSchema = Joi.object({
-  cardSchemeId: Joi.string().required(),
+  cardSchemeId: Joi.number().required(),
   schemeName: Joi.string().required(),
   cardName: Joi.string().required(),
   binInfo: Joi.object({
