@@ -11,9 +11,11 @@ const {
   userServices,
   userProfileServices,
   userKycDetailsServices,
-  dataGenService
+  dataGenService,
+  emailService
 } = require("../services");
 
+///Business request authrisation starts here
 const addNewBusinessCustomerRequest = async (req, res, next) => {
   try {
     const bodyData = req.body;
@@ -25,21 +27,12 @@ const addNewBusinessCustomerRequest = async (req, res, next) => {
     ///update user
     const customer = await businessCustomerServices.addBusinessCustomerRequest({
       first_name: value.firstName,
-      middle_name: value.middleName,
       last_name: value.lastName,
-      request_type: value.requestType,
       mobile_no: value.mobileNo,
-      address_line_1: value.addressLine1,
-      address_line_2: value.addressLine2,
-      state: value.state,
-      city: value.city,
+      email: value.email,
       zip_code: value.zipCode,
       services: value.services,
       business_name: value.businessName,
-      company_type: value.businessType,
-      business_address_1: value.businessAddress1,
-      business_address_2: value.businessAddress2,
-      monthaly_turn_over: value.monthalyTurnOver,
     });
 
     //add new opt from register otp:
@@ -139,6 +132,11 @@ const verifyBusinessCustomerRequest = async (req, res, next) => {
       status: "Verified",
     });
     customer.status="Verified";
+  
+    /// send mail about successfull business requset
+    let mailBody=`Your Business Request with mobile number ${customer.mobile_no} and email ${customer.email} has been submitted successfully.
+    please wait till your request is approved, you will receive mail with your credentials`;
+    emailService.sentEmail(customer.email,"Business Request Submitted Successfully",mailBody)
     response.success(
       res,
       "Business Customer Service Request Submitted!",
@@ -150,7 +148,7 @@ const verifyBusinessCustomerRequest = async (req, res, next) => {
     response.generalError(res, error.message);
   }
 };
-
+///request autherisation ends here
 // save business customer user profile
 const saveBusinessCustomerprofile = async (req, res, next) => {
   try {

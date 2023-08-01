@@ -5,13 +5,13 @@ var transporter = nodeMailer.createTransport({
     service:"Gmail",
     secure: true,
     auth:{
-        user:process.env.EMAIL_USERNAME,
+        user:process.env.EMAIL_USERNAME, 
         pass:process.env.EMAIL_PASSWORD
     }
 });
 
 const sentEmail = async (email,subject,mailbody) => {
-
+  console.log(email)
   var mailOptions = {
     from: process.env.EMAIL_MAILER,
     to: email, 
