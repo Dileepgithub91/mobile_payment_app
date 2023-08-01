@@ -18,6 +18,11 @@ router.post("/upload-user-profile-image",
   userController.uploadUserProfileImage
 );
 
+router.post("/change-user-avatar",
+  auth("updateOwn", "profile"),
+  userController.changeUserAvatar
+);
+
 router.get("/get-user-profile",
   auth("readOwn", "profile"),
   userController.getUserProfile

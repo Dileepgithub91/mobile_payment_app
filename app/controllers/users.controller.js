@@ -77,6 +77,23 @@ const uploadUserProfileImage = async (req, res, next) => {
   }
 };
 
+const changeUserAvatar = async (req, res, next) => {
+  try {
+    ///create new user profile
+    await userProfileServices.updateUserProfilebyUserID(
+      {
+        avtar: req.data.avatar,
+      },
+      req.user.user_id
+    );
+    response.success(res, "User Avatar Updated!");
+  } catch (error) {
+    logger.log("info", error.message);
+    console.log(error);
+    response.generalError(res, error.message);
+  }
+};
+
 const saveManualKycFile = async (req, res, next) => {
   try {
     const checkKycStatus =
@@ -383,6 +400,7 @@ const kycGStVerification = async (req, res, next) => {
 module.exports = {
   updateUserProfile,
   uploadUserProfileImage,
+  changeUserAvatar,
   getUserProfile,
   skipUserKyc,
   saveManualKycFile,
