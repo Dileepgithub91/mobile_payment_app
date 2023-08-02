@@ -61,7 +61,8 @@ db.api_provider_setting = require("./api.provider.setting.model")(
   sequelize,
   DataTypes
 );
-// db.giftcard_category = require("./giftcard.category.model")(sequelize, DataTypes);
+db.products = require("./product.model")(sequelize, DataTypes);
+db.product_price = require("./product.price.model")(sequelize, DataTypes);
 db.giftcard_products = require("./giftcard.product.model")(
   sequelize,
   DataTypes

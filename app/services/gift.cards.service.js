@@ -2,7 +2,7 @@ const logger = require("../logger");
 const db = require("../models");
 
 //Create Main Model
-const giftCardProducts = db.giftcard_products;
+const giftCardProducts = db.products;
 
 //Save Pan verification Data
 const SaveGiftCardProducts = async (bodyData) => {
@@ -29,7 +29,7 @@ const SaveGiftCardProducts = async (bodyData) => {
     return {success:false,data:error};
   }
 };
-const getGiftCardProducts = async ({ pageNumber, limitPerPage }) => {
+const getGiftCardProducts = async ({ pageNumber, limitPerPage ,query}) => {
   try {
     const limitPage = parseInt(limitPerPage) || 10;
     const pageNo = parseInt(pageNumber) || 1;
@@ -38,6 +38,7 @@ const getGiftCardProducts = async ({ pageNumber, limitPerPage }) => {
     const giftCard = await giftCardProducts.findAll({
       limit: limitPage,
       offset: offset,
+      where:query
     });
     return giftCard;
   } catch (error) {

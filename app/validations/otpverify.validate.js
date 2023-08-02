@@ -37,3 +37,10 @@ module.exports.userLogin = Joi.object({
         'string.pattern.base': 'Passoword is Required'
       })
   });
+
+  module.exports.validateChangePassword = Joi.object({
+    mobileNo: Joi.string().trim().min(1).required(),
+    newPassword: Joi.string().required(),
+    confirmPassword: Joi.string().required().valid(Joi.ref('newPassword'))
+    .messages({ 'any.only': 'Confirm password must match the new password' }),
+  });

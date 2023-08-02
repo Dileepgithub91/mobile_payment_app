@@ -4,6 +4,14 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true,
     },
+    avtar: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    image_url: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     bussiness_name: {
       type: DataTypes.STRING,
       allowNull: true,

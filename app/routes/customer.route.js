@@ -11,9 +11,9 @@ const BusinessCardUploader = require("../uploader/businessCard.uploader");
 const KycDocumentUploader = require("../uploader/kyc.Doc.uploader");
 const CompanyAgreementDocumentUploader = require("../uploader/business.agreement.uploader");
 
-router.post("/add-business-customer-request",  auth("readOwn", "profile"), customerController.addNewBusinessCustomerRequest);
-router.post("/resend-business-customer-request-otp",  auth("readOwn", "profile"), customerController.resendBusinessCustomerRequestOtp);
-router.post("/verify-business-customer-request-otp",  auth("readOwn", "profile"), customerController.verifyBusinessCustomerRequest);
+router.post("/add-business-customer-request",customerController.addNewBusinessCustomerRequest);
+router.post("/resend-business-customer-request-otp",customerController.resendBusinessCustomerRequestOtp);
+router.post("/verify-business-customer-request-otp",customerController.verifyBusinessCustomerRequest);
 router.post("/save-business-customer-profile",  auth("updateOwn", "profile"),AvatarUploader.single("ProfileImage"), customerController.saveBusinessCustomerprofile);
 router.post("/save-business-customer-shop-details",  auth("updateOwn", "profile"),BusinessCardUploader.single("BusinessCard"), customerController.saveBusinessCustomerShopDetails);
 router.get("/get-business-customer-profile",  auth("readOwn", "profile"), customerController.getBusinessCustomerProfile);

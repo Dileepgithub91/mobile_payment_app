@@ -4,8 +4,8 @@ const fileName = require("fs");
 
 var attach_files = multer.diskStorage({
   destination: function (req, file, cb) {
-    if (!fileName.existsSync("public")) {
-      fileName.mkdir("public", function (err) {
+    if (!fileName.existsSync("uploads")) {
+      fileName.mkdir("uploads", function (err) {
         if (err) {
           console.log(err);
         } else {
@@ -13,8 +13,8 @@ var attach_files = multer.diskStorage({
         }
       });
     }
-    if (!fileName.existsSync("public/uploadedagreementDocument/")) {
-      fileName.mkdir("public/uploadedagreementDocument/", function (err) {
+    if (!fileName.existsSync("uploads/uploadedagreementDocument/")) {
+      fileName.mkdir("uploads/uploadedagreementDocument/", function (err) {
         if (err) {
           console.log(err);
         } else {
@@ -22,7 +22,7 @@ var attach_files = multer.diskStorage({
         }
       });
     }
-    cb(null, "public/uploadedagreementDocument/");
+    cb(null, "uploads/uploadedagreementDocument/");
   },
   filename: function (req, file, cb) {
     let ext = path.extname(file.originalname);
