@@ -3,77 +3,26 @@ const { response } = require("../helpers");
 const logger = require("../logger");
 const { giftCardServices, qwikCilverService ,pinePerkService,userAddressServices} = require("../services");
 
+
 const addNewGiftCardProduct = async (req, res, next) => {
   try {
-    const responcesError = [];
-    const responcesSuccess = [];
-    ///Qwick silver product api
-    const products = await qwikCilverService.getProductList(req.body);
-    if (!products.success) {
-      responcesError.push(products);
-    }
-    if (products.data.products.length == 0) {
-      responcesError.push("no Product Found!");
-    }
-    await products.data.products.forEach(async (product) => {
-      console.log(product);
       //validator
       const value =
-        await giftCardValidator.verifynewGiftCardProduct.validateAsync(product);
+        await giftCardValidator.verifynewGiftCardSingle.validateAsync(product);
       ///update user
       const giftCard = await giftCardServices.SaveGiftCardProducts({
-        provider_code: value.sku,
+        provider_code: value.provider_code,
         name: value.name,
-        category_id:"gift_card",
-        sub_category_id:"qwikcilver",
-        product_description:"",
-        priceType: "singleprice",
-        min_price: value.minPrice,
-        max_price: value.maxPrice,
-        image: value.images.thumbnail,
+        category_id:value.category_id,
+        sub_category_id:value.sub_category_id,
+        product_description:value.product_description,
+        price_type: value.price_type,
+        min_price: value.min_price,
+        max_price: value.max_price,
+        image: value.image,
       });
-      logger.log("info", giftCard);
-      if (!giftCard.success) {
-        responcesError.push(giftCard.data);
-      } else {
-        responcesSuccess.push(giftCard.data);
-      }
-    });
-    ////pine perks cards
-    const pineCards = await pinePerkService.getCardSchema();
-    if (pineCards.data.responseCode != 0) {
-      responcesError.push(pineCards);
-    }
-
-    await pineCards.data.cardSchemeList.forEach(async (product) => {
-      console.log(product);
-      //validator
-      const value =
-        await giftCardValidator.verifynewGiftCardSchema.validateAsync(product);
-      ///update user
-      const giftCard = await giftCardServices.SaveGiftCardProducts({
-        provider_code: value.cardSchemeId,
-        name: value.cardName,
-        category_id:"gift_card",
-        sub_category_id:"qwikcilver",
-        product_description:"",
-        priceType: "singleprice",
-        min_price:value.binInfo.startRange,
-        max_price: value.binInfo.endRange,
-        image: value.imageUrl   
-      });
-      logger.log("info", giftCard);
-      if (!giftCard.success) {
-        responcesError.push(giftCard.data);
-      } else {
-        responcesSuccess.push(giftCard.data);
-      }
-    });
-
-    response.success(res, "New Gift Cards Have been created!", {
-      responcesError,
-      responcesSuccess,
-    });
+  
+    response.success(res, "New Gift Cards Have been created!", );
   } catch (error) {
     logger.log("info", error);
     console.log(error);

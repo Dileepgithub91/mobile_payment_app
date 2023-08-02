@@ -22,6 +22,18 @@ module.exports.verifynewGiftCardProduct = Joi.object({
   }),
 });
 
+module.exports.verifynewGiftCardSingle = Joi.object({
+  provider_code: Joi.string().max(100).required(),
+  name: Joi.string().required(),
+  category_id: Joi.number(),
+  sub_category_id: Joi.number(),
+  product_description: Joi.string(),
+  price_type: Joi.number(),
+  min_price: Joi.string(),
+  max_price: Joi.string(),
+  image: Joi.string().allow(null)
+});
+
 module.exports.verifynewGiftCardSchema = Joi.object({
   cardSchemeId: Joi.number().required(),
   schemeName: Joi.string().required(),

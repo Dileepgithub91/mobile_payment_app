@@ -9,15 +9,15 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
     },
     category_id: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: true,
     },
     sub_category_id: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: true,
     },
     product_description: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: true,
     },
     image: {
@@ -25,34 +25,34 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
     },
     price_type: {
-      type: DataTypes.STRING,
+      type: DataTypes.TINYINT,
       allowNull: true,
     },
     max_price: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DECIMAL,
       allowNull: true,
     },
     min_price: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DECIMAL,
       allowNull: true,
     },
     is_out_of_stock: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.TINYINT,
       allowNull: true,
       defaultValue: 0,
     },
     is_trending: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.TINYINT,
       allowNull: true,
       defaultValue: 0,
     },
     deleted_at: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.TINYINT,
       allowNull: true,
       defaultValue: 0,
     },
     status: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.TINYINT,
       allowNull: false,
       defaultValue: 1,
     },

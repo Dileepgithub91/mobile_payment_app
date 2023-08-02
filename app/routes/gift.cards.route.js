@@ -5,9 +5,8 @@ const router = express.Router();
 //Auyh Middleware
 const auth = require("../middleware/auth");
 
-router.post('/update-gift-card-list',   auth("readAny", "Gift"),giftCardController.addNewGiftCardProduct);
-router.post('/get-gift-card-list',  auth("readAny", "Gift"), giftCardController.getGiftCardProducts);
-//pineperk
+router.post('/create-card',   auth("readAny", "Gift"),giftCardController.addNewGiftCardProduct);
+router.post('/cards',  auth("readAny", "Gift"), giftCardController.getGiftCardProducts);
 router.post('/new-digital-card-order', giftCardController.generateNewGiftCardOrder);
 
 

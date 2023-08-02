@@ -67,6 +67,8 @@ db.giftcard_products = require("./giftcard.product.model")(
   sequelize,
   DataTypes
 );
+db.ticket = require("./ticket.model")(sequelize, DataTypes);
+db.ticket_reply = require("./ticket.reply.model")(sequelize, DataTypes);
 // db.giftcard_orders = require("./giftcard.orders.model")(sequelize, DataTypes);
 
 db.sequelize.sync({ force: false }).then(() => {

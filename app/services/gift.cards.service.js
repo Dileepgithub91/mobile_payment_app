@@ -20,16 +20,39 @@ const SaveGiftCardProducts = async (bodyData) => {
           id: giftCard.id,
         },
       });
+      return { success: true, data: giftCard };
     }
-
     giftCard = await giftCardProducts.create(bodyData);
-    return {success:true,data:giftCard};
+    return { success: true, data: giftCard };
   } catch (error) {
     logger.log("info", error);
-    return {success:false,data:error};
+    return { success: false, data: error };
   }
 };
-const getGiftCardProducts = async ({ pageNumber, limitPerPage ,query}) => {
+////updte card api
+const updateGiftCardProducts = async (bodyData, card_id) => {
+  try { 
+    const findGiftCard = await giftCardProducts.findAll({
+      where: {
+        name: bodyData.name,
+      },
+    });
+    if (findGiftCard.length == 0) {
+      throw new Error("Card Not Found!");
+    }
+    let giftCard= await giftCardProducts.update(bodyData, {
+      where: {
+        id: card_id,
+      },
+    });
+    return { success: true, data: giftCard };
+  } catch (error) {
+    logger.log("info", error);
+    return { success: false, data: error };
+  }
+};
+
+const getGiftCardProducts = async ({ pageNumber, limitPerPage, query }) => {
   try {
     const limitPage = parseInt(limitPerPage) || 10;
     const pageNo = parseInt(pageNumber) || 1;
@@ -38,7 +61,7 @@ const getGiftCardProducts = async ({ pageNumber, limitPerPage ,query}) => {
     const giftCard = await giftCardProducts.findAll({
       limit: limitPage,
       offset: offset,
-      where:query
+      where: query,
     });
     return giftCard;
   } catch (error) {
@@ -49,5 +72,6 @@ const getGiftCardProducts = async ({ pageNumber, limitPerPage ,query}) => {
 
 module.exports = {
   SaveGiftCardProducts,
+  updateGiftCardProducts,
   getGiftCardProducts,
 };

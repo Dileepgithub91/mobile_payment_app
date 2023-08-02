@@ -5,4 +5,5 @@ module.exports = {
     pinePerksValidator: require('./pineperks.validate'),
     qwikCilverValidator: require('./qwikcilver.validate'),
     giftCardValidator: require('./giftcard.validate'),
+    ticketValidator: require('./ticket.validate'),
 }
