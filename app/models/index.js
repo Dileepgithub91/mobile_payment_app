@@ -31,45 +31,40 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.users = require("./users.model")(sequelize, DataTypes);
+db.User = require("./users.model")(sequelize, DataTypes);
 db.Country = require("./countery.model")(sequelize, DataTypes);
 db.State = require("./state.model")(sequelize, DataTypes);
 db.City = require("./city.model")(sequelize, DataTypes);
-db.user_roles = require("./user.roles.model")(sequelize, DataTypes);
-db.user_addresses = require("./user.addresses.model")(sequelize, DataTypes);
-db.user_kyc_details = require("./user.kyc.details.model")(sequelize, DataTypes);
-db.user_profile = require("./user.profile.model")(sequelize, DataTypes);
-db.otp_verification = require("./otp.verification.model")(sequelize, DataTypes);
-db.user_token = require("./user.token.model")(sequelize, DataTypes);
-db.business_customer = require("./business.customer.model")(
+db.UserRoles = require("./user.roles.model")(sequelize, DataTypes);
+db.UserAddress = require("./user.addresses.model")(sequelize, DataTypes);
+db.UserKycDetail = require("./user.kyc.details.model")(sequelize, DataTypes);
+db.UserProfile = require("./user.profile.model")(sequelize, DataTypes);
+db.OtpVerification = require("./otp.verification.model")(sequelize, DataTypes);
+db.UserToken = require("./user.token.model")(sequelize, DataTypes);
+db.BusinessRequest = require("./business.request.model")(
   sequelize,
   DataTypes
 );
-db.business_agreement = require("./business.agreement.model")(
+db.BusinessAgreement = require("./business.agreement.model")(
   sequelize,
   DataTypes
 );
-db.company_agreement_uploaded_document =
+db.UploadedBusinessAgreement =
   require("./company.agreement.upload.document.model")(sequelize, DataTypes);
-db.kyc_pan_detail = require("./kyc.pan.response.model")(sequelize, DataTypes);
-db.kyc_aadhar_detail = require("./kyc.aadhar.response.model")(
+db.KycPanDetail = require("./kyc.pan.response.model")(sequelize, DataTypes);
+db.kycAadharDetail = require("./kyc.aadhar.response.model")(
   sequelize,
   DataTypes
 );
-db.kyc_gst_detail = require("./kyc.gst.response.model")(sequelize, DataTypes);
-db.api_provider_setting = require("./api.provider.setting.model")(
+db.KycGstDetail = require("./kyc.gst.response.model")(sequelize, DataTypes);
+db.ApiProviderSetting = require("./api.provider.setting.model")(
   sequelize,
   DataTypes
 );
-db.products = require("./product.model")(sequelize, DataTypes);
-db.product_price = require("./product.price.model")(sequelize, DataTypes);
-db.giftcard_products = require("./giftcard.product.model")(
-  sequelize,
-  DataTypes
-);
-db.ticket = require("./ticket.model")(sequelize, DataTypes);
-db.ticket_reply = require("./ticket.reply.model")(sequelize, DataTypes);
-// db.giftcard_orders = require("./giftcard.orders.model")(sequelize, DataTypes);
+db.Product = require("./product.model")(sequelize, DataTypes);
+db.ProductPrice = require("./product.price.model")(sequelize, DataTypes);
+db.Ticket = require("./ticket.model")(sequelize, DataTypes);
+db.TicketReply = require("./ticket.reply.model")(sequelize, DataTypes);
 
 db.sequelize.sync({ force: false }).then(() => {
   console.log("yes re-sync done!");

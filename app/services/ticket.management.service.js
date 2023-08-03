@@ -1,8 +1,8 @@
 const db = require("../models");
 
 //Create Main Model
-const Ticket = db.ticket;
-const TicketReply = db.ticket_reply;
+const Ticket = db.Ticket;
+const TicketReply = db.TicketReply;
 
 const addTickets = async (body) => {
   try {
@@ -18,6 +18,7 @@ const addTickets = async (body) => {
     let ticket = await Ticket.create(body);
     return ticket;
   } catch (error) {
+    logger.log("error",{source:"ticket managemant Services  -- add Tickets",error});
     throw error;
   }
 };
@@ -35,6 +36,7 @@ const addTicketReply = async (body) => {
     let reply = await TicketReply.create(body);
     return reply;
   } catch (error) {
+    logger.log("error",{source:"ticket managemant Services  -- add icket Reply",error});
     throw error;
   }
 };
@@ -59,6 +61,7 @@ const findTicketDetails = async (id) => {
         reply:replys
     };
   } catch (error) {
+    logger.log("error",{source:"ticket managemant Services  -- find Ticket Details",error});
     throw error;
   }
 };
@@ -72,6 +75,7 @@ const findTickets = async (query) => {
     }
     return tickets;
   } catch (error) {
+    logger.log("error",{source:"ticket managemant Services  -- find Tickets",error});
     throw error;
   }
 };

@@ -1,7 +1,7 @@
 const db = require("../models");
 
 //Create Main Model
-const userToken = db.user_token;
+const userToken = db.UserToken;
 
 const addUserToken = async (body) => {
   try {

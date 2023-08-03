@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-    const giftCardCategory = sequelize.define("giftcard_category", {
+    const SubCategory = sequelize.define("sub_category", {
       category_id: {
         type: DataTypes.STRING,
         allowNull: false,

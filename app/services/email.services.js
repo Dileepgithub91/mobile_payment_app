@@ -21,7 +21,7 @@ const sentEmail = async (email,subject,mailbody) => {
 
   transporter.sendMail(mailOptions, function (error, info) {
     if (error) {
-        logger.log("info",error);
+        logger.log("error",{source:"email-service--send mail",error});
     } else {
         logger.log("info",`Email sent: ${info.response}`);
     }

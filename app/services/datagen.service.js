@@ -21,7 +21,7 @@ const sendOtp = async (mobileNo,otp) => {
         return true;
 
     } catch (e) {
-        logger.log("error", e);
+        logger.log("error",{source:"datagen-send-otp",error:e});
         return false;
     }
 }
@@ -41,7 +41,7 @@ const getBalance = async () => {
         return true
 
     } catch (e) {
-        logger.log("info",e);
+        logger.log("error",{source:"datagen-getBalance",error:e});
         return false;
     }
 }

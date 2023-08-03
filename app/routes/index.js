@@ -5,11 +5,9 @@ const router = express.Router();
 const registerRoute = require('./register.route');
 const publicRoute = require('./public.route');
 const userRoute = require('./user.route');
-const customerRoute = require('./customer.route');
-const pinePerksRoute = require('./giftcard.pineperks.route');
-const qwikcilverRoute = require('./giftcard.qwikcilver.route');
-const worldRoute = require('./world.route');
-const giftCardsRoute = require('./gift.cards.route');
+const businessUserRoute = require('./business.user.route');
+const placesNameRoute = require('./places.names.route');
+const CardsRoute = require('./cards.route');
 const ticketRoute = require('./ticket.management.route');
 
 const routesIndex = [
@@ -23,31 +21,23 @@ const routesIndex = [
     },
     {
         path:'/world',
-        route: worldRoute,
+        route: placesNameRoute,
     },
     {
         path:'/user',
         route: userRoute,
     },
     {
-        path:'/customer',
-        route: customerRoute,
+        path:'/business',
+        route: businessUserRoute,
     },
     {
         path:'/ticket',
         route: ticketRoute,
     },
     {
-        path:'/giftcards',
-        route: giftCardsRoute,
-    },
-    {
-        path:'/pineperks',
-        route: pinePerksRoute,
-    },
-    {
-        path:'/qwikcilver',
-        route: qwikcilverRoute,
+        path:'/cards',
+        route: CardsRoute,
     }
 ] 
 

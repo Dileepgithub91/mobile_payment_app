@@ -1,7 +1,7 @@
 const db = require("../models");
 
 //Create Main Model
-const userAddresses = db.user_addresses;
+const userAddresses = db.UserAddress;
 
 const addUserAddress = async (body) => {
   try {

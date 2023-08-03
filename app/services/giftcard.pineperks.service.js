@@ -1,17 +1,14 @@
 const { pinePerksValidator } = require("../validations");
 const pinePerkService = require("./pineperks.service");
 const logger = require("../logger");
-const db = require("../models");
 
-//Create Main Model
-// const KycPanDetails = db.kyc_pan_detail;
 
 const getCardSchema = async () => {
   try {
     const cardSchema = await pinePerkService.getScheme();
     return cardSchema;
   } catch (error) {
-    logger.log("info", error);
+    logger.log("error",{source:"Pine Perks Service  -- get Card schema",error});
     throw error;
   }
 };
@@ -23,7 +20,7 @@ const issueInstantDigitalCard = async (reqBody) => {
     const card = await pinePerkService.InstantDigitalCardIssue(value);
     return card;
   } catch (error) {
-    logger.log("info", error);
+    logger.log("error",{source:"Pine Perks Service  -- issue Instant Digital Card",error});
     throw error;
   }
 };
@@ -34,7 +31,7 @@ const bulkDigitalCardIssue = async (reqBody) => {
     const card = await pinePerkService.BulkDigitalIssue(value);
     return card;
   } catch (error) {
-    logger.log("info", error);
+    logger.log("error",{source:"Pine Perks Service  -- bulk Digital Card Issue",error});
     throw error;
   }
 };
@@ -46,7 +43,7 @@ const getCardOrderStatus = async (reqBody) => {
     const card = await pinePerkService.GetCardOrderStatus(value);
     return card;
   } catch (error) {
-    logger.log("info", error);
+    logger.log("error",{source:"Pine Perks Service  -- get Card Order Status",error});
     throw error;
   }
 };
@@ -56,7 +53,7 @@ const getCardBalance = async (reqBody) => {
     const card = await pinePerkService.GetCardBalance(value);
     return card;
   } catch (error) {
-    logger.log("info", error);
+    logger.log("error",{source:"Pine Perks Service  -- get Card Balance",error});
     throw error;
   }
 };
@@ -67,7 +64,7 @@ const getCardDetails = async (reqBody) => {
     const card = await pinePerkService.GetCardDetails(value);
     return card;
   } catch (error) {
-    logger.log("info", error);
+    logger.log("error",{source:"Pine Perks Service  -- get Card Deatils",error});
     throw error;
   }
 };
@@ -78,7 +75,7 @@ const getCardTransectionHistory = async (reqBody) => {
     const card = await pinePerkService.GetCardTransectionHistory(value);
     return card;
   } catch (error) {
-    logger.log("info", error); 
+    logger.log("error",{source:"Pine Perks Service  -- get Card Deatils",error});
     throw error;
   }
 };
@@ -89,7 +86,7 @@ const updateCardTransectionLimit = async (reqBody) => {
     const card = await pinePerkService.UpdateCardTransectionLimit(value);
     return card;
   } catch (error) {
-    logger.log("info", error);
+    logger.log("error",{source:"Pine Perks Service  -- update Card Transection Limit",error});
     throw error;
   }
 };
@@ -101,7 +98,7 @@ const updateCustomerCardStatus = async (reqBody) => {
     const card = await pinePerkService.UpdateCustomerCardStatus(value);
     return card;
   } catch (error) {
-    logger.log("info", error);
+    logger.log("error",{source:"Pine Perks Service  -- update Customer Card Status",error});
     throw error;
   }
 };
@@ -115,7 +112,7 @@ const updateCustomerCardStatusByAdmin = async (reqBody) => {
     );
     return card;
   } catch (error) {
-    logger.log("info", error);
+    logger.log("error",{source:"Pine Perks Service  -- update Customer Card Status by admin",error});
     throw error;
   }
 };

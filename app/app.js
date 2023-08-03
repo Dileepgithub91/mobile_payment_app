@@ -23,7 +23,7 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-app.use("/api/",route);
+app.use("/api/v1/",route);
 
 app.get("/api/v1/profile", passport.authenticate('jwt', { session: false }), function(req, res) {
   res.send('Hello World!');

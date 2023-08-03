@@ -1,7 +1,7 @@
 const db = require("../models");
 
 //Create Main Model
-const userRoles = db.user_roles;
+const userRoles = db.UserRoles;
 
 const addUserRoles = async (body) => {
   try {

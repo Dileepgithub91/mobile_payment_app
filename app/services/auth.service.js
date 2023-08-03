@@ -2,7 +2,7 @@ const moment = require("moment");
 const db = require("../models");
 
 //Create Main Model
-const otp_verification = db.otp_verification;
+const OtpVerification = db.OtpVerification;
 
 // validate otp before generation
 const validateOtpExpireBeforeGeneration = async (registeredUser) => {
@@ -23,7 +23,7 @@ const validateOtpExpireBeforeGeneration = async (registeredUser) => {
   if (retriesValue < 3 ) {
     retriesValue = retriesValue + 1;
   } else {
-    await otp_verification.update(
+    await OtpVerification.update(
       {
         resend_tries: 0,
         blocked_untill: new Date().toISOString()
@@ -52,14 +52,14 @@ const addRegistrationUser = async ({ mobileNo ,verificationType}) => {
   try {
     let passotp;
     let registeredUser;
-    let findRegisteredUser = await otp_verification.findAll({
+    let findRegisteredUser = await OtpVerification.findAll({
       where: {
         mobile_no: mobileNo,verification_type:verificationType
       },
     });
     if (findRegisteredUser.length == 0) {
       passotp = Math.floor(100000 + Math.random() * 900000);
-      let SavedRegisteredUser = await otp_verification.create({
+      let SavedRegisteredUser = await OtpVerification.create({
         mobile_no: mobileNo,
         otp: passotp,
         verification_type:verificationType
@@ -69,7 +69,7 @@ const addRegistrationUser = async ({ mobileNo ,verificationType}) => {
     }
     registeredUser = findRegisteredUser ? findRegisteredUser[0].dataValues : "";
     passotp = await validateOtpExpireBeforeGeneration(registeredUser);
-    await otp_verification.update(
+    await OtpVerification.update(
       {
         otp: passotp.otp,
         resend_tries: passotp.retriesValue,
@@ -83,27 +83,30 @@ const addRegistrationUser = async ({ mobileNo ,verificationType}) => {
     );
     return registeredUser;
   } catch (error) {
+    logger.log("error",{source:"auth Service -- add registration user",error});
     throw error;
   }
 };
 const findRegistrationUser = async (query) => {
   try {
-    const user = await otp_verification.findAll({
+    const user = await OtpVerification.findAll({
       where: query,
     });
     return user[0];
   } catch (error) {
+    logger.log("error",{source:"auth Service -- find registration user",error});
     throw error;
   }
 };
 
 const updateRegistrationUser = async (updateBody, query) => {
   try {
-    const user = await otp_verification.update(updateBody, {
+    const user = await OtpVerification.update(updateBody, {
       where: query,
     });
     return user[0];
   } catch (error) {
+    logger.log("error",{source:"auth Service -- update registration user",error});
     throw error;
   }
 };

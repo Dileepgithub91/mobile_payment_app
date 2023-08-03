@@ -1,26 +1,26 @@
 const db = require("../models");
 
 //Create Main Model
-const businessCustomer = db.business_customer;
-const businessAgreement=db.business_agreement;
-const CompanyUploadedDocs = db.company_agreement_uploaded_document;
+const BusinessRequest = db.BusinessRequest;
+const BusinessAgreement=db.BusinessAgreement;
+const CompanyUploadedAgreement = db.UploadedBusinessAgreement;
 
-const addBusinessCustomerRequest = async (body) => {
+const addBusinessUserRequest = async (body) => {
   try {
     let customer;
     const mobileNO =body.mobile_no;
-    let findCustomer = await businessCustomer.findAll({
+    let findCustomer = await BusinessRequest.findAll({
       where: {
         mobile_no: mobileNO,
       },
     });
     if(findCustomer.length==0){
-      let savedCustomer = await businessCustomer.create(body);
+      let savedCustomer = await BusinessRequest.create(body);
       customer =savedCustomer.dataValues;
     }else{
       customer=findCustomer[0].dataValues;
       delete body.mobile_no;
-       await businessCustomer.update(body,{
+       await BusinessRequest.update(body,{
         where: {
           mobile_no: mobileNO,
         },
@@ -29,33 +29,36 @@ const addBusinessCustomerRequest = async (body) => {
     
     return customer;
   } catch (error) {
+    logger.log("error",{source:"Business User Service  -- add business user request",error});
     throw error;
   }
 };
 
 ///Get Business Request
-const getBusinessCustomerRequest= async (mobileNo) => {
+const getBusinessUserRequest= async (mobileNo) => {
   try {
-    const customer = await businessCustomer.findAll({
+    const customer = await BusinessRequest.findAll({
       where: {
         mobile_no: mobileNo,
       },
     });
     return customer[0].dataValues;
   } catch (error) {
+    logger.log("error",{source:"Business User Service  -- get business user request",error});
     throw new Error("Business Request Not Found!");
   }
 };
 ////get business agreement list
 const getBusinessAgreement= async (CompanyType) => {
   try {
-    const agreement = await businessAgreement.findAll({
+    const agreement = await BusinessAgreement.findAll({
       where: {
         company_type: CompanyType,
       },
     });
     return agreement;
   } catch (error) {
+    logger.log("error",{source:"Business User Service  -- get business aggrement list",error});
     throw error;
   }
 };
@@ -63,28 +66,30 @@ const getBusinessAgreement= async (CompanyType) => {
 //////Upload Business Agreement
 const uploadBusinessAgreementDocument = async (body) => {
   try {
-    const notes = await CompanyUploadedDocs.create(body);
-    return notes;
+    const agreement = await CompanyUploadedAgreement.create(body);
+    return agreement;
   } catch (error) {
+    logger.log("error",{source:"Business User Service  -- Upload business aggrement",error});
     throw error;
   }
 };
 const getUploadedBusinessAgreementDocument= async (user_id) => {
   try {
-    const notes = await CompanyUploadedDocs.findAll({
+    const agreement = await CompanyUploadedAgreement.findAll({
       where: {
         user_id: user_id,
       },
     });
-    return notes;
+    return agreement;
   } catch (error) {
-    throw new Error("Business Agreement Document Not Found!");
+    logger.log("error",{source:"Business User Service  -- get Uploaded business aggrement",error});
+    throw error;
   }
 };
 
 module.exports = {
-  addBusinessCustomerRequest,
-  getBusinessCustomerRequest,
+  addBusinessUserRequest,
+  getBusinessUserRequest,
   getBusinessAgreement,
   uploadBusinessAgreementDocument,
   getUploadedBusinessAgreementDocument

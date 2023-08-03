@@ -13,7 +13,7 @@ const SavePanVerificationData = async (bodyData) => {
     const panData = await KycPanDetails.create(bodyData);
     return panData;
   } catch (error) {
-    logger.log("info", error);
+    logger.log("error",{source:"Kyc Services  -- SavePanVerificationData",error});
     throw error;
   }
 };
@@ -26,7 +26,7 @@ const getPanVerificationData = async (userId) => {
     });
     return panData[0].dataValues;
   } catch (error) {
-    logger.log("info", error);
+    logger.log("error",{source:"Kyc Services  -- get Pan Verification Data",error});
     throw error;
   }
 };
@@ -37,7 +37,7 @@ const SaveAadharVerificationData = async (bodyData) => {
     const aadharData = await KycAadharDetails.create(bodyData);
     return aadharData;
   } catch (error) {
-    logger.log("info", error);
+    logger.log("error",{source:"Kyc Services  -- Save Aadhar Verification Data",error});
     throw error;
   }
 };
@@ -50,7 +50,7 @@ const getAadharVerificationData = async (userId) => {
     });
     return aadharData[0].dataValues;
   } catch (error) {
-    logger.log("info", error);
+    logger.log("error",{source:"Kyc Services  -- get Aadhar Verification Data",error});
     throw error;
   }
 };
@@ -61,7 +61,7 @@ const SaveGSTVerificationData = async (bodyData) => {
     const gstData = await KycGstDetails.create(bodyData);
     return gstData;
   } catch (error) {
-    logger.log("info", error);
+    logger.log("error",{source:"Kyc Services  -- Save GST Verification Data",error});
     throw error;
   }
 };
@@ -74,7 +74,7 @@ const getGSTVerificationData = async (userId) => {
     });
     return gstData[0].dataValues;
   } catch (error) {
-    logger.log("info", error);
+    logger.log("error",{source:"Kyc Services  -- get GST Verification Data",error});
     throw error;
   }
 };
@@ -88,7 +88,7 @@ const verifyPan = async (pan) => {
     }
     return panData;
   } catch (error) {
-    logger.log("info", error);
+    logger.log("error",{source:"Kyc Services  -- verify pan",error});
     throw error;
   }
 };
@@ -103,7 +103,7 @@ const generateAadharOtp = async (aadhar) => {
     }
     return response;
   } catch (error) {
-    logger.log("info", error);
+    logger.log("error",{source:"Kyc Services  -- aadhar otp",error});
     throw error;
   }
 };
@@ -115,7 +115,7 @@ const VerifyAadharOtp = async (ClientId, Otp) => {
     }
     return response;
   } catch (error) {
-    logger.log("info", error);
+    logger.log("error",{source:"Kyc Services  -- aadhar otp verify",error});
     throw error;
   }
 };
@@ -129,7 +129,7 @@ const verifyGst = async (gstNo) => {
     }
     return response;
   } catch (error) {
-    logger.log("info", error);
+    logger.log("error",{source:"Kyc Services  -- verify gst",error});
     throw error;
   }
 };

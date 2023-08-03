@@ -11,10 +11,10 @@ module.exports = {
     rolesServices: require('./user.role.service'),
     ticketManagementServices: require('./ticket.management.service'),
     userServices: require('./users.service'),
-    giftCardServices: require('./gift.cards.service'),
+    cardServices: require('./card.service'),
     userProfileServices: require('./user.profile.service'),
     userAddressServices: require('./user.addresses.service'),
     userKycDetailsServices: require('./user.kyc.details.service'),
     userTokenServices: require('./user.token.service'),
-    businessCustomerServices: require('./business.customer.services')
+    businessUserServices: require('./business.user.services')
 }

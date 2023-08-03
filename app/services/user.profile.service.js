@@ -1,7 +1,7 @@
 const db = require("../models");
 
 //Create Main Model
-const userProfile = db.user_profile;
+const userProfile = db.UserProfile;
 
 const addUserProfile = async (body) => {
   try {

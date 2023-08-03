@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const giftCardProducts = sequelize.define("giftcard_products", {
+  const giftCardProducts = sequelize.define("products", {
     provider_code: {
       type: DataTypes.STRING,
       allowNull: false,

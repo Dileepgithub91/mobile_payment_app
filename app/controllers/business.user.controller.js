@@ -5,7 +5,7 @@ const {
 const { response } = require("../helpers");
 const logger = require("../logger");
 const {
-  businessCustomerServices,
+  businessUserServices,
   authServices,
   userAddressServices,
   userServices,
@@ -16,7 +16,7 @@ const {
 } = require("../services");
 
 ///Business request authrisation starts here
-const addNewBusinessCustomerRequest = async (req, res, next) => {
+const addBusinessUserRequest = async (req, res, next) => {
   try {
     const bodyData = req.body;
     //validator
@@ -25,7 +25,7 @@ const addNewBusinessCustomerRequest = async (req, res, next) => {
         bodyData
       );
     ///update user
-    const customer = await businessCustomerServices.addBusinessCustomerRequest({
+    const customer = await businessUserServices.addBusinessCustomerRequest({
       first_name: value.firstName,
       last_name: value.lastName,
       mobile_no: value.mobileNo,
@@ -55,7 +55,7 @@ const addNewBusinessCustomerRequest = async (req, res, next) => {
     response.generalError(res, error.message);
   }
 };
-const resendBusinessCustomerRequestOtp = async (req, res, next) => {
+const resendBusinessUserRequestOtp = async (req, res, next) => {
   try {
     const { mobileNo } = req.body;
     ///validate input
@@ -64,7 +64,7 @@ const resendBusinessCustomerRequestOtp = async (req, res, next) => {
         mobileNo: mobileNo
       });
     //verify otp
-    const businessRequset= await businessCustomerServices.getBusinessCustomerRequest(mobileNo);
+    const businessRequset= await businessUserServices.getBusinessCustomerRequest(mobileNo);
 
     if(!businessRequset){
       logger.log("info", "Business Request not found!");
@@ -86,7 +86,7 @@ const resendBusinessCustomerRequestOtp = async (req, res, next) => {
    
     response.success(
       res,
-      "Business Customer Service Request otp resent!",
+      "Business Request otp resent!",
       registeredUser
     );
   } catch (error) {
@@ -95,7 +95,7 @@ const resendBusinessCustomerRequestOtp = async (req, res, next) => {
     response.generalError(res, error.message);
   }
 };
-const verifyBusinessCustomerRequest = async (req, res, next) => {
+const verifyBusinessUserRequest = async (req, res, next) => {
   try {
     const { mobileNo, otp } = req.body;
     ///validate input
@@ -127,7 +127,7 @@ const verifyBusinessCustomerRequest = async (req, res, next) => {
     return false;
   }
     ///update business request
-    const customer = await businessCustomerServices.addBusinessCustomerRequest({
+    const customer = await businessUserServices.addBusinessCustomerRequest({
       mobile_no: value.mobileNo,
       status: "Verified",
     });
@@ -150,7 +150,7 @@ const verifyBusinessCustomerRequest = async (req, res, next) => {
 };
 ///request autherisation ends here
 // save business customer user profile
-const saveBusinessCustomerprofile = async (req, res, next) => {
+const saveBusinessUserProfile = async (req, res, next) => {
   try {
     const bodyData = req.body;
     const UserID = req.user.user_id;
@@ -193,17 +193,17 @@ const saveBusinessCustomerprofile = async (req, res, next) => {
     });
     // get business request data
     const businessRequestData =
-      await businessCustomerServices.getBusinessCustomerRequest(
+      await businessUserServices.getBusinessCustomerRequest(
         req.user.mobile_no
       );
     ////Get all business agreement by company type
     const businessAgreement =
-      await businessCustomerServices.getBusinessAgreement(
+      await businessUserServices.getBusinessAgreement(
         businessRequestData.company_type
       );
     ///Update Comapny agreement document
     businessAgreement.forEach((aggrement) => {
-      businessCustomerServices.uploadBusinessAgreementDocument({
+      businessUserServices.uploadBusinessAgreementDocument({
         user_id: UserID,
         agreement_document_id: aggrement.id,
         uploaded_agreement_document: null,
@@ -222,7 +222,7 @@ const saveBusinessCustomerprofile = async (req, res, next) => {
   }
 };
 // save business customer shop profile
-const saveBusinessCustomerShopDetails = async (req, res, next) => {
+const saveBusinessUserShopDetails = async (req, res, next) => {
   try {
     const bodyData = req.body;
     let imageUrl = "";
@@ -265,7 +265,7 @@ const saveBusinessCustomerShopDetails = async (req, res, next) => {
   }
 };
 // get business customer user profile
-const getBusinessCustomerProfile = async (req, res, next) => {
+const getBusinessUserProfile = async (req, res, next) => {
   try {
     const customer = await userProfileServices.getUserProfilebyUserID(
       req.user.user_id
@@ -279,7 +279,7 @@ const getBusinessCustomerProfile = async (req, res, next) => {
 };
 
 //Skip Business Customer Kyc
-const skipBusinessCustomerKyc = async (req, res, next) => {
+const skipBusinessUserKyc = async (req, res, next) => {
   try {
     ///update user
     await userServices.updateUser(
@@ -352,9 +352,9 @@ const saveManualKycFile = async (req, res, next) => {
   }
 };
 // download link agreement 
-const getUserBusinessAgreement = async (req, res, next) => {
+const getBusinessUserAgreement = async (req, res, next) => {
   try {
-    const customer = await businessCustomerServices.getUploadedBusinessAgreementDocument(
+    const customer = await businessUserServices.getUploadedBusinessAgreementDocument(
       req.user.user_id
     );
     response.success(res, "Your Business Agreement Documents!", customer);
@@ -365,7 +365,7 @@ const getUserBusinessAgreement = async (req, res, next) => {
   }
 };
 //upload agreement document
-const uploadUserBusinessAgreement = async (req, res, next) => {
+const uploadBusinessUserAgreement = async (req, res, next) => {
   try {
     let uploadedAgreementDocument = "";
     const value = await businessCustomerValidator.uploadBusinessAgreement.validateAsync(
@@ -376,7 +376,7 @@ const uploadUserBusinessAgreement = async (req, res, next) => {
     if (req.files) {
       uploadedAgreementDocument = req.files.agreementDocument[0].path;
     }
-    const customer = await businessCustomerServices.uploadBusinessAgreementDocument(
+    const customer = await businessUserServices.uploadBusinessAgreementDocument(
       {
         user_id:req.user.user_id,
         agreement_document_id:value.agreementDocumentId,
@@ -394,14 +394,14 @@ const uploadUserBusinessAgreement = async (req, res, next) => {
 };
 
 module.exports = {
-  addNewBusinessCustomerRequest,
-  resendBusinessCustomerRequestOtp,
-  verifyBusinessCustomerRequest,
-  saveBusinessCustomerprofile,
-  saveBusinessCustomerShopDetails,
-  getBusinessCustomerProfile,
-  skipBusinessCustomerKyc,
+  addBusinessUserRequest,
+  resendBusinessUserRequestOtp,
+  verifyBusinessUserRequest,
+  saveBusinessUserProfile,
+  saveBusinessUserShopDetails,
+  getBusinessUserProfile,
+  skipBusinessUserKyc,
   saveManualKycFile,
-  getUserBusinessAgreement,
-  uploadUserBusinessAgreement
+  getBusinessUserAgreement,
+  uploadBusinessUserAgreement
 };

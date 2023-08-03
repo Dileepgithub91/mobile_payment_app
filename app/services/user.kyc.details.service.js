@@ -1,7 +1,7 @@
 const db = require("../models");
 
 //Create Main Model
-const userKycDetails = db.user_kyc_details;
+const userKycDetails = db.UserKycDetail;
 
 const addUserKycDetails = async (body) => {
   try {

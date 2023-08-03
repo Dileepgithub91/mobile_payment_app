@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const business_customer = sequelize.define("business_customer", {
+  const BusinessRequest = sequelize.define("business_request", {
     first_name: {
       type: DataTypes.STRING,
       allowNull: true,
@@ -75,5 +75,5 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: "notVerified",
     },
   });
-  return business_customer;
+  return BusinessRequest;
 };
