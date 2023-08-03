@@ -6,7 +6,7 @@ const env = require("../env");
 const { PINEPERKS_ENDPOINT } = require("../core/constants");
 
 //Create Main Model
-const apiProviderSetting = db.api_provider_setting;
+const apiProviderSetting = db.ApiProviderSetting;
 
 //generate token
 const generateHeaders = async () => {

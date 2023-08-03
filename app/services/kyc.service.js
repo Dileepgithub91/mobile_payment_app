@@ -3,9 +3,9 @@ const logger = require("../logger");
 const db = require("../models");
 
 //Create Main Model
-const KycPanDetails = db.kyc_pan_detail;
-const KycAadharDetails = db.kyc_pan_detail;
-const KycGstDetails = db.kyc_gst_detail;
+const KycPanDetails = db.KycPanDetail;
+const KycAadharDetails = db.KycAadharDetail;
+const KycGstDetails = db.KycGstDetail;
 
 //Save Pan verification Data
 const SavePanVerificationData = async (bodyData) => {

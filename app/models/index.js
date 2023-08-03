@@ -52,7 +52,7 @@ db.BusinessAgreement = require("./business.agreement.model")(
 db.UploadedBusinessAgreement =
   require("./company.agreement.upload.document.model")(sequelize, DataTypes);
 db.KycPanDetail = require("./kyc.pan.response.model")(sequelize, DataTypes);
-db.kycAadharDetail = require("./kyc.aadhar.response.model")(
+db.KycAadharDetail = require("./kyc.aadhar.response.model")(
   sequelize,
   DataTypes
 );
