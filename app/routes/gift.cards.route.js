@@ -5,9 +5,10 @@ const router = express.Router();
 //Auyh Middleware
 const auth = require("../middleware/auth");
 
-router.post('/create-card',   auth("readAny", "Gift"),giftCardController.addNewGiftCardProduct);
-router.post('/cards',  auth("readAny", "Gift"), giftCardController.getGiftCardProducts);
-router.post('/new-digital-card-order', giftCardController.generateNewGiftCardOrder);
+// router.post('/update-gift-card-list',   auth("readAny", "Gift"),giftCardController.updateNewGiftCardProduct);
+
+router.get('/cards',  auth("readAny", "Gift"), giftCardController.getCards);
+router.get('/card',  auth("readAny", "Gift"), giftCardController.getCardDetails);
 
 
 module.exports = router

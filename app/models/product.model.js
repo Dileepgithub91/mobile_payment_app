@@ -52,9 +52,9 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: 0,
     },
     status: {
-      type: DataTypes.TINYINT,
+      type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: 1,
+      defaultValue: "Draft",
     },
   });
   return giftCardProducts;

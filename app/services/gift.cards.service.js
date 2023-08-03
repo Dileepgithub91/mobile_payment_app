@@ -5,7 +5,7 @@ const db = require("../models");
 const giftCardProducts = db.products;
 
 //Save Pan verification Data
-const SaveGiftCardProducts = async (bodyData) => {
+const saveCard = async (bodyData) => {
   try {
     let giftCard;
     const findGiftCard = await giftCardProducts.findAll({
@@ -30,7 +30,7 @@ const SaveGiftCardProducts = async (bodyData) => {
   }
 };
 ////updte card api
-const updateGiftCardProducts = async (bodyData, card_id) => {
+const updateCard = async (bodyData, card_id) => {
   try { 
     const findGiftCard = await giftCardProducts.findAll({
       where: {
@@ -52,7 +52,7 @@ const updateGiftCardProducts = async (bodyData, card_id) => {
   }
 };
 
-const getGiftCardProducts = async ({ pageNumber, limitPerPage, query }) => {
+const getCard = async ({ pageNumber, limitPerPage, query }) => {
   try {
     const limitPage = parseInt(limitPerPage) || 10;
     const pageNo = parseInt(pageNumber) || 1;
@@ -69,9 +69,23 @@ const getGiftCardProducts = async ({ pageNumber, limitPerPage, query }) => {
     throw error;
   }
 };
+const getCardDetails = async (card_id) => {
+  try {
+    const giftCard = await giftCardProducts.findAll({
+      where: {
+        id:card_id
+      }
+    });
+    return giftCard;
+  } catch (error) {
+    logger.log("info", error);
+    throw error;
+  }
+};
 
 module.exports = {
-  SaveGiftCardProducts,
-  updateGiftCardProducts,
-  getGiftCardProducts,
+  saveCard,
+  updateCard,
+  getCard,
+  getCardDetails
 };
