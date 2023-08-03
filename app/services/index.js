@@ -8,6 +8,8 @@ module.exports = {
     worldService: require('./world.service'),
     emailService: require('./email.services'),
     authServices: require('./auth.service'),
+    rolesServices: require('./user.role.service'),
+    ticketManagementServices: require('./ticket.management.service'),
     userServices: require('./users.service'),
     giftCardServices: require('./gift.cards.service'),
     userProfileServices: require('./user.profile.service'),

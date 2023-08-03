@@ -10,6 +10,7 @@ const pinePerksRoute = require('./giftcard.pineperks.route');
 const qwikcilverRoute = require('./giftcard.qwikcilver.route');
 const worldRoute = require('./world.route');
 const giftCardsRoute = require('./gift.cards.route');
+const ticketRoute = require('./ticket.management.route');
 
 const routesIndex = [
     {
@@ -31,6 +32,10 @@ const routesIndex = [
     {
         path:'/customer',
         route: customerRoute,
+    },
+    {
+        path:'/ticket',
+        route: ticketRoute,
     },
     {
         path:'/giftcards',

@@ -5,7 +5,7 @@ const db = require("../models");
 const giftCardProducts = db.products;
 
 //Save Pan verification Data
-const SaveGiftCardProducts = async (bodyData) => {
+const saveCard = async (bodyData) => {
   try {
     let giftCard;
     const findGiftCard = await giftCardProducts.findAll({
@@ -20,16 +20,39 @@ const SaveGiftCardProducts = async (bodyData) => {
           id: giftCard.id,
         },
       });
+      return { success: true, data: giftCard };
     }
-
     giftCard = await giftCardProducts.create(bodyData);
-    return {success:true,data:giftCard};
+    return { success: true, data: giftCard };
   } catch (error) {
     logger.log("info", error);
-    return {success:false,data:error};
+    return { success: false, data: error };
   }
 };
-const getGiftCardProducts = async ({ pageNumber, limitPerPage ,query}) => {
+////updte card api
+const updateCard = async (bodyData, card_id) => {
+  try { 
+    const findGiftCard = await giftCardProducts.findAll({
+      where: {
+        name: bodyData.name,
+      },
+    });
+    if (findGiftCard.length == 0) {
+      throw new Error("Card Not Found!");
+    }
+    let giftCard= await giftCardProducts.update(bodyData, {
+      where: {
+        id: card_id,
+      },
+    });
+    return { success: true, data: giftCard };
+  } catch (error) {
+    logger.log("info", error);
+    return { success: false, data: error };
+  }
+};
+
+const getCard = async ({ pageNumber, limitPerPage, query }) => {
   try {
     const limitPage = parseInt(limitPerPage) || 10;
     const pageNo = parseInt(pageNumber) || 1;
@@ -38,7 +61,20 @@ const getGiftCardProducts = async ({ pageNumber, limitPerPage ,query}) => {
     const giftCard = await giftCardProducts.findAll({
       limit: limitPage,
       offset: offset,
-      where:query
+      where: query,
+    });
+    return giftCard;
+  } catch (error) {
+    logger.log("info", error);
+    throw error;
+  }
+};
+const getCardDetails = async (card_id) => {
+  try {
+    const giftCard = await giftCardProducts.findAll({
+      where: {
+        id:card_id
+      }
     });
     return giftCard;
   } catch (error) {
@@ -48,6 +84,8 @@ const getGiftCardProducts = async ({ pageNumber, limitPerPage ,query}) => {
 };
 
 module.exports = {
-  SaveGiftCardProducts,
-  getGiftCardProducts,
+  saveCard,
+  updateCard,
+  getCard,
+  getCardDetails
 };
