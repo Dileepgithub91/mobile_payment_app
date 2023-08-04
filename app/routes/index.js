@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 // routes
-const registerRoute = require('./register.route');
+const registrationRoute = require('./registration.route');
 const publicRoute = require('./public.route');
 const userRoute = require('./user.route');
 const businessUserRoute = require('./business.user.route');
@@ -17,7 +17,7 @@ const routesIndex = [
     },
     {
         path:'/auth',
-        route: registerRoute,
+        route: registrationRoute,
     },
     {
         path:'/world',

@@ -1,10 +1,12 @@
 const { cardValidator } = require("../validations");
+const {responseMessages,responseFlags} = require("../core/constants");
+const catchAsyncError=require('../middleware/catch.async.error');
+const ErrorHandler=require('../helpers/errorhandler');
 const { response } = require("../helpers");
 const logger = require("../logger");
 const { cardService} = require("../services");
  
-const getCards = async (req, res, next) => {
-  try {
+const getCards = catchAsyncError(async (req, res, next) => {
     const bodyData = req.query;
     let requestData;
     body.pageNumber?requestData.pageNumber=body.pageNumber:{};
@@ -14,22 +16,13 @@ const getCards = async (req, res, next) => {
     requestData.query=bodyData;
     const giftCards = await cardService.getCard(requestData);
     response.success(res, "List of Gift Cards!", giftCards);
-  } catch (error) {
-    logger.log("info", error.message);
-    response.generalError(res, error.message);
-  }
-};
-const getCardDetails = async (req, res, next) => {
-  try {
+});
+const getCardDetails = catchAsyncError(async (req, res, next) => {
     const value =
     await cardValidator.cardDetails.validateAsync(product);
     const giftCards = await cardService.getCardDetails(value.id);
     response.success(res, "List of Gift Cards!", giftCards);
-  } catch (error) {
-    logger.log("info", error.message);
-    response.generalError(res, error.message);
-  }
-};
+});
 
 module.exports = {
   getCards,
