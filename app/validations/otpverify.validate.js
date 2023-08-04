@@ -9,7 +9,7 @@ module.exports.register_otp = Joi.object({
         'string.pattern.base': 'Invalid mobile number format'
       })
   });
-module.exports.register_otp_verify = Joi.object({
+module.exports.registerOtpVerify = Joi.object({
   mobileNo: Joi.string()
       .pattern(new RegExp("^[0-9]{10,12}$"))
       .required()

@@ -98,7 +98,7 @@ const verifyBusinessUserRequest = async (req, res, next) => {
     const { mobileNo, otp } = req.body;
     ///validate input
     const value =
-      await otpVerificationValidator.register_otp_verify.validateAsync({
+      await otpVerificationValidator.registerOtpVerify.validateAsync({
         mobileNo: mobileNo,
         otp: otp,
       });

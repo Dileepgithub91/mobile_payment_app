@@ -9,7 +9,7 @@ module.exports = {
     emailService: require('./email.services'),
     authService: require('./auth.service'),
     rolesService: require('./user.role.service'),
-    ticketService: require('./ticket.service'),
+    ticketService: require('./tickets.service'),
     userService: require('./users.service'),
     cardService: require('./card.service'),
     userProfileService: require('./user.profile.service'),
