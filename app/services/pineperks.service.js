@@ -1,7 +1,7 @@
 const moment = require("moment");
 const db = require("../models");
 const { client } = require("../helpers");
-const {pinePerksErrorHandler} =require("../helpers/ErrorHandler");
+const {pinePerksErrorHandler} =require("../helpers/apierrorHandler");
 const env = require("../env");
 const { PINEPERKS_ENDPOINT } = require("../core/constants");
 
@@ -88,7 +88,6 @@ const generateHeaders = async () => {
     if (e.error == "FORBIDDEN" && e.status == "403") {
       throw new Error( "Service is not available now, try again after some time!" );
     }
-    console.log(e);
     throw new Error("An Error Occured,contact your provioder!!");
   }
 };

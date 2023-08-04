@@ -65,6 +65,7 @@ const findTicketDetails = async (id) => {
     throw error;
   }
 };
+
 const findTickets = async (query) => {
   try {
     let tickets = await Ticket.findAll({

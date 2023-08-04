@@ -1,5 +1,5 @@
 const express = require('express');
-const ticketController = require('../controllers/ticket.management.controller');
+const ticketController = require('../controllers/ticket.controller');
 const router = express.Router();
 
 const TicketUploader = require("../uploader/ticket.uploader");

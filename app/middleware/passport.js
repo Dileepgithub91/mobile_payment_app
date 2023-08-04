@@ -1,4 +1,4 @@
-const { userServices } = require("../services");
+const { userService } = require("../services");
 const { Strategy: JwtStrategy, ExtractJwt } = require("passport-jwt");
 
 const jwtOptions = {
@@ -7,7 +7,6 @@ const jwtOptions = {
 };
 
 const jwtVerify = async (payload, done) => {
-  console.log("jwt Strategy startted");
 //   console.log("payload" + payload.sub);
   try {
     // const jwtTokenFromUser =  ExtractJwt.fromAuthHeaderAsBearerToken();
@@ -15,7 +14,7 @@ const jwtVerify = async (payload, done) => {
     //if not match deny say logout from others
     //current ipaddress and device type check and match
 
-    const { user, token } = await userServices.getUserByUserId(payload.sub);
+    const { user, token } = await userService.getUserByUserId(payload.sub);
     // console.log(jwtTokenFromUser);
     // console.log(token);
     // if(token.token!==jwtTokenFromUser){

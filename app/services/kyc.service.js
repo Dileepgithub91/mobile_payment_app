@@ -96,7 +96,6 @@ const verifyPan = async (pan) => {
 ///Aadhar Verification
 const generateAadharOtp = async (aadhar) => {
   try {
-    console.log(aadhar);
     const response =await surepassService.generateAadharOtp(aadhar);
     if (!response.success) {
       throw response;

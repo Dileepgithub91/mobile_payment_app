@@ -5,6 +5,7 @@ const morgan = require('morgan')
 const passport = require('passport');
 const { jwtStrategy } = require('./middleware/passport');
 const { testOtp } = require("./controllers/test.controller");
+const errorMiddleware = require("./middleware/sysError");
 const route = require("./routes")
 const port = 3000;
 const app = express();
@@ -45,6 +46,8 @@ app.use(function(req, res, next) {
 //   res.render('error');
 // });
 
+//Middleware for Error
+app.use(errorMiddleware);
 
 app.listen(port, () => {
   console.log(`API Server listening on port ${port}`);

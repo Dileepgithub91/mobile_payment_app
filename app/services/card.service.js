@@ -22,11 +22,11 @@ const getCard = async ({ pageNumber, limitPerPage, query }) => {
     throw error;
   }
 };
-const getCardDetails = async (card_id) => {
+const getCardDetails = async (cardId) => {
   try {
     const giftCard = await Product.findAll({
       where: {
-        id:card_id
+        id:cardId
       }
     });
     return giftCard;

@@ -5,12 +5,12 @@ const {
 const { response } = require("../helpers");
 const logger = require("../logger");
 const {
-  businessUserServices,
-  authServices,
-  userAddressServices,
-  userServices,
-  userProfileServices,
-  userKycDetailsServices,
+  businessUserService,
+  authService,
+  userAddressService,
+  userService,
+  userProfileService,
+  userKycDetailsService,
   dataGenService,
   emailService
 } = require("../services");
@@ -25,7 +25,7 @@ const addBusinessUserRequest = async (req, res, next) => {
         bodyData
       );
     ///update user
-    const customer = await businessUserServices.addBusinessCustomerRequest({
+    const customer = await businessUserService.addBusinessCustomerRequest({
       first_name: value.firstName,
       last_name: value.lastName,
       mobile_no: value.mobileNo,
@@ -36,7 +36,7 @@ const addBusinessUserRequest = async (req, res, next) => {
     });
 
     //add new opt from register otp:
-    const registeredUser = await authServices.addRegistrationUser({
+    const registeredUser = await authService.addRegistrationUser({
       mobileNo: value.mobileNo,
       verificationType:"business"
     });
@@ -51,7 +51,6 @@ const addBusinessUserRequest = async (req, res, next) => {
     );
   } catch (error) {
     logger.log("info", error.message);
-    console.log(error);
     response.generalError(res, error.message);
   }
 };
@@ -64,7 +63,7 @@ const resendBusinessUserRequestOtp = async (req, res, next) => {
         mobileNo: mobileNo
       });
     //verify otp
-    const businessRequset= await businessUserServices.getBusinessCustomerRequest(mobileNo);
+    const businessRequset= await businessUserService.getBusinessCustomerRequest(mobileNo);
 
     if(!businessRequset){
       logger.log("info", "Business Request not found!");
@@ -77,7 +76,7 @@ const resendBusinessUserRequestOtp = async (req, res, next) => {
       return false;
     }
      //add new opt from register otp:
-     const registeredUser = await authServices.addRegistrationUser({
+     const registeredUser = await authService.addRegistrationUser({
       mobileNo: value.mobileNo,
       verificationType:"business"
     });
@@ -91,7 +90,6 @@ const resendBusinessUserRequestOtp = async (req, res, next) => {
     );
   } catch (error) {
     logger.log("info", error.message);
-    console.log(error);
     response.generalError(res, error.message);
   }
 };
@@ -105,7 +103,7 @@ const verifyBusinessUserRequest = async (req, res, next) => {
         otp: otp,
       });
     //verify otp
-    const regesteredUser = await authServices.findRegistrationUser({mobile_no:mobileNo,verification_type:"business"});
+    const regesteredUser = await authService.findRegistrationUser({mobile_no:mobileNo,verification_type:"business"});
     const updatedRetriesValue = parseInt(regesteredUser.no_of_retries) + 1;
     //check if the user has not exceeded otp limit i.e. 3
     if (updatedRetriesValue >= 3) {
@@ -118,7 +116,7 @@ const verifyBusinessUserRequest = async (req, res, next) => {
     }
   //check if the otp is correct
   if (regesteredUser.otp !== otp) {
-    await authServices.updateRegistrationUser(
+    await authService.updateRegistrationUser(
       { no_of_retries: updatedRetriesValue },
       {id:regesteredUser.id, verification_type:"business"}
     );
@@ -127,7 +125,7 @@ const verifyBusinessUserRequest = async (req, res, next) => {
     return false;
   }
     ///update business request
-    const customer = await businessUserServices.addBusinessCustomerRequest({
+    const customer = await businessUserService.addBusinessCustomerRequest({
       mobile_no: value.mobileNo,
       status: "Verified",
     });
@@ -144,7 +142,6 @@ const verifyBusinessUserRequest = async (req, res, next) => {
     );
   } catch (error) {
     logger.log("info", error.message);
-    console.log(error);
     response.generalError(res, error.message);
   }
 };
@@ -164,7 +161,7 @@ const saveBusinessUserProfile = async (req, res, next) => {
       imageUrl = req.file.path || "";
     }
     ///update user
-    await userServices.updateUser(
+    await userService.updateUser(
       {
         first_name: value.firstname,
         middle_name: value.middlename,
@@ -174,7 +171,7 @@ const saveBusinessUserProfile = async (req, res, next) => {
       req.user.user_id
     );
     ///create new user profile
-    await userProfileServices.addUserProfile({
+    await userProfileService.addUserProfile({
       user_id: req.user.user_id,
       avtar: value.avtar || "",
       image_url: imageUrl,
@@ -182,7 +179,7 @@ const saveBusinessUserProfile = async (req, res, next) => {
       alternate_mobile: value.alternateMobile,
     });
     ///create new user address
-    await userAddressServices.addUserAddress({
+    await userAddressService.addUserAddress({
       user_id: req.user.user_id,
       address_type: "user_address",
       address_line_1: value.addressLine1,
@@ -193,17 +190,17 @@ const saveBusinessUserProfile = async (req, res, next) => {
     });
     // get business request data
     const businessRequestData =
-      await businessUserServices.getBusinessCustomerRequest(
+      await businessUserService.getBusinessCustomerRequest(
         req.user.mobile_no
       );
     ////Get all business agreement by company type
     const businessAgreement =
-      await businessUserServices.getBusinessAgreement(
+      await businessUserService.getBusinessAgreement(
         businessRequestData.company_type
       );
     ///Update Comapny agreement document
     businessAgreement.forEach((aggrement) => {
-      businessUserServices.uploadBusinessAgreementDocument({
+      businessUserService.uploadBusinessAgreementDocument({
         user_id: UserID,
         agreement_document_id: aggrement.id,
         uploaded_agreement_document: null,
@@ -217,7 +214,6 @@ const saveBusinessUserProfile = async (req, res, next) => {
     );
   } catch (error) {
     logger.log("info", error.message);
-    console.log(error);
     response.generalError(res, error.message);
   }
 };
@@ -235,7 +231,7 @@ const saveBusinessUserShopDetails = async (req, res, next) => {
       imageUrl = req.file.path || "";
     }
     ///create new user profile
-    await userProfileServices.addUserProfile({
+    await userProfileService.addUserProfile({
       user_id: req.user.user_id,
       bussiness_name: value.businessName,
       bussiness_card: imageUrl,
@@ -246,7 +242,7 @@ const saveBusinessUserShopDetails = async (req, res, next) => {
       bussiness_alternate_mobile: value.alternateMobile,
     });
     ///create new user address
-    await userAddressServices.addUserAddress({
+    await userAddressService.addUserAddress({
       user_id: req.user.user_id,
       address_type: "business_address",
       address_line_1: value.businessAddress,
@@ -260,20 +256,18 @@ const saveBusinessUserShopDetails = async (req, res, next) => {
     );
   } catch (error) {
     logger.log("info", error.message);
-    console.log(error);
     response.generalError(res, error.message);
   }
 };
 // get business customer user profile
 const getBusinessUserProfile = async (req, res, next) => {
   try {
-    const customer = await userProfileServices.getUserProfilebyUserID(
+    const customer = await userProfileService.getUserProfilebyUserID(
       req.user.user_id
     );
     response.success(res, "Your Business Customer Profile!", customer);
   } catch (error) {
     logger.log("info", error.message);
-    console.log(error);
     response.generalError(res, error.message);
   }
 };
@@ -282,21 +276,21 @@ const getBusinessUserProfile = async (req, res, next) => {
 const skipBusinessUserKyc = async (req, res, next) => {
   try {
     ///update user
-    await userServices.updateUser(
+    await userService.updateUser(
       {
         status: "Active",
       },
       req.user.user_id
     );
     ///update user profile
-    await userProfileServices.updateUserProfilebyUserID(
+    await userProfileService.updateUserProfilebyUserID(
       {
         kyc_level: "0",
       },
       req.user.user_id
     );
     ///update User Kyc files
-    await userKycDetailsServices.addUserKycDetails({
+    await userKycDetailsService.addUserKycDetails({
       adhaar_kyc_status: "notVerified",
       pan_kyc_status: "notVerified",
       gst_kyc_status: "notVerified",
@@ -304,7 +298,6 @@ const skipBusinessUserKyc = async (req, res, next) => {
     response.success(res, "User Kyc Skiped!");
   } catch (error) {
     logger.log("info", error.message);
-    console.log(error);
     response.generalError(res, error.message);
   }
 };
@@ -330,14 +323,14 @@ const saveManualKycFile = async (req, res, next) => {
     PanImage === "" ? {} : kycLevel + 1;
     PanImage === "" ? {} : (panKycStatus = "pending");
     ///update user profile
-    await userProfileServices.updateUserProfilebyUserID(
+    await userProfileService.updateUserProfilebyUserID(
       {
         kyc_level: kycLevel,
       },
       req.user.user_id
     );
     ///update User Kyc files
-    await userKycDetailsServices.addUserKycDetails({
+    await userKycDetailsService.addUserKycDetails({
       adhaar_image_front: AadharFront,
       adhaar_image_back: AadharBack,
       pan_image: PanImage,
@@ -347,20 +340,18 @@ const saveManualKycFile = async (req, res, next) => {
     response.success(res, "User Profile Updated!");
   } catch (error) {
     logger.log("info", error.message);
-    console.log(error);
     response.generalError(res, error.message);
   }
 };
 // download link agreement 
 const getBusinessUserAgreement = async (req, res, next) => {
   try {
-    const customer = await businessUserServices.getUploadedBusinessAgreementDocument(
+    const customer = await businessUserService.getUploadedBusinessAgreementDocument(
       req.user.user_id
     );
     response.success(res, "Your Business Agreement Documents!", customer);
   } catch (error) {
     logger.log("info", error.message);
-    console.log(error);
     response.generalError(res, error.message);
   }
 };
@@ -376,7 +367,7 @@ const uploadBusinessUserAgreement = async (req, res, next) => {
     if (req.files) {
       uploadedAgreementDocument = req.files.agreementDocument[0].path;
     }
-    const customer = await businessUserServices.uploadBusinessAgreementDocument(
+    const customer = await businessUserService.uploadBusinessAgreementDocument(
       {
         user_id:req.user.user_id,
         agreement_document_id:value.agreementDocumentId,
@@ -388,7 +379,6 @@ const uploadBusinessUserAgreement = async (req, res, next) => {
     response.success(res, "Your Business Agreement Documents!", customer);
   } catch (error) {
     logger.log("info", error.message);
-    console.log(error);
     response.generalError(res, error.message);
   }
 };

@@ -102,9 +102,9 @@ const signature_genarator = (
       return "%" + c.charCodeAt(0).toString(16).toUpperCase();
     });
   };
-  console.log(
-    cryptoJS.HmacSHA512(getConcatenateBaseString(), clientSecret).toString()
-  );
+  // console.log(
+  //   cryptoJS.HmacSHA512(getConcatenateBaseString(), clientSecret).toString()
+  // );
   return cryptoJS
     .HmacSHA512(getConcatenateBaseString(), clientSecret)
     .toString();

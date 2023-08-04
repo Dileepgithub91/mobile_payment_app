@@ -73,11 +73,11 @@ const uploadBusinessAgreementDocument = async (body) => {
     throw error;
   }
 };
-const getUploadedBusinessAgreementDocument= async (user_id) => {
+const getUploadedBusinessAgreementDocument= async (userId) => {
   try {
     const agreement = await CompanyUploadedAgreement.findAll({
       where: {
-        user_id: user_id,
+        user_id: userId,
       },
     });
     return agreement;

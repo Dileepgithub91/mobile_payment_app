@@ -1,7 +1,7 @@
 const { cardValidator } = require("../validations");
 const { response } = require("../helpers");
 const logger = require("../logger");
-const { cardServices} = require("../services");
+const { cardService} = require("../services");
  
 const getCards = async (req, res, next) => {
   try {
@@ -12,11 +12,10 @@ const getCards = async (req, res, next) => {
     delete bodyData.pageNumber;
     delete bodyData.limitPerPage;
     requestData.query=bodyData;
-    const giftCards = await cardServices.getCard(requestData);
+    const giftCards = await cardService.getCard(requestData);
     response.success(res, "List of Gift Cards!", giftCards);
   } catch (error) {
     logger.log("info", error.message);
-    console.log(error);
     response.generalError(res, error.message);
   }
 };
@@ -24,11 +23,10 @@ const getCardDetails = async (req, res, next) => {
   try {
     const value =
     await cardValidator.cardDetails.validateAsync(product);
-    const giftCards = await cardServices.getCardDetails(value.id);
+    const giftCards = await cardService.getCardDetails(value.id);
     response.success(res, "List of Gift Cards!", giftCards);
   } catch (error) {
     logger.log("info", error.message);
-    console.log(error);
     response.generalError(res, error.message);
   }
 };

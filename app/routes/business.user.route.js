@@ -1,5 +1,5 @@
 const express = require("express");
-const businessUserController = require("../controllers/business.user.controller");
+const businessUserController = require("../controllers/business.users.controller");
 const router = express.Router();
 
 //Authentication middleware

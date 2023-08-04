@@ -1,6 +1,6 @@
 const moment = require("moment");
 const db = require("../../models");
-const {qwikCilverErrorHandler} =require("../../helpers/ErrorHandler");
+const {qwikCilverErrorHandler} =require("../../helpers/apierrorHandler");
 const createSignature = require("./requestSignature");
 const { client } = require("../../helpers");
 const { QWIKCILVER_ENDPOINT } = require("../../core/constants");
@@ -42,7 +42,6 @@ const generateTokens = async (data, url, getORPost) => {
     //     provider: "qwikcilver",
     //   },
     // });
-    // console.log(getToken);
     let getToken = [
       {
         dataValues: {
@@ -128,7 +127,6 @@ const generateTokens = async (data, url, getORPost) => {
         "Service is not available now, try again after some time!"
       );
     }
-    console.log(e);
     throw {
       message: new Error("An Error Occured,contact your provioder!!"),
       data: e,
@@ -277,7 +275,6 @@ const upiBeneficiaryValidation = async (
 const createAnOrderApi = async (bodyData) => {
   try {
     const url = `${QWIKCILVER_ENDPOINT}/rest/v3/orders`;
-    console.log(bodyData);
     const body = bodyData;
     const headers = await generateTokens(body, url, "POST");
     const response = await client.post(url, body, headers);

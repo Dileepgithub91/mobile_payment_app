@@ -37,7 +37,6 @@ const getBalance = async () => {
         const queryString = '?' + new URLSearchParams(smsConfig).toString();
         let url = `https://global.datagenit.com/API/checkBalance.php${queryString}`;
         const response = await client.get(url);
-        // console.log(response);
         return true
 
     } catch (e) {

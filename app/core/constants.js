@@ -5,6 +5,10 @@ module.exports.QWIKCILVER_ENDPOINT = "https://sandbox.woohoo.in";
 
 exports.responseMessages = {
   userNotFound: "User not found.",
+  passwordNotMatch: "Password does not match.",
+  otpTryExceded: "You have exceeded no of tries for otp, you can resend otp.",
+  otpInvalid: "Invalid Otp!, enter correct otp.",
+  userAlreadyExist: "User already Exists.",
   phoneAlreadyExist: "Phone Already Exists.",
   dataNotFound: "Data Not Found.",
   emailAlreadyExist: "Email Already Exists.",
