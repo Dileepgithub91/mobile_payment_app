@@ -1,4 +1,5 @@
 const ErrorHandler = require("../helpers/errorhandler");
+const logger = require("../logger");
 
 module.exports = (err, req, res, next) => {
   console.log(err);

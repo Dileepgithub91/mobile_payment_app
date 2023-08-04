@@ -4,7 +4,7 @@ const { response } = require("../helpers");
 const {responseMessages} = require("../core/constants");
 const logger = require("../logger");
 const HelperFunction = require("../helpers/functions");
-const catchAsyncError=require('../middleware/catchAsyncError');
+const catchAsyncError=require('../middleware/catch.async.error');
 const ErrorHandler=require('../helpers/errorhandler');
 const {
   authService,
@@ -31,7 +31,7 @@ const verifyRegisterOtp =  catchAsyncError(async (req, res, next) => {
     const { mobileNo, otp, deviceType, ipAddress } = req.body;
     const now = new Date().toISOString();
     ///validate input
-    const value = await Validator.register_otp_verify.validateAsync({
+    const value = await Validator.registerOtpVerify.validateAsync({
       mobileNo: mobileNo,
       otp: otp,
     });
