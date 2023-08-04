@@ -15,7 +15,7 @@ const {
 
 const getRegisterOtp = catchAsyncError(async (req, res, next) => {
     const { mobileNo } = req.body;
-    const value = await Validator.register_otp.validateAsync({
+    const value = await Validator.registerOtp.validateAsync({
       mobileNo: mobileNo,
     });
     const registeredUser = await authService.addRegistrationUser({
@@ -104,7 +104,7 @@ const verifyRegisterOtp =  catchAsyncError(async (req, res, next) => {
 
 const getResendOtp = catchAsyncError(async (req, res, next) => {
     const { mobileNo } = req.body;
-    const value = await Validator.register_otp.validateAsync({
+    const value = await Validator.registerOtp.validateAsync({
       mobileNo: mobileNo,
     });
     const user = await authService.findRegistrationUser({
@@ -129,7 +129,7 @@ const getResendOtp = catchAsyncError(async (req, res, next) => {
 const sendForgetPasswordOtp = catchAsyncError(async (req, res, next) => {
   try {
     const { mobileNo } = req.body;
-    const value = await Validator.register_otp.validateAsync({
+    const value = await Validator.registerOtp.validateAsync({
       mobileNo: mobileNo,
     });
 
@@ -156,7 +156,7 @@ const sendForgetPasswordOtp = catchAsyncError(async (req, res, next) => {
 const reSendForgetPasswordOtp = catchAsyncError(async (req, res, next) => {
   try {
     const { mobileNo } = req.body;
-    const value = await Validator.register_otp.validateAsync({
+    const value = await Validator.registerOtp.validateAsync({
       mobileNo: mobileNo,
     });
 
@@ -185,7 +185,7 @@ const verifyForgetPasswordOtp = catchAsyncError(async (req, res, next) => {
     const { mobileNo, otp } = req.body;
     const now = new Date().toISOString();
     ///validate input
-    const value = await Validator.register_otp_verify.validateAsync({
+    const value = await Validator.registerOtpVerify.validateAsync({
       mobileNo: mobileNo,
       otp: otp,
     });

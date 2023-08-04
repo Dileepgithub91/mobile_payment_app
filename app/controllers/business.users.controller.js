@@ -59,7 +59,7 @@ const resendBusinessUserRequestOtp = async (req, res, next) => {
     const { mobileNo } = req.body;
     ///validate input
     const value =
-      await otpVerificationValidator.register_otp.validateAsync({
+      await otpVerificationValidator.registerOtp.validateAsync({
         mobileNo: mobileNo
       });
     //verify otp
