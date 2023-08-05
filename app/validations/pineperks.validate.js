@@ -1,4 +1,5 @@
 const Joi = require("joi");
+
 const cardDetailSchema = Joi.object({
   recordIdentifier: Joi.string().required(),
   customerName: Joi.string().required(),

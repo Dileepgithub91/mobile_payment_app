@@ -1,3 +1,6 @@
+const {responseMessages,responseFlags} = require("../core/constants");
+const catchAsyncError=require('../middleware/catch.async.error');
+const ErrorHandler=require('../helpers/errorhandler');
 const {
   businessCustomerValidator,
   otpVerificationValidator,
@@ -16,8 +19,7 @@ const {
 } = require("../services");
 
 ///Business request authrisation starts here
-const addBusinessUserRequest = async (req, res, next) => {
-  try {
+const addBusinessUserRequest = catchAsyncError(async (req, res, next) => {
     const bodyData = req.body;
     //validator
     const value =
@@ -49,31 +51,27 @@ const addBusinessUserRequest = async (req, res, next) => {
       {...customer,...registeredUser},
       
     );
-  } catch (error) {
-    logger.log("info", error.message);
-    response.generalError(res, error.message);
-  }
-};
-const resendBusinessUserRequestOtp = async (req, res, next) => {
-  try {
+});
+
+const resendBusinessUserRequestOtp = catchAsyncError(async (req, res, next) => {
     const { mobileNo } = req.body;
     ///validate input
     const value =
-      await otpVerificationValidator.register_otp.validateAsync({
+      await otpVerificationValidator.registerOtp.validateAsync({
         mobileNo: mobileNo
       });
     //verify otp
     const businessRequset= await businessUserService.getBusinessCustomerRequest(mobileNo);
 
     if(!businessRequset){
-      logger.log("info", "Business Request not found!");
-      response.validatationError(res, "Business Request not found!");
-      return false;
+      return next(new ErrorHandler(responseMessages.businessRequestNotFound, responseFlags.notFound));
+      // response.validatationError(res, "Business Request not found!");
+      // return false;
     }
     if(businessRequset.status ==="Verified"){
-      logger.log("info", "Business Request is already verified!");
-      response.validatationError(res, "Business Request is already verified!");
-      return false;
+      return next(new ErrorHandler(responseMessages.businessRequestVerifiedError, responseFlags.failure));
+      // response.validatationError(res, "Business Request is already verified!");
+      // return false;
     }
      //add new opt from register otp:
      const registeredUser = await authService.addRegistrationUser({
@@ -88,13 +86,9 @@ const resendBusinessUserRequestOtp = async (req, res, next) => {
       "Business Request otp resent!",
       registeredUser
     );
-  } catch (error) {
-    logger.log("info", error.message);
-    response.generalError(res, error.message);
-  }
-};
-const verifyBusinessUserRequest = async (req, res, next) => {
-  try {
+});
+
+const verifyBusinessUserRequest = catchAsyncError(async (req, res, next) => {
     const { mobileNo, otp } = req.body;
     ///validate input
     const value =
@@ -107,12 +101,9 @@ const verifyBusinessUserRequest = async (req, res, next) => {
     const updatedRetriesValue = parseInt(regesteredUser.no_of_retries) + 1;
     //check if the user has not exceeded otp limit i.e. 3
     if (updatedRetriesValue >= 3) {
-      logger.log(
-        "info",
-        "You have exceeded no of tries for otp,you can resend otp"
-      );
-      response.validatationError(res, "You have exceeded no of tries for otp,you can resend otp.");
-      return false;
+      return next(new ErrorHandler(responseMessages.otpTryExceded, responseFlags.failure));
+      // response.validatationError(res, "You have exceeded no of tries for otp,you can resend otp.");
+      // return false;
     }
   //check if the otp is correct
   if (regesteredUser.otp !== otp) {
@@ -120,9 +111,9 @@ const verifyBusinessUserRequest = async (req, res, next) => {
       { no_of_retries: updatedRetriesValue },
       {id:regesteredUser.id, verification_type:"business"}
     );
-    logger.log("info", "Invalid Otp!, enter correct otp.");
-    response.validatationError(res, "Invalid Otp!, enter correct otp.");
-    return false;
+    return next(new ErrorHandler(responseMessages.otpInvalid, responseFlags.failure));
+    // response.validatationError(res, "Invalid Otp!, enter correct otp.");
+    // return false;
   }
     ///update business request
     const customer = await businessUserService.addBusinessCustomerRequest({
@@ -140,15 +131,10 @@ const verifyBusinessUserRequest = async (req, res, next) => {
       "Business Customer Service Request Submitted!",
       customer
     );
-  } catch (error) {
-    logger.log("info", error.message);
-    response.generalError(res, error.message);
-  }
-};
+});
 ///request autherisation ends here
 // save business customer user profile
-const saveBusinessUserProfile = async (req, res, next) => {
-  try {
+const saveBusinessUserProfile = catchAsyncError(async (req, res, next) => {
     const bodyData = req.body;
     const UserID = req.user.user_id;
     let imageUrl = "";
@@ -212,14 +198,9 @@ const saveBusinessUserProfile = async (req, res, next) => {
       "Your Business Customer Profile has been Updated!",
       customer
     );
-  } catch (error) {
-    logger.log("info", error.message);
-    response.generalError(res, error.message);
-  }
-};
+});
 // save business customer shop profile
 const saveBusinessUserShopDetails = async (req, res, next) => {
-  try {
     const bodyData = req.body;
     let imageUrl = "";
     //validator
@@ -254,27 +235,17 @@ const saveBusinessUserShopDetails = async (req, res, next) => {
       "Your Business Customer Shop Details has been Updated!",
       customer
     );
-  } catch (error) {
-    logger.log("info", error.message);
-    response.generalError(res, error.message);
-  }
 };
 // get business customer user profile
-const getBusinessUserProfile = async (req, res, next) => {
-  try {
+const getBusinessUserProfile = catchAsyncError(async (req, res, next) => {
     const customer = await userProfileService.getUserProfilebyUserID(
       req.user.user_id
     );
     response.success(res, "Your Business Customer Profile!", customer);
-  } catch (error) {
-    logger.log("info", error.message);
-    response.generalError(res, error.message);
-  }
-};
+});
 
 //Skip Business Customer Kyc
-const skipBusinessUserKyc = async (req, res, next) => {
-  try {
+const skipBusinessUserKyc = catchAsyncError(async (req, res, next) => {
     ///update user
     await userService.updateUser(
       {
@@ -296,15 +267,10 @@ const skipBusinessUserKyc = async (req, res, next) => {
       gst_kyc_status: "notVerified",
     });
     response.success(res, "User Kyc Skiped!");
-  } catch (error) {
-    logger.log("info", error.message);
-    response.generalError(res, error.message);
-  }
-};
+});
 
 //Save Manual Kyc
-const saveManualKycFile = async (req, res, next) => {
-  try {
+const saveManualKycFile = catchAsyncError(async (req, res, next) => {
     let AadharFront = "";
     let AadharBack = "";
     let PanImage = "";
@@ -338,26 +304,16 @@ const saveManualKycFile = async (req, res, next) => {
       pan_kyc_status: panKycStatus,
     });
     response.success(res, "User Profile Updated!");
-  } catch (error) {
-    logger.log("info", error.message);
-    response.generalError(res, error.message);
-  }
-};
+});
 // download link agreement 
-const getBusinessUserAgreement = async (req, res, next) => {
-  try {
+const getBusinessUserAgreement = catchAsyncError(async (req, res, next) => {
     const customer = await businessUserService.getUploadedBusinessAgreementDocument(
       req.user.user_id
     );
     response.success(res, "Your Business Agreement Documents!", customer);
-  } catch (error) {
-    logger.log("info", error.message);
-    response.generalError(res, error.message);
-  }
-};
+});
 //upload agreement document
-const uploadBusinessUserAgreement = async (req, res, next) => {
-  try {
+const uploadBusinessUserAgreement = catchAsyncError(async (req, res, next) => {
     let uploadedAgreementDocument = "";
     const value = await businessCustomerValidator.uploadBusinessAgreement.validateAsync(
       {
@@ -377,11 +333,7 @@ const uploadBusinessUserAgreement = async (req, res, next) => {
     );
     
     response.success(res, "Your Business Agreement Documents!", customer);
-  } catch (error) {
-    logger.log("info", error.message);
-    response.generalError(res, error.message);
-  }
-};
+});
 
 module.exports = {
   addBusinessUserRequest,

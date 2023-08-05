@@ -5,7 +5,7 @@ const morgan = require('morgan')
 const passport = require('passport');
 const { jwtStrategy } = require('./middleware/passport');
 const { testOtp } = require("./controllers/test.controller");
-const errorMiddleware = require("./middleware/sysError");
+const errorMiddleware = require("./middleware/system.error");
 const route = require("./routes")
 const port = 3000;
 const app = express();
@@ -32,9 +32,12 @@ app.get("/api/v1/profile", passport.authenticate('jwt', { session: false }), fun
 
 app.get("/test", testOtp);
 
+//Middleware for Error
+app.use(errorMiddleware);
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
+  var err = new Error('Route Not Found');
   err.status = 404;
   next(err);
 });
@@ -46,8 +49,7 @@ app.use(function(req, res, next) {
 //   res.render('error');
 // });
 
-//Middleware for Error
-app.use(errorMiddleware);
+
 
 app.listen(port, () => {
   console.log(`API Server listening on port ${port}`);

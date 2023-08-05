@@ -1,7 +1,7 @@
 
 const Joi = require("joi");
 
-module.exports.register_otp = Joi.object({
+module.exports.registerOtp = Joi.object({
   mobileNo: Joi.string()
       .pattern(new RegExp("^[0-9]{10,12}$"))
       .required()
