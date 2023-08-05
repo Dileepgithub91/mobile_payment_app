@@ -28,6 +28,7 @@ const updateNewGiftCardProduct = async (req, res, next) => {
     worker.on('UpdateExternalApi', (result) => {
       response.success(res,"Operation successfull!!",result);
     });
+    console.log(products.data.products.length);
     // Send a message to the worker thread
     worker.postMessage({ action: 'saveCard', qwikCilver: products.data.products });
   }else{
