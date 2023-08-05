@@ -1,9 +1,11 @@
 const { cardService} = require("../services");
 
 const QwikCilverWorker= async(data)=>{
+    console.log(data[0]);
     let resError=[];
     let resSuccess=[];
     await data.forEach(async (product) => {
+
         ///update user
         const card = await cardService.saveCard({
           provider_code: product.sku,
@@ -16,12 +18,14 @@ const QwikCilverWorker= async(data)=>{
           max_price: product.maxPrice,
           image: product.images.thumbnail,
         });
+        console.log(card);
         if (!card.success) {
           responcesError.push(card.data);
         } else {
           responcesSuccess.push(card.data);
         }
       });
+      console.log( resError,resSuccess);
     return {message:"Operation Completed!",resError,resSuccess}
 }
 

@@ -1,5 +1,5 @@
 const { Worker, isMainThread, parentPort } = require('worker_threads');
-const cardWorker =require("../workers/product.worker")
+const {QwikCilverWorker} =require("../workers/product.worker")
 const { cardValidator } = require("../validations");
 const {responseMessages,responseFlags} = require("../core/constants");
 const catchAsyncError=require('../middleware/catch.async.error');
@@ -34,7 +34,7 @@ const updateNewGiftCardProduct = async (req, res, next) => {
     // Worker thread code: Perform the actual computation
     parentPort.on('UpdateExternalApi', async(message) => {
       if (message.action === 'saveCard') {
-        let qwikCilverRes = await cardWorker.QwikCilverWorker(message.qwikCilver);
+        let qwikCilverRes = await QwikCilverWorker(message.qwikCilver);
         parentPort.postMessage(qwikCilverRes);
       }
     });
