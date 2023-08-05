@@ -6,4 +6,5 @@ module.exports = {
     qwikCilverValidator: require('./qwikcilver.validate'),
     giftCardValidator: require('./giftcard.validate'),
     ticketValidator: require('./ticket.validate'),
+    cardValidator: require('./card.validate'),
 }
