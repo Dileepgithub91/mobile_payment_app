@@ -3,7 +3,7 @@ const cardWorker =require("../workers/product.worker")
 const { cardValidator } = require("../validations");
 const {responseMessages,responseFlags} = require("../core/constants");
 const catchAsyncError=require('../middleware/catch.async.error');
-const ErrorHandler=require('../helpers/errorhandler');
+const ErrorHandler=require('../helpers/error.handler');
 const { response } = require("../helpers");
 const logger = require("../logger");
 const { cardService,qwikCilverService,pinePerkService} = require("../services");
@@ -20,11 +20,6 @@ const updateNewGiftCardProduct = async (req, res, next) => {
     if (products.data.products.length == 0) {
       responcesError.push("no Product Found!");
     }
-    // ////pine perks cards
-    // const pineCards = await pinePerkService.getCardSchema();
-    // if (pineCards.data.responseCode != 0) {
-    //   responcesError.push(pineCards);
-    // }
 
     // Create a new worker thread
     const worker = new Worker(__filename);
@@ -39,9 +34,7 @@ const updateNewGiftCardProduct = async (req, res, next) => {
     // Worker thread code: Perform the actual computation
     parentPort.on('UpdateExternalApi', async(message) => {
       if (message.action === 'saveCard') {
-        // const result=[] ;
         let qwikCilverRes = await cardWorker.QwikCilverWorker(message.qwikCilver);
-          //  result.push(qwikCilverRes);
         parentPort.postMessage(qwikCilverRes);
       }
     });

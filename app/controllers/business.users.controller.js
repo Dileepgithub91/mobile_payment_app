@@ -1,6 +1,6 @@
 const {responseMessages,responseFlags} = require("../core/constants");
 const catchAsyncError=require('../middleware/catch.async.error');
-const ErrorHandler=require('../helpers/errorhandler');
+const ErrorHandler=require('../helpers/error.handler');
 const {
   businessCustomerValidator,
   otpVerificationValidator,

@@ -1,7 +1,7 @@
 const moment = require("moment");
 const db = require("../models");
 const { client } = require("../helpers");
-const {pinePerksErrorHandler} =require("../helpers/apierrorHandler");
+const {pinePerksErrorHandler} =require("../helpers/apierror.handler");
 const env = require("../env");
 const { PINEPERKS_ENDPOINT } = require("../core/constants");
 

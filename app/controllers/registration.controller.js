@@ -5,7 +5,7 @@ const logger = require("../logger");
 const {responseMessages,responseFlags} = require("../core/constants");
 const HelperFunction = require("../helpers/functions");
 const catchAsyncError=require('../middleware/catch.async.error');
-const ErrorHandler=require('../helpers/errorhandler');
+const ErrorHandler=require('../helpers/error.handler');
 const {
   authService,
   userService,

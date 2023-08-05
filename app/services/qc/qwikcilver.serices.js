@@ -1,6 +1,6 @@
 const moment = require("moment");
 const db = require("../../models");
-const {qwikCilverErrorHandler} =require("../../helpers/apierrorHandler");
+const {qwikCilverErrorHandler} =require("../../helpers/apierror.handler");
 const createSignature = require("./requestSignature");
 const { client } = require("../../helpers");
 const { QWIKCILVER_ENDPOINT } = require("../../core/constants");
