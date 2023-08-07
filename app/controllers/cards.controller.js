@@ -10,7 +10,7 @@ const { cardService,qwikCilverService,pinePerkService} = require("../services");
  
 const getGiftCards = catchAsyncError(async (req, res, next) => {
     const bodyData = req.query;
-    let requestData;
+    let requestData={};
     bodyData.pageNumber?requestData.pageNumber=bodyData.pageNumber:{};
     bodyData.limitPerPage?requestData.limitPerPage=bodyData.limitPerPage:{};
     delete bodyData.pageNumber;
@@ -25,7 +25,7 @@ const getGiftCards = catchAsyncError(async (req, res, next) => {
 });
 const getPrePaidCards = catchAsyncError(async (req, res, next) => {
     const bodyData = req.query;
-    let requestData;
+    let requestData={};
     bodyData.pageNumber?requestData.pageNumber=bodyData.pageNumber:{};
     bodyData.limitPerPage?requestData.limitPerPage=bodyData.limitPerPage:{};
     delete bodyData.pageNumber;
