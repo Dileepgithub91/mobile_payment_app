@@ -29,6 +29,5 @@ const getCardDetails = catchAsyncError(async (req, res, next) => {
 
 module.exports = {
   getCards,
-  getCardDetails,
-  updateNewGiftCardProduct
+  getCardDetails
 };
