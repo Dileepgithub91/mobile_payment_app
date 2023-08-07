@@ -1,5 +1,10 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const env = require("../env");
+var config=  {
+  "define": {
+       "underscored": true
+     }
+ }
 const sequelize = new Sequelize(
   env("DB_NAME"),
   env("DB_USER"),
@@ -7,7 +12,8 @@ const sequelize = new Sequelize(
   {
     host: env("DB_HOST"),
     dialect: "mysql",
-  }
+  },
+  config
 );
 // const config = require('config');
 // const dir = config.get('sqlite.logFileDir');
@@ -64,6 +70,9 @@ db.Product = require("./product.model")(sequelize, DataTypes);
 db.ProductPrice = require("./product.price.model")(sequelize, DataTypes);
 db.Ticket = require("./ticket.model")(sequelize, DataTypes);
 db.TicketReply = require("./ticket.reply.model")(sequelize, DataTypes);
+db.Wallet = require("./wallets.model")(sequelize, DataTypes);
+db.Order = require("./order.model")(sequelize, DataTypes);
+db.CardOrderDetail = require("./card.order.details.model")(sequelize, DataTypes);
 
 db.sequelize.sync({ force: false }).then(() => {
   console.log("yes re-sync done!");

@@ -20,6 +20,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull: true,
     },
+    terms_and_conditions: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
     image: {
       type: DataTypes.STRING,
       allowNull: true,

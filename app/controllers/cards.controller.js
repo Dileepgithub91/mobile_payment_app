@@ -8,14 +8,33 @@ const { response } = require("../helpers");
 const logger = require("../logger");
 const { cardService,qwikCilverService,pinePerkService} = require("../services");
  
-const getCards = catchAsyncError(async (req, res, next) => {
+const getGiftCards = catchAsyncError(async (req, res, next) => {
     const bodyData = req.query;
     let requestData;
     bodyData.pageNumber?requestData.pageNumber=bodyData.pageNumber:{};
     bodyData.limitPerPage?requestData.limitPerPage=bodyData.limitPerPage:{};
     delete bodyData.pageNumber;
     delete bodyData.limitPerPage;
-    requestData.query=bodyData;
+    let giftCardQuery={
+      category_id:1,
+      sub_category_id:1
+    }
+    requestData.query={...bodyData,...giftCardQuery};
+    const giftCards = await cardService.getCard(requestData);
+    response.success(res, "List of Gift Cards!", giftCards);
+});
+const getPrePaidCards = catchAsyncError(async (req, res, next) => {
+    const bodyData = req.query;
+    let requestData;
+    bodyData.pageNumber?requestData.pageNumber=bodyData.pageNumber:{};
+    bodyData.limitPerPage?requestData.limitPerPage=bodyData.limitPerPage:{};
+    delete bodyData.pageNumber;
+    delete bodyData.limitPerPage;
+    let giftCardQuery={
+      category_id:1,
+      sub_category_id:1
+    }
+    requestData.query={...bodyData,...giftCardQuery};
     const giftCards = await cardService.getCard(requestData);
     response.success(res, "List of Gift Cards!", giftCards);
 });
@@ -28,6 +47,7 @@ const getCardDetails = catchAsyncError(async (req, res, next) => {
 
 
 module.exports = {
-  getCards,
+  getGiftCards,
+  getPrePaidCards,
   getCardDetails
 };

@@ -6,7 +6,8 @@ const router = express.Router();
 const auth = require("../middleware/auth");
 
 
-router.get('/cards',  auth("readAny", "Gift"), cardController.getCards);
+router.get('/gift-cards',  auth("readAny", "Gift"), cardController.getGiftCards);
+router.get('/pre-paid-cards',  auth("readAny", "Gift"), cardController.getPrePaidCards);
 router.get('/card',  auth("readAny", "Gift"), cardController.getCardDetails);
 
 
