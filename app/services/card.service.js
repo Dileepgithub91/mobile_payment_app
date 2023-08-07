@@ -60,6 +60,7 @@ const getCard = async ({ pageNumber, limitPerPage, query }) => {
     const pageNo = parseInt(pageNumber) || 1;
 
     const offset = (pageNo - 1) * limitPage;
+    query?query:query={};
     const giftCard = await Product.findAll({
       limit: limitPage,
       offset: offset,
