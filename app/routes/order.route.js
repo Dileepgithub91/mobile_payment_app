@@ -8,7 +8,7 @@ const auth = require("../middleware/auth");
 
 
 router.get('/',  auth("readOwn", "Order"), orderController.getOrderDetails);
-router.post('/',   auth("saveOwn", "Order"),orderController.createOrder);
+router.post('/',   auth("createOwn", "Order"),orderController.createOrder);
 
 
 
