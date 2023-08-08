@@ -12,7 +12,8 @@ let grantsObject = {
     admin:{
         // test:allRights,
         profile: allRights,
-        Gift:allRights
+        Gift:allRights,
+        Order:allRights
     },
     user:{
         profile:{
@@ -21,6 +22,11 @@ let grantsObject = {
         },
         Gift:{
             'read:any':['*'],
+        },
+        Order:{
+            'read:own':['*'],
+            'update:own':['*'],
+            'create:own':['*'],
         }
     }
 }

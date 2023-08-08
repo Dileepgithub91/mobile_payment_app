@@ -9,6 +9,9 @@ const businessUserRoute = require('./business.user.route');
 const placesNameRoute = require('./places.names.route');
 const CardsRoute = require('./cards.route');
 const ticketsRoute = require('./tickets.route');
+const orderRoute = require('./order.route');
+const walletRoute = require('./wallet.routes');
+const providerRoute = require('./provider.route');
 
 const routesIndex = [
     {
@@ -38,6 +41,18 @@ const routesIndex = [
     {
         path:'/cards',
         route: CardsRoute,
+    },
+    {
+        path:'/wallet',
+        route: walletRoute,
+    },
+    {
+        path:'/orders',
+        route: orderRoute,
+    },
+    {
+        path:'/providers',
+        route: providerRoute,
     }
 ] 
 

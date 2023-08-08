@@ -73,7 +73,7 @@ const getCard = async ({ pageNumber, limitPerPage, query }) => {
 };
 const getCardDetails = async (cardId) => {
   try {
-    const giftCard = await Product.findAll({
+    const giftCard = await Product.findOne({
       where: {
         id: cardId,
       },

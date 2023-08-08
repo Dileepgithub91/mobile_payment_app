@@ -7,4 +7,6 @@ module.exports = {
     giftCardValidator: require('./giftcard.validate'),
     ticketValidator: require('./ticket.validate'),
     cardValidator: require('./card.validate'),
+    orderValidator: require('./order.validate'),
+    walletValidator: require('./wallet.validate'),
 }

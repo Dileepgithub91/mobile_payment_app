@@ -16,5 +16,10 @@ module.exports = {
     userAddressService: require('./user.addresses.service'),
     userKycDetailsService: require('./user.kyc.details.service'),
     userTokenService: require('./user.token.service'),
-    businessUserService: require('./business.user.services')
+    businessUserService: require('./business.user.services'),
+    providerServices: require('./provider.service'),
+    orderService: require('./order.service'),
+    cardOrderService: require('./card.order.detail.service'),
+    walletService: require('./wallet.service'),
+    orderRouteService: require('./order.routes.services'),
 }

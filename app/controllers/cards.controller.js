@@ -41,8 +41,8 @@ const getPrePaidCards = catchAsyncError(async (req, res, next) => {
 const getCardDetails = catchAsyncError(async (req, res, next) => {
     const value =
     await cardValidator.cardDetails.validateAsync(product);
-    const giftCards = await cardService.getCardDetails(value.id);
-    response.success(res, "List of Gift Cards!", giftCards);
+    const giftCard = await cardService.getCardDetails(value.id);
+    response.success(res, "List of Gift Cards!", giftCard);
 });
 
 

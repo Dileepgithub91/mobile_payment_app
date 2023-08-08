@@ -70,9 +70,11 @@ db.Product = require("./product.model")(sequelize, DataTypes);
 db.ProductPrice = require("./product.price.model")(sequelize, DataTypes);
 db.Ticket = require("./ticket.model")(sequelize, DataTypes);
 db.TicketReply = require("./ticket.reply.model")(sequelize, DataTypes);
+db.Provider = require("./provider.model")(sequelize, DataTypes);
 db.Wallet = require("./wallets.model")(sequelize, DataTypes);
 db.Order = require("./order.model")(sequelize, DataTypes);
 db.CardOrderDetail = require("./card.order.details.model")(sequelize, DataTypes);
+db.PurchasedCard = require("./purchased.cards.model")(sequelize, DataTypes);
 
 db.sequelize.sync({ force: false }).then(() => {
   console.log("yes re-sync done!");

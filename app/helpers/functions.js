@@ -17,3 +17,7 @@ exports.generateStrongPassword=async(length)=> {
   }
   return password;
 }
+
+exports.generateSixDigitRandomNumber=async()=> {
+  return  Math.floor(100000 + Math.random() * 900000);
+}
