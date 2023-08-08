@@ -16,7 +16,8 @@ const checkProductAvailabilityAndPorviders = async (productId) => {
     let providers = await providerService.getProviderDetails(
       product.provider_code
     );
-    return {provider:providers.name,images:product.image};
+    console.log(providers);
+    return {provider:providers.dataValue.name,images:product.image};
   } catch (err) {
     console.log(err);
     throw err;
