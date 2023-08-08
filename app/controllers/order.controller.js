@@ -13,7 +13,7 @@ const {
 } = require("../services");
 
 // save order
-const saveOrder = catchAsyncError(async (req, res, next) => {
+const createOrder = catchAsyncError(async (req, res, next) => {
   //@todo validate quantitiy
   //@todo routing to check availability of product
   let extOrderRes = {};
@@ -119,6 +119,7 @@ const saveOrder = catchAsyncError(async (req, res, next) => {
     image: provider.images,
     send_as_gift:  value.send_as_gift
   });
+  console.log(extOrderRes);
 
   response.success(
     res,
@@ -172,7 +173,7 @@ const getOrderDetails = catchAsyncError(async (req, res, next) => {
 });
 
 module.exports = {
-  saveOrder,
+  createOrder,
   editOrder,
   updateOrderStatus,
   getOrders,
