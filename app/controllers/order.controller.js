@@ -20,12 +20,13 @@ const createOrder = catchAsyncError(async (req, res, next) => {
   //validator
   const value = await orderValidator.saveOrder.validateAsync(req.body);
   //save user_id via authentication
-  value.user_id = req.user.user_id || "4530";
+  value.user_id = req.user.user_id;
   value.sell_amount = value.quantity * value.amount;
   /////check availabilty of products and return provider
   const provider = await orderRouteService.checkProductAvailabilityAndPorviders(
     value.product_id
   );
+  console.log(provider);
   ///save order in order table 
   const order = await orderService.saveOrder({
     user_id: value.user_id,
@@ -34,11 +35,13 @@ const createOrder = catchAsyncError(async (req, res, next) => {
     amount: value.amount,
     sell_amount:value.sell_amount,
   });
+
   //Directing flow according to providers
   if (provider.provider == "qwickcilver") {
+    console.log("qwikcilver hit")
     extOrderRes = await qwikCilverService.createAnOrderApi({
       address: {
-        salutation: "Mr.",
+        salutation: "Mr./Ms.",
         firstname: "Jhon",
         lastname: "Deo",
         email: "jhon.deo@gmail.com",
@@ -73,9 +76,11 @@ const createOrder = catchAsyncError(async (req, res, next) => {
       syncOnly: false,
       deliveryMode: "API",
     });
+    console.log(extOrderRes);
   }
 
   if (provider.provider == "pineperk") {
+    console.log("pineperk hit")
     if (value.quantity != 1) {
       let qty = value.quantity;
       let customerList = [];
@@ -123,6 +128,8 @@ const createOrder = catchAsyncError(async (req, res, next) => {
     image: provider.images,
     send_as_gift:  value.send_as_gift
   });
+  // wallet se payment karo
+
   console.log(extOrderRes);
 
   response.success(
