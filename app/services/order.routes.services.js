@@ -18,7 +18,7 @@ const checkProductAvailabilityAndPorviders = async (productId) => {
       product.provider_code
     );
     console.log(providers);
-    return {provider:providers.name,images:product.image,product_code:product.provider_code};
+    return {provider:providers.name,images:product.image,product_code:product.product_code};
   } catch (err) {
     console.log(err);
     throw err;
