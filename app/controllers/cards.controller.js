@@ -17,7 +17,8 @@ const getGiftCards = catchAsyncError(async (req, res, next) => {
     delete bodyData.limitPerPage;
     let giftCardQuery={
       category_id:1,
-      sub_category_id:1
+      sub_category_id:1,
+      status:1
     }
     requestData.query={...bodyData,...giftCardQuery};
     const giftCards = await cardService.getCard(requestData);
@@ -32,7 +33,8 @@ const getPrePaidCards = catchAsyncError(async (req, res, next) => {
     delete bodyData.limitPerPage;
     let giftCardQuery={
       category_id:1,
-      sub_category_id:2
+      sub_category_id:2,
+      status:1
     }
     requestData.query={...bodyData,...giftCardQuery};
     const giftCards = await cardService.getCard(requestData);
