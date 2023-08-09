@@ -34,11 +34,9 @@ const generateCardListForPinePerks = async (value) => {
     return new Promise((resolve) => {
       let qty = parseInt(value.quantity);
       let customerList = [];
+
       console.log(qty);
-      let i = 0;
-      while (qty == 0) {
-        console.log("loops");
-        i++;
+      for (let i = 0; i < qty; i++) {
         let customerData = {
           recordIdentifier: "Row" + i,
           customerName: value.customer_name,
@@ -47,11 +45,10 @@ const generateCardListForPinePerks = async (value) => {
           amount: parseInt(value.amount),
           externalCardIdentifier: "abc00" + i,
         };
-        console.log(customerData);
         customerList.push(customerData);
-        qty--;
       }
       console.log(customerList);
+      console.log("Resolved");
       resolve(customerList);
     });
   } catch (err) {
