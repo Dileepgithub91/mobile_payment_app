@@ -25,9 +25,34 @@ const checkProductAvailabilityAndPorviders = async (productId) => {
   }
 };
 
-// const 
+const generateCardListForPinePerks=async(value)=>{
+  try {
+    let qty = value.quantity;
+    let customerList = [];
+    console.log(qty);
+    for (let i = 0; qty == 0; i++) {
+      let customerData = {
+        recordIdentifier: "Row" + i,
+        customerName: value.customer_name,
+        mobileNumber: parseInt(value.customer_mobile),
+        email: value.customer_email,
+        amount: parseInt(value.amount),
+        externalCardIdentifier: "abc00" + i,
+      };
+      console.log(customerData);
+      customerList.push(customerData);
+      qty--;
+    }
+    console.log(customerList);
+    return customerList;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
 
 
 module.exports = {
   checkProductAvailabilityAndPorviders,
+  generateCardListForPinePerks,
 };

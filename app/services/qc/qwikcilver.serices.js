@@ -284,6 +284,7 @@ const createAnOrderApi = async (bodyData) => {
       data: response.data,
     };
   } catch (e) {
+    console.log(e);
     const error = qwikCilverErrorHandler(e);
     throw error;
   }

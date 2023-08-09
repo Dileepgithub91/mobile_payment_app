@@ -82,23 +82,7 @@ const createOrder = catchAsyncError(async (req, res, next) => {
   if (provider.provider == "pineperks") {
     console.log("pineperks hit")
     if (value.quantity != 1) {
-      let qty = value.quantity;
-      let customerList = [];
-      console.log(qty);
-      for (let i = 0; qty == 0; i++) {
-        let customerData = {
-          recordIdentifier: "Row" + i,
-          customerName: value.customer_name,
-          mobileNumber: parseInt(value.customer_mobile),
-          email: value.customer_email,
-          amount: parseInt(value.amount),
-          externalCardIdentifier: "abc00" + i,
-        };
-        console.log(customerData);
-        customerList.push(customerData);
-        qty--;
-      }
-      console.log(customerList);
+      const customerList= await orderRouteService.generateCardListForPinePerks(value);
       extOrderRes = await pinePerkService.bulkDigitalCardIssue({
         externalRequestId: order.order_id,
         cardSchemeId:  parseInt(provider.product_code),

@@ -136,6 +136,7 @@ const InstantDigitalCardIssue = async (reqBody) => {
       data: response.data,
     };
   } catch (e) {
+    console.log(e);
     const error = pinePerksErrorHandler(e);
     throw error;
   }
@@ -177,6 +178,7 @@ const BulkDigitalIssue = async ({
       data: response.data,
     };
   } catch (e) {
+    console.log(e);
     const error = pinePerksErrorHandler(e);
     throw error;
   }
