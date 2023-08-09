@@ -19,7 +19,7 @@ module.exports.validateInstantDigital = Joi.object({
     .messages({
       "string.pattern.base": "Invalid mobile number format",
     }),
-    email: Joi.string(),
+    email: Joi.string().email(),
     amount: Joi.string(),
     externalCardIdentifier: Joi.string(),
     orderDescription: Joi.string().allow(null).allow(""),
