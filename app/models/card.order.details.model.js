@@ -1,5 +1,9 @@
 module.exports = (sequelize, DataTypes) => {
     const CardOrderDetails = sequelize.define("card_order_details", {
+       card_order_id: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
        order_id: {
         type: DataTypes.STRING,
         allowNull: false,

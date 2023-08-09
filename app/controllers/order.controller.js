@@ -17,6 +17,7 @@ const createOrder = catchAsyncError(async (req, res, next) => {
   //@todo validate quantitiy
   //@todo routing to check availability of product
   let extOrderRes = {};
+  let extCardOrderId;
   //validator
   const value = await orderValidator.saveOrder.validateAsync(req.body);
   //save user_id via authentication
@@ -76,6 +77,7 @@ const createOrder = catchAsyncError(async (req, res, next) => {
       syncOnly: false,
       deliveryMode: "API",
     });
+    extCardOrderId=extOrderRes.data.orderId;
     console.log(extOrderRes);
   }
 
@@ -101,10 +103,12 @@ const createOrder = catchAsyncError(async (req, res, next) => {
         orderDescription: null,
       });
     }
+    extCardOrderId="pine";
   }
   //Save card order details data in card order details table
   const cardOrderDetails = await cardOrderService.saveCardOrderDetail({
     order_id: order.order_id,
+    card_order_id:extCardOrderId,
     user_id: value.user_id,
     product_id: value.product_id,
     quantity: value.quantity,
