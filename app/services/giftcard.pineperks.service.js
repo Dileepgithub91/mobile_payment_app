@@ -17,7 +17,7 @@ const issueInstantDigitalCard = async (reqBody) => {
   try {
     const value =
       await pinePerksValidator.validateInstantDigital.validateAsync(reqBody);
-      value.cardSchemeId="SKODR20238915329277907";
+      value.externalRequestId="SKODR20238915329277907";
     const card = await pinePerkService.InstantDigitalCardIssue(value);
     return card;
   } catch (error) {
