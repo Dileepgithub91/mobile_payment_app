@@ -41,7 +41,7 @@ const createOrder = catchAsyncError(async (req, res, next) => {
     console.log("qwikcilver hit")
     extOrderRes = await qwikCilverService.createAnOrderApi({
       address: {
-        salutation: "Mr./Ms.",
+        salutation: "Mr.",
         firstname: "Jhon",
         lastname: "Deo",
         email: "jhon.deo@gmail.com",
