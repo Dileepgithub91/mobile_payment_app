@@ -37,6 +37,7 @@ const generateCardListForPinePerks = async (value) => {
       console.log(qty);
       let i = 0;
       while (qty == 0) {
+        console.log("loops");
         i++;
         let customerData = {
           recordIdentifier: "Row" + i,

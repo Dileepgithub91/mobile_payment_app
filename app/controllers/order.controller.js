@@ -103,7 +103,7 @@ const createOrder = catchAsyncError(async (req, res, next) => {
         orderDescription: null,
       });
     }
-    extCardOrderId="pine";
+    extCardOrderId=extOrderRes.data.orderId;
   }
   //Save card order details data in card order details table
   const cardOrderDetails = await cardOrderService.saveCardOrderDetail({
