@@ -9,6 +9,7 @@ const checkProductAvailabilityAndPorviders = async (productId) => {
    //check for providers
     //get product details and provider
     let product = await cardService.getCardDetails(productId);
+    console.log(product);
     if(!product){
         throw new Error("Product not found!");
     }
@@ -17,7 +18,7 @@ const checkProductAvailabilityAndPorviders = async (productId) => {
       product.provider_code
     );
     console.log(providers);
-    return {provider:providers.dataValue.name,images:product.image};
+    return {provider:providers.name,images:product.image};
   } catch (err) {
     console.log(err);
     throw err;

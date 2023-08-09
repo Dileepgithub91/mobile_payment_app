@@ -58,7 +58,7 @@ const createOrder = catchAsyncError(async (req, res, next) => {
       ],
       products: [
         {
-          sku: value.product_id,
+          sku: value.product_code,
           price: value.amount,
           qty: value.quantity,
           currency: 356,
@@ -89,14 +89,14 @@ const createOrder = catchAsyncError(async (req, res, next) => {
       }
       extOrderRes = await pinePerkService.bulkDigitalCardIssue({
         externalRequestId: order.order_id,
-        cardSchemeId:  parseInt(value.product_id),
+        cardSchemeId:  parseInt(value.product_code),
         cardDetailList:customerList,
         orderDescription: null,
       });
     } else {
       extOrderRes = await pinePerkService.issueInstantDigitalCard({
         externalRequestId: order.order_id,
-        cardSchemeId: value.product_id,
+        cardSchemeId: value.product_code,
         customerName: value.customer_name,
         mobileNumber: value.customer_mobile,
         email: value.customer_email,
