@@ -11,6 +11,7 @@ const saveOrder = async (bodyData) => {
     const now =new Date();
     const saveData={...bodyData};
     saveData.order_id=`SKODR${now.getFullYear()}${now.getMonth()+1}${now.getDate()}${now.getHours()}${now.getMinutes()}${now.getSeconds()}${ await HelperFunction.generateSixDigitRandomNumber()}`;
+    console.log(saveData);
     let order = await Order.create(saveData);
     return order;
   } catch (error) {
