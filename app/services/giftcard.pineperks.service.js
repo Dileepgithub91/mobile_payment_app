@@ -18,6 +18,7 @@ const issueInstantDigitalCard = async (reqBody) => {
     const value =
       await pinePerksValidator.validateInstantDigital.validateAsync(reqBody);
       delete value.mobileNumber;
+      delete value.email;
     const card = await pinePerkService.InstantDigitalCardIssue(value);
     return card;
   } catch (error) {
