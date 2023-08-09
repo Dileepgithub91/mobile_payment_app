@@ -26,12 +26,15 @@ const createOrder = catchAsyncError(async (req, res, next) => {
   const provider = await orderRouteService.checkProductAvailabilityAndPorviders(
     value.product_id
   );
-  ///save order
+  ///save order in order table 
   const order = await orderService.saveOrder({
+    user_id: value.user_id,
     product_id: value.product_id,
     quantity: value.quantity,
-    amount: value.amount
+    amount: value.amount,
+    sell_amount:value.sell_amount,
   });
+  //Directing flow according to providers
   if (provider.provider == "qwickcilver") {
     extOrderRes = await qwikCilverService.createAnOrderApi({
       address: {
@@ -106,6 +109,7 @@ const createOrder = catchAsyncError(async (req, res, next) => {
       });
     }
   }
+  //Save card order details data in card order details table
   const cardOrderDetails = await cardOrderService.saveCardOrderDetail({
     order_id: order.order_id,
     user_id: value.user_id,
