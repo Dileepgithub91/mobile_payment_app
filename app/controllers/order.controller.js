@@ -37,7 +37,7 @@ const createOrder = catchAsyncError(async (req, res, next) => {
   });
 
   //Directing flow according to providers
-  if (provider.provider == "qwickcilver") {
+  if (provider.provider == "qwikcilver") {
     console.log("qwikcilver hit")
     extOrderRes = await qwikCilverService.createAnOrderApi({
       address: {
@@ -79,8 +79,8 @@ const createOrder = catchAsyncError(async (req, res, next) => {
     console.log(extOrderRes);
   }
 
-  if (provider.provider == "pineperk") {
-    console.log("pineperk hit")
+  if (provider.provider == "pineperks") {
+    console.log("pineperks hit")
     if (value.quantity != 1) {
       let qty = value.quantity;
       let customerList = [];
