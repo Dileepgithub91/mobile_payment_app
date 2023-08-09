@@ -116,7 +116,7 @@ const createOrder = catchAsyncError(async (req, res, next) => {
     product_id: value.product_id,
     quantity: value.quantity,
     amount: value.amount,
-    total_amount: sell_amount,
+    total_amount: value.sell_amount,
     customer_name:value.customer_name,
     customer_mobile:value.customer_mobile,
     customer_email: value.customer_email,
