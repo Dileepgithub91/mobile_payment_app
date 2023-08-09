@@ -32,7 +32,7 @@ const checkProductAvailabilityAndPorviders = async (productId) => {
 const generateCardListForPinePerks = async (value) => {
   try {
     return new Promise((resolve) => {
-      let qty = value.quantity;
+      let qty = parseInt(value.quantity);
       let customerList = [];
       console.log(qty);
       let i = 0;
