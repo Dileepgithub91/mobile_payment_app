@@ -89,6 +89,7 @@ const createAnOrderApi = async (bodyData) => {
     await qwikCilverValidator.newGiftCardOrderValidator.validateAsync(
       bodyData
     );
+    console.log(`request Body : ${value}`)
     const card = await qwikCilverService.createAnOrderApi(value);
     return card;
   } catch (error) {

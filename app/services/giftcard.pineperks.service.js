@@ -17,6 +17,7 @@ const issueInstantDigitalCard = async (reqBody) => {
   try {
     const value =
       await pinePerksValidator.validateInstantDigital.validateAsync(reqBody);
+      console.log(`request Body : ${value}`)
     const card = await pinePerkService.InstantDigitalCardIssue(value);
     return card;
   } catch (error) {
@@ -28,6 +29,7 @@ const issueInstantDigitalCard = async (reqBody) => {
 const bulkDigitalCardIssue = async (reqBody) => {
   try {
     const value = await pinePerksValidator.validateBulkDigital.validateAsync(reqBody);
+    console.log(`request Body : ${value}`)
     const card = await pinePerkService.BulkDigitalIssue(value);
     return card;
   } catch (error) {
