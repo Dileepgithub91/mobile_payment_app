@@ -127,7 +127,7 @@ const createOrder = catchAsyncError(async (req, res, next) => {
   response.success(
     res,
     "Order placed successfully, delivery in progress!",
-    order
+    extOrderRes
   );
 });
 
