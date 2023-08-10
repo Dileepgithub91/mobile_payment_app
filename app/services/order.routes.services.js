@@ -1,5 +1,6 @@
 const cardService = require("./card.service");
 const providerService = require("./provider.service");
+const logger = require("../logger");
 
 const checkProductAvailabilityAndPorviders = async (productId) => {
   try {
@@ -20,7 +21,6 @@ const checkProductAvailabilityAndPorviders = async (productId) => {
     console.log(providers);
     return {
       provider: providers.name,
-      images: product.image,
       product_code: product.product_code,
     };
   } catch (err) {
@@ -57,7 +57,86 @@ const generateCardListForPinePerks = async (value) => {
   }
 };
 
+const savePurchasedCard = async (flowtype, data, value) => {
+  try {
+    if(flowtype == "qwikcilver"){
+      let purchasedCard = await cardService.savePurchasedCard({
+        order_id: data.refno,
+        user_id: value.user_id,
+        product_id: value.product_id,
+        amount: value.amount,
+        card_order_id: data.orderId,
+        reference_number: "",
+        serial_number: "",
+        customer_name: value.customer_name,
+        customer_mobile: value.customer_mobile,
+        customer_email: value.customer_email,
+        card_link:"",
+        masked_card_number: "",
+        approval_code: "",
+        external_card_identifier: "",
+        account_number: "",
+        response_message: data.status,
+        response_code:"",
+      });
+      // if(!purchasedCard){
+        
+      // }
+    }
+  if (flowtype == "pineperks") {
+    if(data.cardDetailResponseList){
+      await data.cardDetailResponseList.map(async(card)=>{
+        await cardService.savePurchasedCard({
+          order_id: data.externalRequestId,
+          user_id: value.user_id,
+          product_id: value.product_id,
+          amount: card.amount,
+          card_order_id: data.orderId,
+          reference_number: "",
+          serial_number: "",
+          customer_name: card.customerName,
+          customer_mobile: card.mobileNumber,
+          customer_email: card.email,
+          card_link: "",
+          masked_card_number: "",
+          approval_code: "",
+          external_card_identifier: card.externalCardIdentifier,
+          account_number: "",
+          response_message: card.responseCode,
+          response_code: card.responseMessage,
+        });
+      })
+    }
+    let purchasedCard = await cardService.savePurchasedCard({
+      order_id: data.externalRequestId,
+      user_id: value.user_id,
+      product_id: value.product_id,
+      amount: data.orderAmount,
+      card_order_id: data.orderId,
+      reference_number: data.referenceNumber,
+      serial_number: data.serialNumber,
+      customer_name: data.customerName,
+      customer_mobile: data.mobileNumber,
+      customer_email: data.email,
+      card_link: data.cardLink,
+      masked_card_number: data.maskedCardNumber,
+      approval_code: data.approvalCode,
+      external_card_identifier: data.externalCardIdentifier,
+      account_number: data.accountNumber,
+      response_message: data.responseCode,
+      response_code: data.responseMessage,
+    });
+  }
+  return "completed"
+  } catch (error) {
+    logger.log("error", { source: "Order Route Service  -- save purchased Card", error });
+    return false;
+  }
+  
+};
+
 module.exports = {
   checkProductAvailabilityAndPorviders,
   generateCardListForPinePerks,
+  savePurchasedCard
 };

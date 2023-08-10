@@ -6,10 +6,12 @@ const { response } = require("../helpers");
 const logger = require("../logger");
 const {
   orderService,
+  cardService,
   cardOrderService,
   orderRouteService,
   qwikCilverService,
   pinePerkService,
+  walletService
 } = require("../services");
 
 // save order
@@ -37,6 +39,23 @@ const createOrder = catchAsyncError(async (req, res, next) => {
     sell_amount:value.sell_amount,
   });
 
+  ///Deduct money from wallet and store in ledger
+  /**
+   * check wallet money
+   * if greater than sell_amount then deduct the money
+   * save the ledger
+   */
+  const wallet=await walletService.getWalletByUserId(value.user_id);
+  console.log(wallet);
+  console.log("wallet");
+  const remainBalance=parseInt(wallet.dmt_wallet)-parseInt(value.sell_amount);
+  if(remainBalance<1){
+    return next(new ErrorHandler("Wallet balance not enough!"))
+  }
+  let walletUpdateStatus= await walletService.updateWallet({dmt_wallet:remainBalance},wallet.id);
+if(walletUpdateStatus[0]===1){
+  
+}
   //Directing flow according to providers
   if (provider.provider == "qwikcilver") {
     console.log("qwikcilver hit")
@@ -79,6 +98,7 @@ const createOrder = catchAsyncError(async (req, res, next) => {
     });
     extCardOrderId=extOrderRes.data.orderId;
     console.log(extOrderRes);
+    const purchasedCard =await orderRouteService.savePurchasedCard("qwikcilver",extOrderRes,value);
   }
 
   if (provider.provider == "pineperks") {
@@ -104,6 +124,7 @@ const createOrder = catchAsyncError(async (req, res, next) => {
       });
     }
     extCardOrderId=extOrderRes.data.orderId;
+    let purchasedCard =await orderRouteService.savePurchasedCard("pineperks",extOrderRes,value);
   }
   //Save card order details data in card order details table
   const cardOrderDetails = await cardOrderService.saveCardOrderDetail({
@@ -120,7 +141,6 @@ const createOrder = catchAsyncError(async (req, res, next) => {
     image: provider.images,
     send_as_gift:  value.send_as_gift
   });
-  // wallet se payment karo
 
   console.log(extOrderRes);
 
@@ -128,6 +148,37 @@ const createOrder = catchAsyncError(async (req, res, next) => {
     res,
     "Order placed successfully, delivery in progress!",
     extOrderRes
+  );
+});
+
+const checkOrderStatus = catchAsyncError(async (req, res, next) => {
+  let extOrderStatus="no Order";
+  const value = await orderValidator.checkOrderStatus.validateAsync(req.body);
+  const orderDetail=await cardOrderService.getCardOrderByOrderId(value.order_id);
+  if(!orderDetail){
+    return next(new ErrorHandler("Order not Found!"))
+  }
+  const provider = await orderRouteService.checkProductAvailabilityAndPorviders(
+    orderDetail.product_id
+  );
+  if (provider.provider == "qwikcilver") {
+    extOrderStatus = await qwikCilverService.getOrderStatusAPi({refno:orderDetail.order_id});
+    console.log(extOrderStatus)
+    if(extOrderStatus.status != "COMPLETE"){
+      response.success(res,"Your Card Order is still in Process, try again after some time!");
+      return true;
+    }
+  }
+  if (provider.provider == "pineperks") {
+    extOrderStatus = await pinePerkService.getCardOrderStatus({requsetId:orderDetail.order_id})
+    console.log(extOrderStatus)
+    // if(extOrderStatus.status != "COMPLETE"){}
+  }
+
+  response.success(
+    res,
+    "fetched Order status!",
+    extOrderStatus
   );
 });
 
@@ -181,4 +232,5 @@ module.exports = {
   updateOrderStatus,
   getOrders,
   getOrderDetails,
+  checkOrderStatus
 };

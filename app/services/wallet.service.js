@@ -31,7 +31,7 @@ const updateWallet = async (bodyData, walletId) => {
         id: walletId,
       },
     });
-    if (findOrder.length == 0) {
+    if (findWallet.length == 0) {
       throw new Error("Wallet Not Found!");
     }
     let wallet = await Wallet.update(bodyData, {
@@ -80,9 +80,25 @@ const getWalletDetails = async (walletId) => {
   }
 };
 
+//Wallet By User Id
+const getWalletByUserId = async (userId) => {
+  try {
+    const wallet = await Wallet.findOne({
+      where: {
+        user_id: userId,
+      },
+    });
+    return wallet;
+  } catch (error) {
+    logger.log("info", error);
+    throw error;
+  }
+};
+
 module.exports = {
   saveWallet,
   updateWallet,
   getWallets,
-  getWalletDetails
+  getWalletDetails,
+  getWalletByUserId
 };

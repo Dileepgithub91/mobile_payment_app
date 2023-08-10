@@ -80,6 +80,21 @@ const getCardOrderDetail = async (cardOrderId) => {
   }
 };
 
+//Order Details
+const getCardOrderByOrderId = async (orderId) => {
+  try {
+    const cardOrder = await CardOrderDetail.findOne({
+      where: {
+        order_id: orderId,
+      },
+    });
+    return cardOrder;
+  } catch (error) {
+    logger.log("info", error);
+    throw error;
+  }
+};
+
 //Delete Order
 const deleteCardOrderDetail = async (cardOrderId) => {
   try {
@@ -103,5 +118,6 @@ module.exports = {
   updateCardOrderDetail,
   getCardOrder,
   getCardOrderDetail,
-  deleteCardOrderDetail
+  deleteCardOrderDetail,
+  getCardOrderByOrderId
 };
