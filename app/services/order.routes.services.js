@@ -127,9 +127,19 @@ const savePurchasedCard = async (flowtype, data, value) => {
       response_code: data.responseMessage,
     });
   }
-  return "completed"
+  return true;
   } catch (error) {
     logger.log("error", { source: "Order Route Service  -- save purchased Card", error });
+    return false;
+  }
+  
+};
+
+const updatePurchasedCardAndSaveActiveCard = async (flowtype, data, value) => {
+  try {
+      
+  } catch (error) {
+    logger.log("error", { source: "Order Route Service  -- update Purchased Card And Save Active Card", error });
     return false;
   }
   
@@ -138,5 +148,6 @@ const savePurchasedCard = async (flowtype, data, value) => {
 module.exports = {
   checkProductAvailabilityAndPorviders,
   generateCardListForPinePerks,
-  savePurchasedCard
+  savePurchasedCard,
+  updatePurchasedCardAndSaveActiveCard
 };

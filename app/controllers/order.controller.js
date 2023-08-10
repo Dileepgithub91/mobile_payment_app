@@ -50,7 +50,7 @@ const createOrder = catchAsyncError(async (req, res, next) => {
   console.log("wallet");
   const remainBalance=parseInt(wallet.dmt_wallet)-parseInt(value.sell_amount);
   if(remainBalance<1){
-    return next(new ErrorHandler("Wallet balance not enough!"))
+    throw new ErrorHandler("Wallet balance not enough!");
   }
   let walletUpdateStatus= await walletService.updateWallet({dmt_wallet:remainBalance},wallet.id);
 if(walletUpdateStatus[0]===1){
@@ -153,6 +153,7 @@ if(walletUpdateStatus[0]===1){
 
 const checkOrderStatus = catchAsyncError(async (req, res, next) => {
   let extOrderStatus="no Order";
+  let activeCard={};
   const value = await orderValidator.checkOrderStatus.validateAsync(req.body);
   const orderDetail=await cardOrderService.getCardOrderByOrderId(value.order_id);
   if(!orderDetail){
@@ -164,21 +165,27 @@ const checkOrderStatus = catchAsyncError(async (req, res, next) => {
   if (provider.provider == "qwikcilver") {
     extOrderStatus = await qwikCilverService.getOrderStatusAPi({refno:orderDetail.order_id});
     console.log(extOrderStatus)
-    if(extOrderStatus.status != "COMPLETE"){
+    if(extOrderStatus.data.data.status != "COMPLETE"){
       response.success(res,"Your Card Order is still in Process, try again after some time!");
       return true;
     }
+   //update purchased card, orders status
   }
   if (provider.provider == "pineperks") {
     extOrderStatus = await pinePerkService.getCardOrderStatus({requsetId:orderDetail.order_id})
     console.log(extOrderStatus)
-    // if(extOrderStatus.status != "COMPLETE"){}
+    if(extOrderStatus.data.data.orderStatus != "6"){
+      response.success(res,"Your Card Order is still in Process, try again after some time!");
+      return true;
+    }
+   //update purchased card, orders status
+   activeCard= await orderRouteService.updatePurchasedCardAndSaveActiveCard(extOrderStatus.data.data,orderDetail);
   }
 
   response.success(
     res,
     "fetched Order status!",
-    extOrderStatus
+    {extOrderStatus,activeCard}
   );
 });
 
