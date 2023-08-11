@@ -67,18 +67,10 @@ const savePurchasedCard = async (flowtype, data, value) => {
         product_id: value.product_id,
         amount: value.amount,
         card_order_id: data.orderId,
-        reference_number: "",
-        serial_number: "",
         customer_name: value.customer_name,
         customer_mobile: value.customer_mobile,
         customer_email: value.customer_email,
-        card_link:"",
-        masked_card_number: "",
-        approval_code: "",
-        external_card_identifier: "",
-        account_number: "",
         response_message: data.status,
-        response_code:"",
       });
       // if(!purchasedCard){
         
