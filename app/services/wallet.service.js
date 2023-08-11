@@ -105,14 +105,6 @@ const getWalletByUserId = async (userId) => {
 //Save Transection
 const saveTransection = async (bodyData) => {
   try {
-    const findTransection = await Transection.findAll({
-      where: {
-        user_id: bodyData.user_id,
-      },
-    });
-    if (findTransection.length != 0) {
-      throw new Error("Transection Already Exists!!");
-    }
     let transection = await Transection.create(bodyData);
     return transection;
   } catch (error) {
