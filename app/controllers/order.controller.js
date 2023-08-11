@@ -6,7 +6,6 @@ const { response } = require("../helpers");
 const logger = require("../logger");
 const {
   orderService,
-  cardService,
   cardOrderService,
   orderRouteService,
   qwikCilverService,
@@ -24,7 +23,8 @@ const createOrder = catchAsyncError(async (req, res, next) => {
   const value = await orderValidator.saveOrder.validateAsync(req.body);
   //save user_id via authentication
   value.user_id = req.user.user_id;
-  value.sell_amount = value.quantity * value.amount;
+  value.total_amount = value.quantity * value.amount;
+  value.sell_amount = value.total_amount;
   /////check availabilty of products and return provider
   const provider = await orderRouteService.checkProductAvailabilityAndPorviders(
     value.product_id
@@ -35,7 +35,8 @@ const createOrder = catchAsyncError(async (req, res, next) => {
     user_id: value.user_id,
     product_id: value.product_id,
     quantity: value.quantity,
-    amount: value.amount,
+    amount: value.amount,    
+    total_amount: value.total_amount,
     sell_amount:value.sell_amount,
   });
 
@@ -53,8 +54,26 @@ const createOrder = catchAsyncError(async (req, res, next) => {
     throw new ErrorHandler("Wallet balance not enough!");
   }
   let walletUpdateStatus= await walletService.updateWallet({dmt_wallet:remainBalance},wallet.id);
-if(walletUpdateStatus[0]===1){
-  
+if(walletUpdateStatus && walletUpdateStatus[0]!=1){
+ throw new ErrorHandler("Error occured when wallet was updated",400);
+}
+///save transection
+const transections= await walletService.saveTransection({
+  user_id: value.user_id,
+  order_id: order.order_id,
+  transection_type:"dmt_transection",
+  amount: value.sell_amount,
+  before_amount: parseInt(wallet.dmt_wallet),
+  current_amount: remainBalance,
+})
+console.log(transections);
+if(!transections){
+  throw new ErrorHandler("Error occured, while saving transection.")
+}
+const reCheckWallet=await walletService.getWalletByUserId(value.user_id);
+///check if the amount is in negative
+if(parseInt(reCheckWallet.dmt_wallet)<1){
+  throw new ErrorHandler("Wallet balance not enough!");
 }
   //Directing flow according to providers
   if (provider.provider == "qwikcilver") {
@@ -99,6 +118,7 @@ if(walletUpdateStatus[0]===1){
     extCardOrderId=extOrderRes.data.orderId;
     console.log(extOrderRes);
     const purchasedCard =await orderRouteService.savePurchasedCard("qwikcilver",extOrderRes,value);
+    console.log(purchasedCard);
   }
 
   if (provider.provider == "pineperks") {
@@ -125,6 +145,7 @@ if(walletUpdateStatus[0]===1){
     }
     extCardOrderId=extOrderRes.data.orderId;
     let purchasedCard =await orderRouteService.savePurchasedCard("pineperks",extOrderRes,value);
+    console.log(purchasedCard);
   }
   //Save card order details data in card order details table
   const cardOrderDetails = await cardOrderService.saveCardOrderDetail({
@@ -157,7 +178,7 @@ const checkOrderStatus = catchAsyncError(async (req, res, next) => {
   const value = await orderValidator.checkOrderStatus.validateAsync(req.body);
   const orderDetail=await cardOrderService.getCardOrderByOrderId(value.order_id);
   if(!orderDetail){
-    return next(new ErrorHandler("Order not Found!"))
+    throw new ErrorHandler("Order not Found!");
   }
   const provider = await orderRouteService.checkProductAvailabilityAndPorviders(
     orderDetail.product_id

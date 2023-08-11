@@ -59,6 +59,7 @@ const generateCardListForPinePerks = async (value) => {
 
 const savePurchasedCard = async (flowtype, data, value) => {
   try {
+    console.log("purchased Api hit!")
     if(flowtype == "qwikcilver"){
       let purchasedCard = await cardService.savePurchasedCard({
         order_id: data.refno,

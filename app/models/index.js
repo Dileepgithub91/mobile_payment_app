@@ -72,6 +72,7 @@ db.Ticket = require("./ticket.model")(sequelize, DataTypes);
 db.TicketReply = require("./ticket.reply.model")(sequelize, DataTypes);
 db.Provider = require("./provider.model")(sequelize, DataTypes);
 db.Wallet = require("./wallets.model")(sequelize, DataTypes);
+db.Transection = require("./transections.model")(sequelize, DataTypes);
 db.Order = require("./order.model")(sequelize, DataTypes);
 db.CardOrderDetail = require("./card.order.details.model")(sequelize, DataTypes);
 db.PurchasedCard = require("./purchased.cards.model")(sequelize, DataTypes);

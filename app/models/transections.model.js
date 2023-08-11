@@ -13,7 +13,15 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       amount: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      before_amount: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      current_amount: {
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
       status: {
