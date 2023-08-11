@@ -65,15 +65,15 @@ const savePurchasedCard = async (flowtype, data, value) => {
     console.log(value)
     if(flowtype == "qwikcilver"){
       let purchasedCard = await cardService.savePurchasedCard({
-        order_id: data.refno,
+        order_id: data.data.refno,
         user_id: value.user_id,
         product_id: value.product_id,
         amount: value.amount,
-        card_order_id: data.orderId,
+        card_order_id:  data.data.orderId,
         customer_name: value.customer_name,
         customer_mobile: value.customer_mobile,
         customer_email: value.customer_email,
-        response_message: data.status,
+        response_message:  data.data.status,
       });
       // if(!purchasedCard){
         
