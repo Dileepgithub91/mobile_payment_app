@@ -15,6 +15,10 @@ module.exports.saveOrder = Joi.object({
     }),
 });
 
+module.exports.checkOrderStatus = Joi.object({
+  order_id:Joi.string().required()
+});
+
 module.exports.editOrder = Joi.object({
   product_id: Joi.string(),
   quantity: Joi.number(),

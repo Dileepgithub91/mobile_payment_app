@@ -4,7 +4,7 @@ const logger = require("../logger");
 module.exports = (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
   err.message = err.message || "Internal Server Error";
-  logger.log("error",{message:err.message ,error:err})
+  logger.log("error",{message:err.message ,error:err});
   //Wrong MongoDb Error
   if (err.name == "CasteError") {
     const message = `Resource not found. Invalid ${err.path}`;

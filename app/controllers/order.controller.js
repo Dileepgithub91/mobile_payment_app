@@ -10,6 +10,7 @@ const {
   orderRouteService,
   qwikCilverService,
   pinePerkService,
+  walletService
 } = require("../services");
 
 // save order
@@ -22,7 +23,8 @@ const createOrder = catchAsyncError(async (req, res, next) => {
   const value = await orderValidator.saveOrder.validateAsync(req.body);
   //save user_id via authentication
   value.user_id = req.user.user_id;
-  value.sell_amount = value.quantity * value.amount;
+  value.total_amount = value.quantity * value.amount;
+  value.sell_amount = value.total_amount;
   /////check availabilty of products and return provider
   const provider = await orderRouteService.checkProductAvailabilityAndPorviders(
     value.product_id
@@ -33,10 +35,46 @@ const createOrder = catchAsyncError(async (req, res, next) => {
     user_id: value.user_id,
     product_id: value.product_id,
     quantity: value.quantity,
-    amount: value.amount,
+    amount: value.amount,    
+    total_amount: value.total_amount,
     sell_amount:value.sell_amount,
   });
 
+  ///Deduct money from wallet and store in ledger
+  /**
+   * check wallet money
+   * if greater than sell_amount then deduct the money
+   * save the ledger
+   */
+  const wallet=await walletService.getWalletByUserId(value.user_id);
+  console.log(wallet);
+  console.log("wallet");
+  const remainBalance=parseInt(wallet.dmt_wallet)-parseInt(value.sell_amount);
+  if(remainBalance<1){
+    throw new ErrorHandler("Wallet balance not enough!");
+  }
+  let walletUpdateStatus= await walletService.updateWallet({dmt_wallet:remainBalance},wallet.id);
+if(walletUpdateStatus && walletUpdateStatus[0]!=1){
+ throw new ErrorHandler("Error occured when wallet was updated",400);
+}
+///save transection
+const transections= await walletService.saveTransection({
+  user_id: value.user_id,
+  order_id: order.order_id,
+  transection_type:"dmt_transection",
+  amount: value.sell_amount,
+  before_amount: parseInt(wallet.dmt_wallet),
+  current_amount: remainBalance,
+})
+console.log(transections);
+if(!transections){
+  throw new ErrorHandler("Error occured, while saving transection.")
+}
+const reCheckWallet=await walletService.getWalletByUserId(value.user_id);
+///check if the amount is in negative
+if(parseInt(reCheckWallet.dmt_wallet)<1){
+  throw new ErrorHandler("Wallet balance not enough!");
+}
   //Directing flow according to providers
   if (provider.provider == "qwikcilver") {
     console.log("qwikcilver hit")
@@ -79,6 +117,8 @@ const createOrder = catchAsyncError(async (req, res, next) => {
     });
     extCardOrderId=extOrderRes.data.orderId;
     console.log(extOrderRes);
+    const purchasedCard =await orderRouteService.savePurchasedCard("qwikcilver",extOrderRes,value);
+    console.log(purchasedCard);
   }
 
   if (provider.provider == "pineperks") {
@@ -104,6 +144,8 @@ const createOrder = catchAsyncError(async (req, res, next) => {
       });
     }
     extCardOrderId=extOrderRes.data.orderId;
+    let purchasedCard =await orderRouteService.savePurchasedCard("pineperks",extOrderRes,value);
+    console.log(purchasedCard);
   }
   //Save card order details data in card order details table
   const cardOrderDetails = await cardOrderService.saveCardOrderDetail({
@@ -120,7 +162,6 @@ const createOrder = catchAsyncError(async (req, res, next) => {
     image: provider.images,
     send_as_gift:  value.send_as_gift
   });
-  // wallet se payment karo
 
   console.log(extOrderRes);
 
@@ -128,6 +169,44 @@ const createOrder = catchAsyncError(async (req, res, next) => {
     res,
     "Order placed successfully, delivery in progress!",
     extOrderRes
+  );
+});
+
+const checkOrderStatus = catchAsyncError(async (req, res, next) => {
+  let extOrderStatus="no Order";
+  let activeCard={};
+  const value = await orderValidator.checkOrderStatus.validateAsync(req.body);
+  const orderDetail=await cardOrderService.getCardOrderByOrderId(value.order_id);
+  if(!orderDetail){
+    throw new ErrorHandler("Order not Found!");
+  }
+  const provider = await orderRouteService.checkProductAvailabilityAndPorviders(
+    orderDetail.product_id
+  );
+  if (provider.provider == "qwikcilver") {
+    extOrderStatus = await qwikCilverService.getOrderStatusAPi({refno:orderDetail.order_id});
+    console.log(extOrderStatus)
+    if(extOrderStatus.data.data.status != "COMPLETE"){
+      response.success(res,"Your Card Order is still in Process, try again after some time!");
+      return true;
+    }
+   //update purchased card, orders status
+  }
+  if (provider.provider == "pineperks") {
+    extOrderStatus = await pinePerkService.getCardOrderStatus({requsetId:orderDetail.order_id})
+    console.log(extOrderStatus)
+    if(extOrderStatus.data.data.orderStatus != "6"){
+      response.success(res,"Your Card Order is still in Process, try again after some time!");
+      return true;
+    }
+   //update purchased card, orders status
+   activeCard= await orderRouteService.updatePurchasedCardAndSaveActiveCard(extOrderStatus.data.data,orderDetail);
+  }
+
+  response.success(
+    res,
+    "fetched Order status!",
+    {extOrderStatus,activeCard}
   );
 });
 
@@ -181,4 +260,5 @@ module.exports = {
   updateOrderStatus,
   getOrders,
   getOrderDetails,
+  checkOrderStatus
 };

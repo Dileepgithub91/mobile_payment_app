@@ -12,7 +12,7 @@ const pinePerksErrorHandler = (error) => {
     resData = {
       status: error.data.responseCode,
       code: "Dubilcate",
-      message: error.data.responseMessage,
+      message: "Order has been completed, check Order Status!",
     };
   }
 

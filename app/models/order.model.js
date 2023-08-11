@@ -23,6 +23,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: 0,
     },
+    total_amount: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+    },
     sell_amount: {
       type: DataTypes.INTEGER,
       allowNull: false,

@@ -1,9 +1,13 @@
 module.exports = (sequelize, DataTypes) => {
     const ActiveCard = sequelize.define("active_card", {
-      order_id: {
+      ref_order_id: {
         type: DataTypes.STRING,
         allowNull: false,
         unique:true
+      },
+      order_id: {
+        type: DataTypes.STRING,
+        allowNull: false,
       },
       user_id: {
         type: DataTypes.STRING,
@@ -13,22 +17,35 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      quantity: {
-        type: DataTypes.INTEGER,
+      serialNumber: {
+        type: DataTypes.STRING,
         allowNull: false,
-        defaultValue: 0,
+      },
+      referenceNumber: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      card_link: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      masked_card_no: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      customer_name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      customer_email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      customer_mobile: {
+        type: DataTypes.STRING,
+        allowNull: false,
       },
       amount: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        defaultValue: 0,
-      },
-      sell_amount: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        defaultValue: 0,
-      },
-      coupon_code_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 0,
@@ -36,7 +53,7 @@ module.exports = (sequelize, DataTypes) => {
       status: {
         type: DataTypes.STRING,
         allowNull: false,
-        defaultValue: "inProgress",
+        defaultValue: "pending",
       },
     });
     return ActiveCard;
