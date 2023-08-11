@@ -119,8 +119,8 @@ const savePurchasedCard = async (flowtype, data, value) => {
       approval_code: data.data.approvalCode,
       external_card_identifier: data.data.externalCardIdentifier,
       account_number: data.data.accountNumber,
-      response_message: data.data.responseCode,
-      response_code: data.data.responseMessage,
+      response_message: data.data.responseMessage,
+      response_code: data.data.responseCode,
     });
   }
   return true;

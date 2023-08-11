@@ -22,4 +22,5 @@ module.exports = {
     cardOrderService: require('./card.order.detail.service'),
     walletService: require('./wallet.service'),
     orderRouteService: require('./order.routes.services'),
+    uploadedCardsService: require('./uploaded.card.service'),
 }

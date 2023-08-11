@@ -27,7 +27,7 @@ const addBusinessUserRequest = catchAsyncError(async (req, res, next) => {
         bodyData
       );
     ///update user
-    const customer = await businessUserService.addBusinessCustomerRequest({
+    const customer = await businessUserService.addBusinessUserRequest({
       first_name: value.firstName,
       last_name: value.lastName,
       mobile_no: value.mobileNo,

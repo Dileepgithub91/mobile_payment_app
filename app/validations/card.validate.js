@@ -53,7 +53,7 @@ module.exports.updateStatusCardSingle = Joi.object({
 });
 module.exports.updateTrandingCardStatus = Joi.object({
   id: Joi.string().max(100).required(),
-  is_trending: Joi.number().valid(0,1).required(),
+  is_trending: Joi.number().valid(0, 1).required(),
 });
 
 module.exports.cardDetails = Joi.object({
@@ -76,7 +76,6 @@ module.exports.verifynewGiftCardSchema = Joi.object({
   imageUrl: Joi.string(),
 });
 
-
 //////////////////////////Card Provider Validator////////////////////////////
 module.exports.verifyCardProvider = Joi.object({
   card_id: Joi.string().max(100).required(),
@@ -86,7 +85,7 @@ module.exports.verifyCardProvider = Joi.object({
   amount_rule: Joi.string(),
   block_amount_rule: Joi.string(),
   user_rule: Joi.string(),
-  block_user_rule: Joi.string()
+  block_user_rule: Joi.string(),
 });
 module.exports.EditCardProvider = Joi.object({
   id: Joi.string().max(100).required(),
@@ -97,5 +96,31 @@ module.exports.EditCardProvider = Joi.object({
   amount_rule: Joi.string(),
   block_amount_rule: Joi.string(),
   user_rule: Joi.string(),
-  block_user_rule: Joi.string()
+  block_user_rule: Joi.string(),
+});
+
+/////////////////////////////Uploaded Cards ///////////////////////////////
+module.exports.validateUploadedCardDetails = Joi.object({
+  id: Joi.string().max(100).required(),
+});
+module.exports.validateEditUploadedCard = Joi.object({
+  id: Joi.string().max(100).required(),
+  product_id: Joi.string(),
+  card_name: Joi.string(),
+  card_pin: Joi.string(),
+  cvv_no: Joi.string(),
+  balance: Joi.string(),
+  isuue_date: Joi.string(),
+  expiry_date: Joi.string(),
+});
+
+module.exports.validateSaveUploadedCard = Joi.object({
+  product_id: Joi.string().required(),
+  card_name: Joi.string().required(),
+  card_no: Joi.string().required(),
+  card_pin: Joi.string().required(),
+  cvv_no: Joi.string(),
+  balance: Joi.string(),
+  isuue_date: Joi.string(),
+  expiry_date: Joi.string().required(),
 });
