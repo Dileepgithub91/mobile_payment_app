@@ -81,13 +81,13 @@ const savePurchasedCard = async (flowtype, data, value) => {
     }
   if (flowtype == "pineperks") {
     if(data.cardDetailResponseList){
-      await data.cardDetailResponseList.map(async(card)=>{
+      await data.data.cardDetailResponseList.map(async(card)=>{
         await cardService.savePurchasedCard({
-          order_id: data.externalRequestId,
+          order_id: data.data.externalRequestId,
           user_id: value.user_id,
           product_id: value.product_id,
           amount: card.amount,
-          card_order_id: data.orderId,
+          card_order_id: data.data.orderId,
           reference_number: "",
           serial_number: "",
           customer_name: card.customerName,
@@ -104,23 +104,23 @@ const savePurchasedCard = async (flowtype, data, value) => {
       })
     }
     let purchasedCard = await cardService.savePurchasedCard({
-      order_id: data.externalRequestId,
+      order_id: data.data.externalRequestId,
       user_id: value.user_id,
       product_id: value.product_id,
-      amount: data.orderAmount,
-      card_order_id: data.orderId,
-      reference_number: data.referenceNumber,
-      serial_number: data.serialNumber,
-      customer_name: data.customerName,
-      customer_mobile: data.mobileNumber,
-      customer_email: data.email,
-      card_link: data.cardLink,
-      masked_card_number: data.maskedCardNumber,
-      approval_code: data.approvalCode,
-      external_card_identifier: data.externalCardIdentifier,
-      account_number: data.accountNumber,
-      response_message: data.responseCode,
-      response_code: data.responseMessage,
+      amount: data.data.orderAmount,
+      card_order_id: data.data.orderId,
+      reference_number: data.data.referenceNumber,
+      serial_number: data.data.serialNumber,
+      customer_name: data.data.customerName,
+      customer_mobile: data.data.mobileNumber,
+      customer_email: data.data.email,
+      card_link: data.data.cardLink,
+      masked_card_number: data.data.maskedCardNumber,
+      approval_code: data.data.approvalCode,
+      external_card_identifier: data.data.externalCardIdentifier,
+      account_number: data.data.accountNumber,
+      response_message: data.data.responseCode,
+      response_code: data.data.responseMessage,
     });
   }
   return true;
