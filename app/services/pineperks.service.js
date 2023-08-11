@@ -85,6 +85,7 @@ const generateHeaders = async () => {
         "Content-Type": "application/json",
       };
   } catch (e) {
+    console.log(e);
     if (e.error == "FORBIDDEN" && e.status == "403") {
       throw new Error( "Service is not available now, try again after some time!" );
     }
