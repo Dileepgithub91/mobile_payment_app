@@ -24,51 +24,51 @@ module.exports = (sequelize, DataTypes) => {
       },
       reference_number: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       serial_number: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       customer_name: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       customer_mobile: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       customer_email: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       card_link: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       masked_card_number: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       approval_code: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       external_card_identifier: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       account_number: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       response_message: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       response_code: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       status: {
         type: DataTypes.STRING,
