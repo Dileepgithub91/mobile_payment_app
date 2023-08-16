@@ -78,6 +78,7 @@ db.CardOrderDetail = require("./card.order.details.model")(sequelize, DataTypes)
 db.PurchasedCard = require("./purchased.cards.model")(sequelize, DataTypes);
 db.ActiveCard = require("./active.cards.model")(sequelize, DataTypes);
 db.UploadedCards = require("./uploaded.cards.model")(sequelize, DataTypes);
+db.CardFormat = require("./card.format.model")(sequelize, DataTypes);
 
 db.sequelize.sync({ force: false }).then(() => {
   console.log("yes re-sync done!");

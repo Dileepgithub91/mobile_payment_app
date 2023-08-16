@@ -83,11 +83,10 @@ const bulkCreateUploadedCard= catchAsyncError(async (req, res, next) => {
 const createUploadedCard= catchAsyncError(async (req, res, next) => {
   //validator
   const value = await cardValidator.validateSaveUploadedCard.validateAsync(req.body);
-  let id = value.id;
-  delete value.id;
-  ///update user
-  const card = await uploadedCardsService.saveUploadedCards(value, id);
-  response.success(res, "Uploaded Card Have been updated!", card);
+  value.provider_id=req.user.role_id;
+  ///create user
+  const card = await uploadedCardsService.saveUploadedCards(value);
+  response.success(res, "Uploaded Card Have been created!", card);
 });
 
 const updateUploadedCard = catchAsyncError(async (req, res, next) => {
@@ -119,6 +118,9 @@ const getUploadedCardDetails = catchAsyncError(async (req, res, next) => {
   const card = await uploadedCardsService.getUploadedCardsDetails(value.id);
   response.success(res, "Details Of Uploaded Card!", card);
 });
+
+
+//Card Format APi Api
 
 
 

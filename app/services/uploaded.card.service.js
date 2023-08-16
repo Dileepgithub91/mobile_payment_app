@@ -3,8 +3,9 @@ const db = require("../models");
 
 //Create Main Model
 const UploadedCards = db.UploadedCards;
+const CardFormat = db.CardFormat;
 
-//Save Pan verification Data
+//Save Uploaded Cards
 const saveUploadedCards = async (bodyData) => {
   try {
     let card;
@@ -89,9 +90,102 @@ const getUploadedCardsDetails = async (cardId) => {
   }
 };
 
+/// card Formating api:
+
+//Save Card Format Data
+const saveCardFormat = async (bodyData) => {
+  try {
+    let cardFormat;
+    ///find Card format With Same name
+    const findCardFormat = await CardFormat.findAll({
+      where: {
+        format_name: bodyData.name,
+      },
+    });
+    if (findCardFormat.length != 0) {
+      throw new Error("Card format name exists!");
+    }
+    cardFormat = await CardFormat.create(bodyData);
+    return { success: true, data: cardFormat };
+  } catch (error) {
+    logger.log("error", {
+      source: "Uploaded Cards Service  -- save Uploaded Cards",
+      error,
+    });
+    throw error;
+  }
+};
+
+////update Card Format api
+const updateCardFormat = async (bodyData, cardId) => {
+  try {
+    const findCardFormat = await CardFormat.findAll({
+      where: {
+        id: cardId,
+      },
+    });
+    if (findCardFormat.length == 0) {
+      throw new Error("Card Format Not Found!");
+    }
+    let cardFormat = await CardFormat.update(bodyData, {
+      where: {
+        id: cardId,
+      },
+    });
+    return { success: true, data: cardFormat };
+  } catch (error) {
+    logger.log("error", error);
+    throw error;
+  }
+};
+
+const getCardFormat = async ({ pageNumber, limitPerPage, query }) => {
+  try {
+    const limitPage = parseInt(limitPerPage) || 10;
+    const pageNo = parseInt(pageNumber) || 1;
+
+    const offset = (pageNo - 1) * limitPage;
+    const cardFormat = await CardFormat.findAll({
+      limit: limitPage,
+      offset: offset,
+      where: query || {},
+    });
+    return cardFormat;
+  } catch (error) {
+    logger.log("error", {
+      source: "Uploaded Card Service  -- get Card",
+      error,
+    });
+    throw error;
+  }
+};
+
+const getCardFormatDetails = async (cardId) => {
+  try {
+    const cardFormat = await CardFormat.findOne({
+      where: {
+        id: cardId,
+      },
+    });
+    return cardFormat;
+  } catch (error) {
+    logger.log("error", {
+      source: "Uploaded Card Service  -- get Uploaded Card details",
+      error,
+    });
+    throw error;
+  }
+};
+
+
 module.exports = {
   getUploadedCards,
   getUploadedCardsDetails,
   saveUploadedCards,
   updateUploadedCards,
+  ///card format
+  getCardFormatDetails,
+  getCardFormat,
+  updateCardFormat,
+  saveCardFormat
 };

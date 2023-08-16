@@ -116,11 +116,12 @@ module.exports.validateEditUploadedCard = Joi.object({
 
 module.exports.validateSaveUploadedCard = Joi.object({
   product_id: Joi.string().required(),
+  format_id: Joi.string().required(),
   card_name: Joi.string().required(),
   card_no: Joi.string().required(),
   card_pin: Joi.string().required(),
-  cvv_no: Joi.string(),
-  balance: Joi.string(),
-  isuue_date: Joi.string(),
+  cvv_no: Joi.string().required(),
+  balance: Joi.string().required(),
+  isuue_date: Joi.string().required(),
   expiry_date: Joi.string().required(),
 });

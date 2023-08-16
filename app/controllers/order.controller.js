@@ -10,7 +10,8 @@ const {
   orderRouteService,
   qwikCilverService,
   pinePerkService,
-  walletService
+  walletService,
+  uploadedCardsService
 } = require("../services");
 
 // save order
@@ -45,6 +46,7 @@ const createOrder = catchAsyncError(async (req, res, next) => {
    * check wallet money
    * if greater than sell_amount then deduct the money
    * save the ledger
+   * check amount again if it is negative if it is throw error
    */
   const wallet=await walletService.getWalletByUserId(value.user_id);
   console.log(wallet);
@@ -76,6 +78,23 @@ if(parseInt(reCheckWallet.dmt_wallet)<1){
   throw new ErrorHandler("Wallet balance not enough!");
 }
   //Directing flow according to providers
+  if (provider.provider == "admin") {
+    console.log("admin uploaded cards hit");
+    /**
+     * first check if the product available with admin
+     * if it has then save purchased card and active card on user name
+     * 
+     */
+    const query={
+      product_id: value.product_id
+    }
+    extOrderRes = await uploadedCardsService.getUploadedCards({query});
+    extCardOrderId=extOrderRes.data.orderId;
+    console.log(extOrderRes);
+    const purchasedCard =await orderRouteService.savePurchasedCard("qwikcilver",extOrderRes,value);
+    console.log(purchasedCard);
+  }
+
   if (provider.provider == "qwikcilver") {
     console.log("qwikcilver hit")
     extOrderRes = await qwikCilverService.createAnOrderApi({
