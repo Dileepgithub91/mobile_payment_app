@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-    const UploadedCard = sequelize.define("uploaded_cards", {
+    const UploadedCardsTemp = sequelize.define("uploaded_cards_temp", {
       batch_process_Id: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -65,21 +65,16 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      sell_date: {
+      error: {
         type: DataTypes.STRING,
         allowNull: true,
-      },
-      sell_status: {
-        type: DataTypes.TINYINT,
-        allowNull: false,
-        defaultValue:0
       },
       status: {
         type: DataTypes.STRING,
         allowNull: false,
-        defaultValue: "SUCCESS",
+        defaultValue: "PROCESSING",
       },
     });
-    return UploadedCard;
+    return UploadedCardsTemp;
   };
   

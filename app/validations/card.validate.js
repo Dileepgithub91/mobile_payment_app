@@ -100,28 +100,63 @@ module.exports.EditCardProvider = Joi.object({
 });
 
 /////////////////////////////Uploaded Cards ///////////////////////////////
-module.exports.validateUploadedCardDetails = Joi.object({
+module.exports.validateCardDetails = Joi.object({
   id: Joi.string().max(100).required(),
 });
 module.exports.validateEditUploadedCard = Joi.object({
   id: Joi.string().max(100).required(),
-  product_id: Joi.string(),
-  card_name: Joi.string(),
-  card_pin: Joi.string(),
-  cvv_no: Joi.string(),
-  balance: Joi.string(),
-  isuue_date: Joi.string(),
-  expiry_date: Joi.string(),
+  format_id: Joi.string().required(),
 });
 
-module.exports.validateSaveUploadedCard = Joi.object({
+module.exports.validateSaveUploadedCardFormat1 = Joi.object({
   product_id: Joi.string().required(),
   format_id: Joi.string().required(),
   card_name: Joi.string().required(),
   card_no: Joi.string().required(),
   card_pin: Joi.string().required(),
-  cvv_no: Joi.string().required(),
-  balance: Joi.string().required(),
-  isuue_date: Joi.string().required(),
+  activation_code: Joi.string().required(),
+  activation_url: Joi.string().required(),
+  cvv_no: Joi.string(),
+  balance: Joi.string(),
+  isuue_date: Joi.string(),
   expiry_date: Joi.string().required(),
+});
+module.exports.validateSaveUploadedCardFormat2 = Joi.object({
+  product_id: Joi.string().required(),
+  format_id: Joi.string().required(),
+  card_name: Joi.string().required(),
+  card_no: Joi.string().required(),
+  cvv_no: Joi.string(),
+  balance: Joi.string(),
+  isuue_date: Joi.string(),
+  expiry_date: Joi.string().required(),
+});
+
+module.exports.validateSaveUploadedCardFormat3 = Joi.object({
+  product_id: Joi.string().required(),
+  format_id: Joi.string().required(),
+  card_name: Joi.string().required(),
+  card_no: Joi.string().required(),
+  card_pin: Joi.string().required(),
+  cvv_no: Joi.string(),
+  balance: Joi.string(),
+  isuue_date: Joi.string(),
+  expiry_date: Joi.string().required(),
+});
+
+module.exports.validateSaveUploadedCardFormat4 = Joi.object({
+  product_id: Joi.string().required(),
+  format_id: Joi.string().required(),
+  card_name: Joi.string().required(),
+  card_no: Joi.string().required(),
+  card_pin: Joi.string().required(),
+  barcode: Joi.string().required(),
+  cvv_no: Joi.string(),
+  balance: Joi.string(),
+  isuue_date: Joi.string(),
+  expiry_date: Joi.string().required(),
+});
+
+module.exports.validateFormatId = Joi.object({
+  format_id: Joi.string().required(),
 });

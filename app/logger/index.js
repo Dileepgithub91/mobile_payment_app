@@ -35,6 +35,14 @@ let logger = winston.createLogger({
 			maxFiles: 25,
 			datePattern: '.dd-MM-yyyy'
         }),
+        new winston.transports.DailyRotateFile({ 
+            level: 'order',
+            filename: 'orders.log',
+            dirname: config.get('logger.logFileDir'),
+			maxsize: 20971520, //20MB
+			maxFiles: 25,
+			datePattern: '.dd-MM-yyyy'
+        }),
 	]
 });
 

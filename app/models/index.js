@@ -71,6 +71,7 @@ db.ProductPrice = require("./product.price.model")(sequelize, DataTypes);
 db.Ticket = require("./ticket.model")(sequelize, DataTypes);
 db.TicketReply = require("./ticket.reply.model")(sequelize, DataTypes);
 db.Provider = require("./provider.model")(sequelize, DataTypes);
+db.card_provider_setting = require("./card.provider.setting.model")(sequelize, DataTypes);
 db.Wallet = require("./wallets.model")(sequelize, DataTypes);
 db.Transection = require("./transections.model")(sequelize, DataTypes);
 db.Order = require("./order.model")(sequelize, DataTypes);
@@ -78,6 +79,7 @@ db.CardOrderDetail = require("./card.order.details.model")(sequelize, DataTypes)
 db.PurchasedCard = require("./purchased.cards.model")(sequelize, DataTypes);
 db.ActiveCard = require("./active.cards.model")(sequelize, DataTypes);
 db.UploadedCards = require("./uploaded.cards.model")(sequelize, DataTypes);
+db.UploadedCardsTemp = require("./uploaded.cards.temp.model")(sequelize, DataTypes);
 db.CardFormat = require("./card.format.model")(sequelize, DataTypes);
 
 db.sequelize.sync({ force: false }).then(() => {
