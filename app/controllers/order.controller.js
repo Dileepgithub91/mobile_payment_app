@@ -127,6 +127,7 @@ const createOrder = catchAsyncError(async (req, res, next) => {
         throw extOrderRes.error;
       }
     }
+    throw new Error("Card Not Available!");
   }
 
   //Save card order details data in card order details table
@@ -238,6 +239,7 @@ const getOrders = catchAsyncError(async (req, res, next) => {
   delete bodyData.pageNumber;
   delete bodyData.limitPerPage;
   requestData.query = bodyData;
+  requestData.query.user_id = req.user.user_id;
   const orders = await orderService.getOrder(requestData);
   response.success(res, "List of Orders!", orders);
 });

@@ -8,6 +8,7 @@ const auth = require("../middleware/auth");
 
 
 router.get('/',  auth("readOwn", "Order"), orderController.getOrderDetails);
+router.get('/all',  auth("readOwn", "Order"), orderController.getOrders);
 router.post('/',   auth("createOwn", "Order"),orderController.createOrder);
 router.post('/status',   auth("createOwn", "Order"),orderController.checkOrderStatus);
 
