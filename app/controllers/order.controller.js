@@ -53,6 +53,7 @@ const createOrder = catchAsyncError(async (req, res, next) => {
     total_amount: value.total_amount,
     sell_amount: value.sell_amount,
   });
+  value.order_id=order.order_id;
   logger.log("order", {
     message: "Order Saved!",
     order,

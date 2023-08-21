@@ -1,5 +1,6 @@
 const moment = require("moment");
 const db = require("../models");
+const logger = require("../logger");
 
 //Create Main Model
 const OtpVerification = db.OtpVerification;

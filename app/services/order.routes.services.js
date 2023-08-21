@@ -1,5 +1,6 @@
 const cardService = require("./card.service");
 const providerService = require("./card.provider.setting.service");
+const uploadedCardService = require("./uploaded.card.service");
 const logger = require("../logger");
 
 const checkProductAvailabilityAndPorviders = async (productId) => {
@@ -102,12 +103,42 @@ const generateCardListForPinePerks = async (value) => {
   }
 };
 
-const savePurchasedCard = async (flowtype, data, value) => {
+const savePurchasedCardAndActiveCard = async (flowtype, data, value) => {
   try {
     console.log("purchased Api hit!");
     console.log(flowtype);
     console.log(data);
     console.log(value);
+    if(flowtype=="admin"){
+      const purchasedCard= await cardService.savePurchasedCard({
+        order_id: value.order_id,
+        user_id: value.user_id,
+        product_id: value.product_id,
+        amount: value.amount,
+        card_order_id: data.id,
+        customer_name: value.customer_name,
+        customer_mobile: value.customer_mobile,
+        customer_email: value.customer_email,
+        response_message: "Delivered!",
+      });
+      let maskedCardNumber=`${data.card_no.slice(5)}********${data.card_no.slice(-5)}`;
+      await cardService.saveActiveCard({
+        ref_order_id: data.id,
+        order_id: value.order_id,
+        user_id: value.user_id,
+        product_id: value.product_id,
+        serialNumber: "0",
+        referenceNumber: "0",
+        card_link: data.activation_url,
+        masked_card_no: maskedCardNumber,
+        customer_name:value.customer_name,
+        customer_email: value.customer_email,
+        customer_mobile:value.customer_mobile,
+        amount: data.balance,
+        status: "Active",
+      })
+      return purchasedCard;
+    }
     if (flowtype == "qwikcilver") {
       let purchasedCard = await cardService.savePurchasedCard({
         order_id: data.data.refno,
@@ -197,10 +228,26 @@ const userOrderFlow = async () => {
     };
   }
 };
+
 const adminOrderFlow = async (value) => {
   try {
     console.log(value);
-    //find 
+    let cardAvailable= parseInt(value.quantity);
+    let requireMore=0;
+    //loop to find all the cards available in uploads
+    let cards = await uploadedCardService.getAllUploadedCard({product_id:value.product_id,sell_status:0},cardAvailable);
+    if(cardAvailable<cards.length){
+      requireMore =cardAvailable-cards.length;
+    }
+    for(let i=0;i<cardAvailable;i++){
+      let currCard=cards[i];
+      //save purchased card and active cards
+       const purchesedCard=await this.savePurchasedCardAndActiveCard("admin",currCard,value)
+       if(!purchesedCard){
+        throw new Error("Error occured during Purchase and Active card generation!")
+       }
+      //
+    }
     return {
       success: "1",
       data,
@@ -331,7 +378,7 @@ const updatePurchasedCardAndSaveActiveCard = async (flowtype, data, value) => {
 module.exports = {
   checkProductAvailabilityAndPorviders,
   generateCardListForPinePerks,
-  savePurchasedCard,
+  savePurchasedCardAndActiveCard,
   updatePurchasedCardAndSaveActiveCard,
   deductMoneyAsOrderAmount,
   qwikcilverOrderFlow,

@@ -61,7 +61,7 @@ const resendBusinessUserRequestOtp = catchAsyncError(async (req, res, next) => {
         mobileNo: mobileNo
       });
     //verify otp
-    const businessRequset= await businessUserService.getBusinessCustomerRequest(mobileNo);
+    const businessRequset= await businessUserService.getBusinessUserRequest(mobileNo);
 
     if(!businessRequset){
       return next(new ErrorHandler(responseMessages.businessRequestNotFound, responseFlags.notFound));
@@ -116,7 +116,7 @@ const verifyBusinessUserRequest = catchAsyncError(async (req, res, next) => {
     // return false;
   }
     ///update business request
-    const customer = await businessUserService.addBusinessCustomerRequest({
+    const customer = await businessUserService.addBusinessUserRequest({
       mobile_no: value.mobileNo,
       status: "Verified",
     });
@@ -176,7 +176,7 @@ const saveBusinessUserProfile = catchAsyncError(async (req, res, next) => {
     });
     // get business request data
     const businessRequestData =
-      await businessUserService.getBusinessCustomerRequest(
+      await businessUserService.addBusinessUserRequest(
         req.user.mobile_no
       );
     ////Get all business agreement by company type

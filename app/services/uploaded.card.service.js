@@ -73,6 +73,26 @@ const getUploadedCards = async ({ pageNumber, limitPerPage, query }) => {
   }
 };
 
+const getAllUploadedCard = async (query,quantity) => {
+  try {
+    const cards = await UploadedCards.findAll({
+      limit: quantity,
+      where: query,
+      order: [
+        [sequelize.literal(`CASE WHEN role = '4' THEN 1 ELSE 2 END`)],
+        ['provider_id'],
+      ]
+    });
+    return cards;
+  } catch (error) {
+    logger.log("error", {
+      source: "Uploaded Card Service  -- get all uploaded Card",
+      error,
+    });
+    throw error;
+  }
+};
+
 const getUploadedCardsDetails = async (cardId) => {
   try {
     const card = await UploadedCards.findOne({
@@ -177,9 +197,9 @@ const getCardFormatDetails = async (cardId) => {
   }
 };
 
-
 module.exports = {
   getUploadedCards,
+  getAllUploadedCard,
   getUploadedCardsDetails,
   saveUploadedCards,
   updateUploadedCards,
@@ -187,5 +207,5 @@ module.exports = {
   getCardFormatDetails,
   getCardFormat,
   updateCardFormat,
-  saveCardFormat
+  saveCardFormat,
 };

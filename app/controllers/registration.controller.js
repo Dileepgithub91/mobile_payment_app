@@ -18,6 +18,11 @@ const getRegisterOtp = catchAsyncError(async (req, res, next) => {
     const value = await Validator.registerOtp.validateAsync({
       mobileNo: mobileNo,
     });
+    const checkUserExists= await userService.getUserByMobile(value.mobileNo);
+    if(checkUserExists){
+      throw new Error("User Exists!")
+      // throw next(new ErrorHandler(responseMessages.userExist, responseFlags.failure));
+    }
     const registeredUser = await authService.addRegistrationUser({
       mobileNo: value.mobileNo,
       verificationType:"register"
@@ -107,13 +112,18 @@ const getResendOtp = catchAsyncError(async (req, res, next) => {
     const value = await Validator.registerOtp.validateAsync({
       mobileNo: mobileNo,
     });
+    const checkUserExists= await userService.getUserByMobile(value.mobileNo);
+    if(checkUserExists!=null){
+      logger.log("info", "User Exists, Can't be registered again!");
+      throw next(new ErrorHandler(responseMessages.userExist, responseFlags.failure));
+    }
     const user = await authService.findRegistrationUser({
       mobile_no: value.mobileNo,
       verification_Type:"register"
     });
     if (!user) {
       logger.log("info", "User Not Found");
-      return next(new ErrorHandler(responseMessages.userNotFound, responseFlags.notFound));
+      throw next(new ErrorHandler(responseMessages.userNotFound, responseFlags.notFound));
       // response.generalError(res, "User Not Found");
       // return false;
     }

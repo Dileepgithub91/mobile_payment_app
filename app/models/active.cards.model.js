@@ -19,11 +19,11 @@ module.exports = (sequelize, DataTypes) => {
       },
       serialNumber: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       referenceNumber: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       card_link: {
         type: DataTypes.STRING,

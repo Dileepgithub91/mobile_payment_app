@@ -16,7 +16,7 @@ const addUser = async (body) => {
     if (finduser.length === 0) {
       body.user_id = Math.floor(1000 + Math.random() * 9000);
       body.role = "user";
-      body.status = "Active";
+      body.status = 1;
       let saveduser = await users.create(body);
       user =saveduser.dataValues;
     } else {
@@ -71,12 +71,12 @@ const getUserByUserId = async (userID) => {
 };
 const getUserByMobile = async (mobileNO) => {
   try {
-    const user = await users.findAll({
+    const user = await users.findOne({
       where: {
         mobile_no: mobileNO,
       },
     });
-    return user[0];
+    return user;
   } catch (error) {
     throw error;
   }

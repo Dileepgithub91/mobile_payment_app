@@ -35,9 +35,9 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: "user",
     },
     status: {
-      type: DataTypes.STRING,
+      type: DataTypes.TINYINT,
       allowNull: false,
-      defaultValue: "active",
+      defaultValue: 1,
     },
   });
   return User;
