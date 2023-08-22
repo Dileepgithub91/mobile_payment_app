@@ -6,9 +6,9 @@ const {providerServices} = require("../services");
 const getProvider= async (req, res, next) => {
   try {
     const bodyData = req.query;
-    let requestData;
-    body.pageNumber ? (requestData.pageNumber = body.pageNumber) : {};
-    body.limitPerPage ? (requestData.limitPerPage = body.limitPerPage) : {};
+    let requestData={};
+    bodyData.pageNumber ? (requestData.pageNumber = bodyData.pageNumber) : {};
+    bodyData.limitPerPage ? (requestData.limitPerPage = bodyData.limitPerPage) : {};
     delete bodyData.pageNumber;
     delete bodyData.limitPerPage;
     requestData.query = bodyData;

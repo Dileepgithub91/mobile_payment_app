@@ -9,4 +9,5 @@ module.exports = {
     cardValidator: require('./card.validate'),
     orderValidator: require('./order.validate'),
     walletValidator: require('./wallet.validate'),
+    providerValidator: require('./provider.validate'),
 }

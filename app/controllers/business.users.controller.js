@@ -1,6 +1,5 @@
 const {responseMessages,responseFlags} = require("../core/constants");
 const catchAsyncError=require('../middleware/catch.async.error');
-const ErrorHandler=require('../helpers/error.handler');
 const {
   businessCustomerValidator,
   otpVerificationValidator,
@@ -64,12 +63,10 @@ const resendBusinessUserRequestOtp = catchAsyncError(async (req, res, next) => {
     const businessRequset= await businessUserService.getBusinessUserRequest(mobileNo);
 
     if(!businessRequset){
-      return next(new ErrorHandler(responseMessages.businessRequestNotFound, responseFlags.notFound));
-      // response.validatationError(res, "Business Request not found!");
-      // return false;
+      throw new Error(responseMessages.businessRequestNotFound);
     }
     if(businessRequset.status ==="Verified"){
-      return next(new ErrorHandler(responseMessages.businessRequestVerifiedError, responseFlags.failure));
+      throw new Error(responseMessages.businessRequestVerifiedError);
       // response.validatationError(res, "Business Request is already verified!");
       // return false;
     }
@@ -101,7 +98,7 @@ const verifyBusinessUserRequest = catchAsyncError(async (req, res, next) => {
     const updatedRetriesValue = parseInt(regesteredUser.no_of_retries) + 1;
     //check if the user has not exceeded otp limit i.e. 3
     if (updatedRetriesValue >= 3) {
-      return next(new ErrorHandler(responseMessages.otpTryExceded, responseFlags.failure));
+      throw new Error(responseMessages.otpTryExceded);
       // response.validatationError(res, "You have exceeded no of tries for otp,you can resend otp.");
       // return false;
     }
@@ -111,7 +108,7 @@ const verifyBusinessUserRequest = catchAsyncError(async (req, res, next) => {
       { no_of_retries: updatedRetriesValue },
       {id:regesteredUser.id, verification_type:"business"}
     );
-    return next(new ErrorHandler(responseMessages.otpInvalid, responseFlags.failure));
+    throw new Error(responseMessages.otpInvalid);
     // response.validatationError(res, "Invalid Otp!, enter correct otp.");
     // return false;
   }
@@ -177,7 +174,7 @@ const saveBusinessUserProfile = catchAsyncError(async (req, res, next) => {
     // get business request data
     const businessRequestData =
       await businessUserService.addBusinessUserRequest(
-        req.user.mobile_no
+        {mobile_no:req.user.mobile_no}
       );
     ////Get all business agreement by company type
     const businessAgreement =
@@ -195,17 +192,16 @@ const saveBusinessUserProfile = catchAsyncError(async (req, res, next) => {
 
     response.success(
       res,
-      "Your Business Customer Profile has been Updated!",
-      customer
+      "Your Business Customer Profile has been Updated!"
     );
 });
 // save business customer shop profile
-const saveBusinessUserShopDetails = async (req, res, next) => {
+const saveBusinessUserShopDetails = catchAsyncError(async (req, res, next) => {
     const bodyData = req.body;
     let imageUrl = "";
     //validator
     const value =
-      await businessCustomerValidator.saveCustomerProfile.validateAsync(
+      await businessCustomerValidator.saveCustomerShopDetails.validateAsync(
         bodyData
       );
     if (req.file) {
@@ -232,10 +228,9 @@ const saveBusinessUserShopDetails = async (req, res, next) => {
 
     response.success(
       res,
-      "Your Business Customer Shop Details has been Updated!",
-      customer
+      "Your Business Customer Shop Details has been Updated!"
     );
-};
+});
 // get business customer user profile
 const getBusinessUserProfile = catchAsyncError(async (req, res, next) => {
     const customer = await userProfileService.getUserProfilebyUserID(
@@ -249,7 +244,7 @@ const skipBusinessUserKyc = catchAsyncError(async (req, res, next) => {
     ///update user
     await userService.updateUser(
       {
-        status: "Active",
+        status: 1,
       },
       req.user.user_id
     );
@@ -265,6 +260,7 @@ const skipBusinessUserKyc = catchAsyncError(async (req, res, next) => {
       adhaar_kyc_status: "notVerified",
       pan_kyc_status: "notVerified",
       gst_kyc_status: "notVerified",
+      user_id:req.user.user_id
     });
     response.success(res, "User Kyc Skiped!");
 });
@@ -302,6 +298,7 @@ const saveManualKycFile = catchAsyncError(async (req, res, next) => {
       pan_image: PanImage,
       adhaar_kyc_status: adhaarKycStatus,
       pan_kyc_status: panKycStatus,
+      user_id:req.user.user_id
     });
     response.success(res, "User Profile Updated!");
 });

@@ -25,7 +25,6 @@ const addUserProfile = async (body) => {
         },
       });
     }
-
     return user;
   } catch (error) {
     throw error;

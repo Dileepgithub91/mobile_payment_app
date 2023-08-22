@@ -1,4 +1,5 @@
 const db = require("../models");
+const logger = require("../logger");
 
 //Create Main Model
 const BusinessRequest = db.BusinessRequest;

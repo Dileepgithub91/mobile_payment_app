@@ -40,7 +40,7 @@ var attach_files = multer.diskStorage({
     cb(null, userId+"_"+Date.now() + ext);
   },
 });
-var ticket_doc = multer({
+var TicketDoc = multer({
   storage: attach_files,
   // limits: {
   //   fieldNameSize: 300,
@@ -61,4 +61,4 @@ var ticket_doc = multer({
   },
 });
 
-module.exports = ticket_doc;
+module.exports = TicketDoc;

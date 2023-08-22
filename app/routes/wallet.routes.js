@@ -6,9 +6,10 @@ const router = express.Router();
 const auth = require("../middleware/auth");
 
 
-router.get('/',  auth("readAny", "Order"), walletController.getWallets);
+router.get('/',  auth("readOwn", "Order"), walletController.getWallets);
+router.get('/new',  auth("readOwn", "Order"), walletController.newUserActivateWallet);
 router.get('/wallet',  auth("readOwn", "Order"), walletController.getWalletsDetails);
-router.post('/update/status',   auth("readAny", "Order"),walletController.updateWalletStatus);
+router.post('/update/status',   auth("readOwn", "Order"),walletController.updateWalletStatus);
 
 
 module.exports = router

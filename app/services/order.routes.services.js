@@ -42,14 +42,14 @@ const deductMoneyAsOrderAmount = async (value) => {
     const remainBalance =
       parseInt(wallet.dmt_wallet) - parseInt(value.sell_amount);
     if (remainBalance < 1) {
-      throw new ErrorHandler("Wallet balance not enough!");
+      throw new Error("Wallet balance not enough!");
     }
     let walletUpdateStatus = await walletService.updateWallet(
       { dmt_wallet: remainBalance },
       wallet.id
     );
     if (walletUpdateStatus && walletUpdateStatus[0] != 1) {
-      throw new ErrorHandler("Error occured when wallet was updated", 400);
+      throw new Error("Error occured when wallet was updated", 400);
     }
     ///save transection
     const transections = await walletService.saveTransection({
@@ -62,7 +62,7 @@ const deductMoneyAsOrderAmount = async (value) => {
     });
     console.log(transections);
     if (!transections) {
-      throw new ErrorHandler("Error occured, while saving transection.");
+      throw new Error("Error occured, while saving transection.");
     }
     return true;
   } catch (err) {
@@ -151,14 +151,13 @@ const savePurchasedCardAndActiveCard = async (flowtype, data, value) => {
         customer_email: value.customer_email,
         response_message: data.data.status,
       });
-      // if(!purchasedCard){
-
-      // }
+      return purchasedCard;
     }
     if (flowtype == "pineperks") {
+      let purchasedCard=[];
       if (data.cardDetailResponseList) {
         await data.data.cardDetailResponseList.map(async (card) => {
-          await cardService.savePurchasedCard({
+         let pCards= await cardService.savePurchasedCard({
             order_id: data.data.externalRequestId,
             user_id: value.user_id,
             product_id: value.product_id,
@@ -177,9 +176,10 @@ const savePurchasedCardAndActiveCard = async (flowtype, data, value) => {
             response_message: card.responseCode,
             response_code: card.responseMessage,
           });
+          purchasedCard.push(pCards);
         });
       }
-      let purchasedCard = await cardService.savePurchasedCard({
+      let pSCard = await cardService.savePurchasedCard({
         order_id: data.data.externalRequestId,
         user_id: value.user_id,
         product_id: value.product_id,
@@ -198,8 +198,27 @@ const savePurchasedCardAndActiveCard = async (flowtype, data, value) => {
         response_message: data.data.responseMessage,
         response_code: data.data.responseCode,
       });
+      purchasedCard.push(pSCard);
+      if(data.responseCode=="0"&& data.responseMessage=="Success"){
+        await cardService.saveActiveCard({
+          ref_order_id:  data.data.orderId,
+          order_id: data.data.externalRequestId,
+          user_id: value.user_id,
+          product_id: value.product_id,
+          serialNumber:  data.data.serialNumber,
+          referenceNumber:data.data.referenceNumber,
+          card_link: data.data.cardLink,
+          masked_card_no: data.data.maskedCardNumber,
+          customer_name:data.data.customerName,
+          customer_email: value.customer_email,
+          customer_mobile:data.data.mobileNumber,
+          amount: data.data.orderAmount,
+          status: data.data.responseMessage,
+        })
+      }
+      return purchasedCard;
     }
-    return true;
+    throw new Error("Flow type not found!");
   } catch (error) {
     logger.log("error", {
       source: "Order Route Service  -- save purchased Card",
@@ -232,6 +251,7 @@ const userOrderFlow = async () => {
 const adminOrderFlow = async (value) => {
   try {
     console.log(value);
+    let cardList=[];
     let cardAvailable= parseInt(value.quantity);
     let requireMore=0;
     //loop to find all the cards available in uploads
@@ -242,11 +262,11 @@ const adminOrderFlow = async (value) => {
     for(let i=0;i<cardAvailable;i++){
       let currCard=cards[i];
       //save purchased card and active cards
-       const purchesedCard=await this.savePurchasedCardAndActiveCard("admin",currCard,value)
+       const purchesedCard=await this.savePurchasedCardAndActiveCard("admin",currCard,value);
        if(!purchesedCard){
         throw new Error("Error occured during Purchase and Active card generation!")
        }
-      //
+       cardList.push(purchesedCard);
     }
     return {
       success: "1",
@@ -259,7 +279,7 @@ const adminOrderFlow = async (value) => {
     };
   }
 };
-const qwikcilverOrderFlow = async () => {
+const qwikcilverOrderFlow = async (value) => {
   try {
     console.log("qwikcilver hit");
     extOrderRes = await qwikCilverService.createAnOrderApi({
@@ -301,7 +321,7 @@ const qwikcilverOrderFlow = async () => {
     });
     extCardOrderId = extOrderRes.data.orderId;
     console.log(extOrderRes);
-    const purchasedCard = await orderRouteService.savePurchasedCard(
+    const purchasedCard = await this.savePurchasedCardAndActiveCard(
       "qwikcilver",
       extOrderRes,
       value
@@ -344,7 +364,7 @@ const pinePerksOrderFLow = async () => {
       });
     }
     extCardOrderId = extOrderRes.data.orderId;
-    let purchasedCard = await orderRouteService.savePurchasedCard(
+    let purchasedCard = await this.savePurchasedCardAndActiveCard(
       "pineperks",
       extOrderRes,
       value

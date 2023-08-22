@@ -1,7 +1,6 @@
 const { response } = require("../helpers");
 const {responseMessages,responseFlags} = require("../core/constants");
 const catchAsyncError=require('../middleware/catch.async.error');
-const ErrorHandler=require('../helpers/error.handler');
 const logger = require("../logger");
 const { commonService } = require("../services");
 
@@ -18,8 +17,7 @@ const getStates = catchAsyncError(async (req, res, next) => {
   try {
     const counteryId = req.query.counteryId;
     if (counteryId == "" ||counteryId==null) {
-      return next(new ErrorHandler("Countery id is required", responseFlags.failure));
-      // throw new Error("Countery id is required");
+      throw new Error("Countery id is required");
     }
     const States = await commonService.getStates(counteryId);
     response.success(res, "State Lists!", States);
@@ -33,8 +31,7 @@ const getCities = catchAsyncError(async (req, res, next) => {
     const counteryId = req.query.counteryId;
     const stateId = req.query.stateId;
     if (counteryId == "" ||counteryId==null ||stateId=="" ||stateId ==null) {
-      return next(new ErrorHandler("Countery id and State id both are required.", responseFlags.failure));
-      // throw new Error("Countery id and State id both are required!");
+      throw new Error("Countery id and State id both are required!");
     }
     const Cities = await commonService.getCities(counteryId,stateId);
     response.success(res, "Cities Lists!", Cities);

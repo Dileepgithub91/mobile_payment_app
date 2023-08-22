@@ -53,12 +53,12 @@ const addRegistrationUser = async ({ mobileNo ,verificationType}) => {
   try {
     let passotp;
     let registeredUser;
-    let findRegisteredUser = await OtpVerification.findAll({
+    let findRegisteredUser = await OtpVerification.findOne({
       where: {
         mobile_no: mobileNo,verification_type:verificationType
       },
     });
-    if (findRegisteredUser.length == 0) {
+    if (findRegisteredUser== null) {
       passotp = Math.floor(100000 + Math.random() * 900000);
       let SavedRegisteredUser = await OtpVerification.create({
         mobile_no: mobileNo,
@@ -68,9 +68,9 @@ const addRegistrationUser = async ({ mobileNo ,verificationType}) => {
       registeredUser = SavedRegisteredUser.dataValues;
       return registeredUser;
     }
-    registeredUser = findRegisteredUser ? findRegisteredUser[0].dataValues : "";
+    registeredUser = findRegisteredUser.dataValues;
     passotp = await validateOtpExpireBeforeGeneration(registeredUser);
-    await OtpVerification.update(
+   await OtpVerification.update(
       {
         otp: passotp.otp,
         resend_tries: passotp.retriesValue,
@@ -82,6 +82,8 @@ const addRegistrationUser = async ({ mobileNo ,verificationType}) => {
         },
       }
     );
+     registeredUser.otp=passotp.otp;
+     registeredUser.resend_tries=passotp.retriesValue;
     return registeredUser;
   } catch (error) {
     logger.log("error",{source:"auth Service -- add registration user",error});

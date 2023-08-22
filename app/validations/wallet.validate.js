@@ -22,7 +22,9 @@ module.exports.saveWallet = Joi.object({
 });
 
 module.exports.validateUpdateStatus = Joi.object({
-  id: Joi.string().required(),
+  status: Joi.string().required(),
+});
+module.exports.validateNewUserActivateWallet = Joi.object({
   status: Joi.string().required(),
 });
 module.exports.validateWalletDetails = Joi.object({

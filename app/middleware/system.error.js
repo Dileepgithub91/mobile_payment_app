@@ -4,6 +4,7 @@ const logger = require("../logger");
 module.exports = (err, req, res, next) => {
   console.log(err);
   console.log(err.message);
+  console.log(err.name);
   console.log("hit error");
   err.statusCode = err.statusCode || 500;
   err.message = err.message || "Internal Server Error";
@@ -12,6 +13,16 @@ module.exports = (err, req, res, next) => {
   //Wrong MongoDb Error
   if (err.name == "CasteError") {
     const message = `Resource not found. Invalid ${err.path}`;
+    err = new ErrorHandler(message, 400);
+  }
+  //Wrong DataBAse Error
+  if (err.name == "SequelizeDatabaseError") {
+    const message = err.message;
+    err = new ErrorHandler(message, 400);
+  }
+  //Variable not defined
+  if (err.name == "ReferenceError") {
+    const message = `An Error Occured,Contact Your Provider!!`;
     err = new ErrorHandler(message, 400);
   }
 

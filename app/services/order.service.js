@@ -63,11 +63,12 @@ const getOrder = async ({ pageNumber, limitPerPage, query }) => {
 };
 
 //Order Details
-const getOrderDetails = async (orderId) => {
+const getOrderDetails = async (data) => {
   try {
     const order = await Order.findOne({
       where: {
-        id: orderId,
+        id: data.id,
+        user_id:data.user_id,
       },
     });
     return order;

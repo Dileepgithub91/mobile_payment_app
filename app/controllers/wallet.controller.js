@@ -1,6 +1,5 @@
 const {responseMessages,responseFlags} = require("../core/constants");
 const catchAsyncError=require('../middleware/catch.async.error');
-const ErrorHandler=require('../helpers/error.handler');
 const { walletValidator } = require("../validations");
 const { response } = require("../helpers");
 const logger = require("../logger");
@@ -23,25 +22,31 @@ const updateWalletStatus = catchAsyncError(async (req, res, next) => {
       req.body
     );
     ///update Wallet status
-    const wallet = await walletService.updateWallet({status:value.status}, value.id);
+    const wallet = await walletService.updateWallet({status:value.status}, req.user.user_id);
     response.success(res, "Wallet Status updated!", wallet);
+});
+
+const newUserActivateWallet = catchAsyncError(async (req, res, next) => {
+    ///update Wallet status
+    const wallet = await walletService.saveWallet({user_id:req.user.user_id});
+    response.success(res, "new User Wallet Activated!", wallet);
 });
 
 const getWallets= catchAsyncError(async (req, res, next) => {
     const bodyData = req.query;
     let requestData={};
-    body.pageNumber ? (requestData.pageNumber = body.pageNumber) : {};
-    body.limitPerPage ? (requestData.limitPerPage = body.limitPerPage) : {};
+    bodyData.pageNumber ? (requestData.pageNumber = bodyData.pageNumber) : {};
+    bodyData.limitPerPage ? (requestData.limitPerPage = bodyData.limitPerPage) : {};
     delete bodyData.pageNumber;
     delete bodyData.limitPerPage;
     requestData.query = bodyData;
+    requestData.query.user_id=req.user.user_id;
     const wallets = await walletService.getWallets(requestData);
     response.success(res, "List of Wallet!", wallets);
 });
 
 const getWalletsDetails = catchAsyncError(async (req, res, next) => {
-    const value = await walletValidator.validateWalletDetails.validateAsync(req.query);
-    const wallet = await walletService.getWalletDetails(value.id);
+    const wallet = await walletService.getWalletDetails(req.user.user_id);
     response.success(res, "Details Of Wallets!", wallet);
 });
 
@@ -49,5 +54,6 @@ module.exports = {
     getWalletsDetails,
     getWallets,
     updateWalletStatus,
-    editWallet
+    editWallet,
+    newUserActivateWallet
 };

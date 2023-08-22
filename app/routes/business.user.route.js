@@ -26,6 +26,6 @@ router.post("/save-kyc-manualy",auth("updateOwn", "profile"),KycDocumentUploader
     businessUserController.saveManualKycFile
   );
 router.get("/get-agreement",  auth("updateOwn", "profile"), businessUserController.getBusinessUserAgreement);
-router.post ("/upload-agreement",  auth("updateOwn", "profile"), CompanyAgreementDocumentUploader.fields({ name: "agreementDocument", maxCount: 1 }),businessUserController.uploadBusinessUserAgreement);
+router.post ("/upload-agreement",  auth("updateOwn", "profile"), CompanyAgreementDocumentUploader.fields([{ name: "agreementDocument", maxCount: 1 }]),businessUserController.uploadBusinessUserAgreement);
 
 module.exports = router;

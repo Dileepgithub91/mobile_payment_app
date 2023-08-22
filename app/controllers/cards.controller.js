@@ -5,7 +5,6 @@ const {QwikCilverWorker} =require("../workers/product.worker")
 const { cardValidator } = require("../validations");
 const {responseMessages,responseFlags} = require("../core/constants");
 const catchAsyncError=require('../middleware/catch.async.error');
-const ErrorHandler=require('../helpers/error.handler');
 const { response } = require("../helpers");
 const logger = require("../logger");
 const { cardService,cardProviderServices,uploadedCardsService,tempUploadedCardsService} = require("../services");

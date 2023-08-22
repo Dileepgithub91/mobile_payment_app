@@ -5,7 +5,6 @@ const logger = require("../logger");
 const {responseMessages,responseFlags} = require("../core/constants");
 const HelperFunction = require("../helpers/functions");
 const catchAsyncError=require('../middleware/catch.async.error');
-const ErrorHandler=require('../helpers/error.handler');
 const {
   authService,
   userService,
@@ -21,7 +20,6 @@ const getRegisterOtp = catchAsyncError(async (req, res, next) => {
     const checkUserExists= await userService.getUserByMobile(value.mobileNo);
     if(checkUserExists){
       throw new Error("User Exists!")
-      // throw next(new ErrorHandler(responseMessages.userExist, responseFlags.failure));
     }
     const registeredUser = await authService.addRegistrationUser({
       mobileNo: value.mobileNo,
@@ -52,8 +50,7 @@ const verifyRegisterOtp =  catchAsyncError(async (req, res, next) => {
       verification_type:"register"
     });
     if(!registeredUser){
-      return next(new ErrorHandler(responseMessages.userNotFound, responseFlags.notFound));
-      // response.validatationError(res, "Registration does not Exists!");
+      throw new Error(responseMessages.userNotFound);
     }
     const updatedRetriesValue = parseInt(registeredUser.no_of_retries) + 1;
     //check if the user has not exceeded otp limit i.e. 3
@@ -62,9 +59,7 @@ const verifyRegisterOtp =  catchAsyncError(async (req, res, next) => {
         "info",
         "You have exceeded no of tries for otp,you can resend otp!"
       );
-      return next(new ErrorHandler(responseMessages.otpTryExceded, responseFlags.forbidden));
-      // response.validatationError(res, "You have exceeded no of tries for otp,you can resend otp");
-      // return false;
+      throw new Error(responseMessages.otpTryExceded);
     }
     //check if the otp is correct
     if (registeredUser.otp !== otp) {
@@ -73,7 +68,7 @@ const verifyRegisterOtp =  catchAsyncError(async (req, res, next) => {
         {id:registeredUser.id, verification_type:"register"}
       );
       logger.log("info", "Invalid Otp!, enter correct otp.");
-      return next(new ErrorHandler(responseMessages.otpInvalid, responseFlags.forbidden));
+      throw new Error(responseMessages.otpInvalid);
       // response.validatationError(res, "Invalid Otp!, enter correct otp.");
       // return false;
     }
@@ -115,7 +110,7 @@ const getResendOtp = catchAsyncError(async (req, res, next) => {
     const checkUserExists= await userService.getUserByMobile(value.mobileNo);
     if(checkUserExists!=null){
       logger.log("info", "User Exists, Can't be registered again!");
-      throw next(new ErrorHandler(responseMessages.userExist, responseFlags.failure));
+      throw new Error(responseMessages.userExist);
     }
     const user = await authService.findRegistrationUser({
       mobile_no: value.mobileNo,
@@ -123,9 +118,7 @@ const getResendOtp = catchAsyncError(async (req, res, next) => {
     });
     if (!user) {
       logger.log("info", "User Not Found");
-      throw next(new ErrorHandler(responseMessages.userNotFound, responseFlags.notFound));
-      // response.generalError(res, "User Not Found");
-      // return false;
+      throw new Error(responseMessages.userNotFound);
     }
    const registeredUser =await authService.addRegistrationUser({
       mobileNo: value.mobileNo,
@@ -146,7 +139,7 @@ const sendForgetPasswordOtp = catchAsyncError(async (req, res, next) => {
     const user = await userService.getUserByMobile(value.mobileNo);
     if (!user) {
       logger.log("info", "User Not Found");
-      return next(new ErrorHandler(responseMessages.userNotFound, responseFlags.notFound));
+      throw new Error(responseMessages.userNotFound);
       // response.generalError(res, "User Not Found");
       // return false;
     }
@@ -173,9 +166,7 @@ const reSendForgetPasswordOtp = catchAsyncError(async (req, res, next) => {
     const user = await authService.findRegistrationUser({mobile_no:value.mobileNo,verification_type:"forget"});
     if (!user) {
       logger.log("info", "User Not Found");
-      return next(new ErrorHandler(responseMessages.userNotFound, responseFlags.notFound));
-      // response.generalError(res, "User Not Found");
-      // return false;
+      throw new Error(responseMessages.userNotFound);
     }
     const registeredUser =await authService.addRegistrationUser({
       mobileNo: value.mobileNo,
@@ -212,7 +203,7 @@ const verifyForgetPasswordOtp = catchAsyncError(async (req, res, next) => {
           "info",
           "You have exceeded no of tries for otp,you can resend otp"
         );
-        return next(new ErrorHandler(responseMessages.otpTryExceded, responseFlags.forbidden));
+        throw new Error(responseMessages.otpTryExceded);
         // response.validatationError(res, "You have exceeded no of tries for otp,you can resend otp.");
         // return false;
       }
@@ -223,7 +214,7 @@ const verifyForgetPasswordOtp = catchAsyncError(async (req, res, next) => {
         {id:registeredUser.id, verification_type:"forget"}
       );
       logger.log("info", "Invalid Otp!, enter correct otp.");
-      return next(new ErrorHandler(responseMessages.otpInvalid, responseFlags.forbidden));
+      throw new Error(responseMessages.otpInvalid);
       // response.validatationError(res, "Invalid Otp!, enter correct otp.");
       // return false;
     }
@@ -250,7 +241,7 @@ const forgetPasswordChangePassword = catchAsyncError(async (req, res, next) => {
     const hashedPassword = await bcrypt.hash(value.newPassword, 10);
     const findUser= await userService.getUserByMobile(mobileNo);
     if(!findUser){
-      return next(new ErrorHandler(responseMessages.userNotFound, responseFlags.notFound));
+      throw new Error(responseMessages.userNotFound);
       // throw new Error("User Not found");
     }
     const user = await userService.updateUser(
@@ -276,13 +267,13 @@ const loginViaPassowrd = catchAsyncError(async (req, res, next) => {
     const user = await userService.getUserByMobile(value.mobileNo);
     if (!user) {
       logger.log("info", "User Not Found");
-      return next(new ErrorHandler(responseMessages.userNotFound, responseFlags.notFound));
+      throw new Error(responseMessages.userNotFound);
       // response.generalError(res, "User Not Found");
       // return false;
     }
     if (!(await bcrypt.compare(value.password, user.password))) {
       logger.log("info", "Password does not match!");
-      return next(new ErrorHandler(responseMessages.passwordNotMatch, responseFlags.failure));
+      throw new Error(responseMessages.passwordNotMatch);
       // response.generalError(res, "Password does not match!");
       // return false;
     }

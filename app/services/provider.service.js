@@ -6,7 +6,9 @@ const Providers = db.Provider;
 
 const getProvider = async () => {
   try {
-    let providers = await Providers.findAll();
+    let providers = await Providers.findAll({
+      attributes: { exclude: ['config','status'] }
+    });
     return providers;
   } catch (error) {
     logger.log("info", error);
@@ -19,7 +21,8 @@ const getProviderDetails = async (providerId) => {
     let provider = await Providers.findOne({
         where:{
             id:providerId
-        }
+        },
+        attributes: { exclude: ['config','status'] }
     });
     return provider;
   } catch (error) {

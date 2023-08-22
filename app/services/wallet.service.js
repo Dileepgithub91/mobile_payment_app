@@ -10,12 +10,12 @@ const Transection = db.Transection;
 //Save Wallet
 const saveWallet = async (bodyData) => {
   try {
-    const findWallet = await Wallet.findAll({
+    const findWallet = await Wallet.findOne({
       where: {
         user_id: bodyData.user_id,
       },
     });
-    if (findWallet.length != 0) {
+    if (findWallet!=null) {
       throw new Error("Wallet Already Exists!!");
     }
     let wallet = await Wallet.create(bodyData);
@@ -27,19 +27,19 @@ const saveWallet = async (bodyData) => {
 };
 
 ////update Wallet
-const updateWallet = async (bodyData, walletId) => {
+const updateWallet = async (bodyData, UserId) => {
   try {
-    const findWallet = await Wallet.findAll({
+    const findWallet = await Wallet.findOne({
       where: {
-        id: walletId,
+        user_id: UserId,
       },
     });
-    if (findWallet.length == 0) {
+    if (findWallet==null) {
       throw new Error("Wallet Not Found!");
     }
     let wallet = await Wallet.update(bodyData, {
       where: {
-        id: walletId
+        user_id: UserId
       },
     });
     return wallet;
@@ -69,13 +69,16 @@ const getWallets = async ({ pageNumber, limitPerPage, query }) => {
 };
 
 //Wallet Details
-const getWalletDetails = async (walletId) => {
+const getWalletDetails = async (userId) => {
   try {
     const wallet = await Wallet.findOne({
       where: {
-        id: walletId,
+        user_id:userId,
       },
     });
+    if(wallet==null){
+      throw new Error("Wallet not Activated!");
+    }
     return wallet;
   } catch (error) {
     logger.log("info", error);

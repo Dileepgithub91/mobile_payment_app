@@ -2,7 +2,6 @@ const Validator = require("../validations/user.validate");
 const { response } = require("../helpers");
 const {responseMessages,responseFlags} = require("../core/constants");
 const catchAsyncError=require('../middleware/catch.async.error');
-const ErrorHandler=require('../helpers/error.handler');
 const logger = require("../logger");
 const {
   userService,
@@ -55,6 +54,8 @@ const uploadUserProfileImage = catchAsyncError(async (req, res, next) => {
     let imageUrl = "";
     if (req.file) {
       imageUrl = req.file.path || "";
+    }else{
+      throw new Error("Upload is required")
     }
     ///create new user profile
     await userProfileService.updateUserProfilebyUserID(
@@ -67,10 +68,11 @@ const uploadUserProfileImage = catchAsyncError(async (req, res, next) => {
 });
 
 const changeUserAvatar = catchAsyncError(async (req, res, next) => {
+  const value = await Validator.updateUserProfileAvatar.validateAsync(req.body);
     ///create new user profile
     await userProfileService.updateUserProfilebyUserID(
       {
-        avtar: req.data.avatar,
+        avatar: value.avatar,
       },
       req.user.user_id
     );
@@ -123,6 +125,7 @@ const saveManualKycFile = catchAsyncError(async (req, res, next) => {
       pan_image: PanImage,
       adhaar_kyc_status: adhaarKycStatus,
       pan_kyc_status: panKycStatus,
+      user_id:req.user.user_id
     });
     response.success(res, "User Profile Updated!");
 });
@@ -147,6 +150,7 @@ const skipUserKyc = catchAsyncError(async (req, res, next) => {
       user_id: req.user.user_id,
       adhaar_kyc_status: "notVerified",
       pan_kyc_status: "notVerified",
+      user_id:req.user.user_id
     });
     response.success(res, "User Kyc Skiped!");
 });
@@ -169,7 +173,7 @@ const getManualKycdocument =  catchAsyncError(async (req, res, next) => {
       userId
     );
     if (!userKycdata) {
-      return next(new ErrorHandler(responseMessages.userKycNotFound, responseFlags.notFound));
+      throw new Error(responseMessages.userKycNotFound);
       // throw new Error("User Kyc Data not found!");
     }
     const userKyc = userKycdata.dataValues;
@@ -307,7 +311,7 @@ const kycGStVerification = catchAsyncError( async (req, res, next) => {
     const { gstNo } = req.body;
     const gstData = await kycService.verifyGst(gstNo);
     if (gstData.data.gstin_status != "Active") {
-      return next(new ErrorHandler(responseMessages.gstInactive, responseFlags.failure));
+      throw new Error(responseMessages.gstInactive);
       // throw new Error("Gst is Inactive, gst verification failed!");
     }
     //update kyc document

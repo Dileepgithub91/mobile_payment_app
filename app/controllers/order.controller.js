@@ -1,6 +1,5 @@
 const { responseMessages, responseFlags } = require("../core/constants");
 const catchAsyncError = require("../middleware/catch.async.error");
-const ErrorHandler = require("../helpers/error.handler");
 const { orderValidator } = require("../validations");
 const { response } = require("../helpers");
 const logger = require("../logger");
@@ -70,7 +69,7 @@ const createOrder = catchAsyncError(async (req, res, next) => {
   const reCheckWallet = await walletService.getWalletByUserId(value.user_id);
   ///check if the amount is in negative
   if (parseInt(reCheckWallet.dmt_wallet) < 1) {
-    throw new ErrorHandler("Wallet balance not enough!");
+    throw new Error("Wallet balance not enough!");
   }
 
   let providerList = provider.provider;
@@ -130,7 +129,7 @@ const createOrder = catchAsyncError(async (req, res, next) => {
     }
     throw new Error("Card Not Available!");
   }
-
+   console.log(extOrderRes);
   //Save card order details data in card order details table
   const cardOrderDetails = await cardOrderService.saveCardOrderDetail({
     order_id: order.order_id,
@@ -164,7 +163,7 @@ const checkOrderStatus = catchAsyncError(async (req, res, next) => {
     value.order_id
   );
   if (!orderDetail) {
-    throw new ErrorHandler("Order not Found!");
+    throw new Error("Order not Found!");
   }
   const provider = await orderRouteService.checkProductAvailabilityAndPorviders(
     orderDetail.product_id
@@ -235,8 +234,8 @@ const updateOrderStatus = catchAsyncError(async (req, res, next) => {
 const getOrders = catchAsyncError(async (req, res, next) => {
   const bodyData = req.query;
   let requestData = {};
-  body.pageNumber ? (requestData.pageNumber = body.pageNumber) : {};
-  body.limitPerPage ? (requestData.limitPerPage = body.limitPerPage) : {};
+  bodyData.pageNumber ? (requestData.pageNumber = bodyData.pageNumber) : {};
+  bodyData.limitPerPage ? (requestData.limitPerPage = bodyData.limitPerPage) : {};
   delete bodyData.pageNumber;
   delete bodyData.limitPerPage;
   requestData.query = bodyData;
@@ -249,7 +248,8 @@ const getOrderDetails = catchAsyncError(async (req, res, next) => {
   const value = await orderValidator.validateOrderDetails.validateAsync(
     req.query
   );
-  const order = await orderService.getOrderDetails(value.id);
+  value.user_id=req.user.user_id;
+  const order = await orderService.getOrderDetails(value);
   response.success(res, "Details Of Orders!", order);
 });
 

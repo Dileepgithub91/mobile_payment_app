@@ -1,4 +1,5 @@
 const db = require("../models");
+const logger =require("../logger");
 
 //Create Main Model
 const Ticket = db.Ticket;
@@ -24,14 +25,13 @@ const addTickets = async (body) => {
 };
 const addTicketReply = async (body) => {
   try {
-    const description = body.description;
-    let replys = await TicketReply.findAll({
+    let ticket = await Ticket.findOne({
       where: {
-        description: description,
+        id: body.ticket_id,
       },
     });
-    if (replys.length != 0) {
-      throw new Error("Role Exists, try again!");
+    if (ticket==null) {
+      throw new Error("Invalid Ticket!");
     }
     let reply = await TicketReply.create(body);
     return reply;
@@ -43,7 +43,7 @@ const addTicketReply = async (body) => {
 
 const findTicketDetails = async (id) => {
   try {
-    let tickets = await Ticket.findAll({
+    let tickets = await Ticket.findOne({
       where: {
         id:id
       },
@@ -53,11 +53,11 @@ const findTicketDetails = async (id) => {
     }
     let replys = await TicketReply.findAll({
       where: {
-        ticket_id:tickets[0].dataValues.id
+        ticket_id:tickets.id
       },
     });
     return {
-        ticket:tickets[0].dataValues,
+        ticket:tickets.dataValues,
         reply:replys
     };
   } catch (error) {

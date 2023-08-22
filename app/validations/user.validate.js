@@ -5,7 +5,7 @@ module.exports.saveUserProfile = Joi.object({
   middlename: Joi.string(),
   lastname: Joi.string(),
   email: Joi.string(),
-  avtar: Joi.string(),
+  avatar: Joi.string(),
   alternateMobile: Joi.string()
     .pattern(new RegExp("^[0-9]{10,12}$"))
     .required()
@@ -19,4 +19,8 @@ module.exports.saveUserProfile = Joi.object({
   cityId: Joi.string(),
   postcode: Joi.string(),
   whatsappNumber: Joi.string(),
+});
+
+module.exports.updateUserProfileAvatar = Joi.object({
+  avatar: Joi.string().uri().required(),
 });

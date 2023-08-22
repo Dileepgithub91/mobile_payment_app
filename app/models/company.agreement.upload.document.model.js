@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const company_agreement_uploaded_document = sequelize.define("company_agreement_uploaded_document", {
+  const companyAgreementUploadedDocument = sequelize.define("company_agreement_uploaded_document", {
     user_id: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -18,5 +18,5 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: "notVerified"
     }
   });
-  return company_agreement_uploaded_document;
+  return companyAgreementUploadedDocument;
 };

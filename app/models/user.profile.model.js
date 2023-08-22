@@ -1,10 +1,10 @@
 module.exports = (sequelize, DataTypes) => {
-  const user_profile = sequelize.define("user_profile", {
+  const UserProfile = sequelize.define("user_profile", {
     user_id: {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    avtar: {
+    avatar: {
       type: DataTypes.STRING,
       allowNull: true,
     },
@@ -86,5 +86,5 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
     }
   });
-  return user_profile;
+  return UserProfile;
 };

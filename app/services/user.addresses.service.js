@@ -20,7 +20,6 @@ const addUserAddress = async (body) => {
         where: { user_id: userId },
       });
     }
-
     return user;
   } catch (error) {
     throw error;
