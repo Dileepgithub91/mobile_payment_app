@@ -8,7 +8,8 @@ const {
   userProfileService,
   userAddressService,
   userKycDetailsService,
-  kycService 
+  kycService ,
+  walletService
 } = require("../services");
 
 const updateUserProfile = catchAsyncError(async (req, res, next) => {
@@ -47,6 +48,8 @@ const updateUserProfile = catchAsyncError(async (req, res, next) => {
       state_id: value.stateId,
       postcode: value.postcode,
     });
+    //create Wallet of user
+    await walletService.saveWallet({user_id:req.user.user_id});
     response.success(res, "User Profile Updated!");
 });
 
