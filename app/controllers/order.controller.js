@@ -145,7 +145,7 @@ const createOrder = catchAsyncError(async (req, res, next) => {
     image: provider.images,
     send_as_gift: value.send_as_gift,
   });
-
+ console.log(cardOrderDetails);
   console.log(extOrderRes);
 
   response.success(
