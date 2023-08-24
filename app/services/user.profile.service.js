@@ -1,7 +1,11 @@
 const db = require("../models");
 
 //Create Main Model
+const User = db.User;
 const userProfile = db.UserProfile;
+const Wallet = db.Wallet;
+const UserAddress = db.UserAddress;
+const UserKycDetails = db.UserKycDetail;
 
 const addUserProfile = async (body) => {
   try {
@@ -45,10 +49,12 @@ const updateUserProfilebyUserID = async (bodyData,userId) => {
 
 const getUserProfilebyUserID = async (userId) => {
   try {
-    const user = await userProfile.findOne({
+    const user = await User.findOne({
       where:{
-        user_id:userId
-      }
+        id:userId
+      },
+      include: [ Wallet, userProfile,UserAddress,UserKycDetails ],
+      attributes:{exclude:['password']}
     });
     return user;
   } catch (error) {

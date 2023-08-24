@@ -8,27 +8,27 @@ const { ticketValidator } = require("../validations");
 
 const saveTicket = catchAsyncError(async (req, res, next) => {
   const value = await ticketValidator.saveTicket.validateAsync(req.body);
-  if (req.files) {
+  if (req.files.ticket_doc) {
     value.document = req.files.ticket_doc[0].path;
   }
-  value.user_id = req.user.user_id;
+  value.user_id = req.user.id;
   const ticket = await ticketService.addTickets(value);
   response.success(res, "new ticket created!", ticket);
 });
 
 const saveTicketReply = catchAsyncError(async (req, res, next) => {
   const value = await ticketValidator.saveReply.validateAsync(req.body);
-  if (req.files) {
+  if (req.files.ticket_doc) {
     value.document = req.files.ticket_doc[0].path;
   }
-  value.user_id = req.user.user_id;
+  value.user_id = req.user.id;
   const reply = await ticketService.addTicketReply(value);
   response.success(res, "Reply sent!!", reply);
 });
 
 const getTicketLists = catchAsyncError(async (req, res, next) => {
   let query = req.query || {};
-  query.user_id=req.user.user_id;
+  query.user_id=req.user.id;
   const tickets = await ticketService.findTickets(query);
   response.success(res, "Tickets Lists!", tickets);
 });

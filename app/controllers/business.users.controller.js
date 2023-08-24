@@ -133,7 +133,7 @@ const verifyBusinessUserRequest = catchAsyncError(async (req, res, next) => {
 // save business customer user profile
 const saveBusinessUserProfile = catchAsyncError(async (req, res, next) => {
     const bodyData = req.body;
-    const UserID = req.user.user_id;
+    const UserID = req.user.id;
     let imageUrl = "";
     //validator
     const value =
@@ -151,11 +151,11 @@ const saveBusinessUserProfile = catchAsyncError(async (req, res, next) => {
         last_name: value.lastname,
         email: value.email,
       },
-      req.user.user_id
+      req.user.id
     );
     ///create new user profile
     await userProfileService.addUserProfile({
-      user_id: req.user.user_id,
+      user_id: req.user.id,
       avtar: value.avtar || "",
       image_url: imageUrl,
       whatsapp_number: value.whatsappNumber,
@@ -163,7 +163,7 @@ const saveBusinessUserProfile = catchAsyncError(async (req, res, next) => {
     });
     ///create new user address
     await userAddressService.addUserAddress({
-      user_id: req.user.user_id,
+      user_id: req.user.id,
       address_type: "user_address",
       address_line_1: value.addressLine1,
       address_line_2: value.addressLine2,
@@ -209,7 +209,7 @@ const saveBusinessUserShopDetails = catchAsyncError(async (req, res, next) => {
     }
     ///create new user profile
     await userProfileService.addUserProfile({
-      user_id: req.user.user_id,
+      user_id: req.user.id,
       bussiness_name: value.businessName,
       bussiness_card: imageUrl,
       whatsapp_number: value.whatsappNumber,
@@ -220,7 +220,7 @@ const saveBusinessUserShopDetails = catchAsyncError(async (req, res, next) => {
     });
     ///create new user address
     await userAddressService.addUserAddress({
-      user_id: req.user.user_id,
+      user_id: req.user.id,
       address_type: "business_address",
       address_line_1: value.businessAddress,
       postcode: value.businessZipCode,
@@ -234,7 +234,7 @@ const saveBusinessUserShopDetails = catchAsyncError(async (req, res, next) => {
 // get business customer user profile
 const getBusinessUserProfile = catchAsyncError(async (req, res, next) => {
     const customer = await userProfileService.getUserProfilebyUserID(
-      req.user.user_id
+      req.user.id
     );
     response.success(res, "Your Business Customer Profile!", customer);
 });
@@ -246,21 +246,21 @@ const skipBusinessUserKyc = catchAsyncError(async (req, res, next) => {
       {
         status: 1,
       },
-      req.user.user_id
+      req.user.id
     );
     ///update user profile
     await userProfileService.updateUserProfilebyUserID(
       {
         kyc_level: "0",
       },
-      req.user.user_id
+      req.user.id
     );
     ///update User Kyc files
     await userKycDetailsService.addUserKycDetails({
       adhaar_kyc_status: "notVerified",
       pan_kyc_status: "notVerified",
       gst_kyc_status: "notVerified",
-      user_id:req.user.user_id
+      user_id:req.user.id
     });
     response.success(res, "User Kyc Skiped!");
 });
@@ -289,7 +289,7 @@ const saveManualKycFile = catchAsyncError(async (req, res, next) => {
       {
         kyc_level: kycLevel,
       },
-      req.user.user_id
+      req.user.id
     );
     ///update User Kyc files
     await userKycDetailsService.addUserKycDetails({
@@ -298,14 +298,14 @@ const saveManualKycFile = catchAsyncError(async (req, res, next) => {
       pan_image: PanImage,
       adhaar_kyc_status: adhaarKycStatus,
       pan_kyc_status: panKycStatus,
-      user_id:req.user.user_id
+      user_id:req.user.id
     });
     response.success(res, "User Profile Updated!");
 });
 // download link agreement 
 const getBusinessUserAgreement = catchAsyncError(async (req, res, next) => {
     const customer = await businessUserService.getUploadedBusinessAgreementDocument(
-      req.user.user_id
+      req.user.id
     );
     response.success(res, "Your Business Agreement Documents!", customer);
 });
@@ -322,7 +322,7 @@ const uploadBusinessUserAgreement = catchAsyncError(async (req, res, next) => {
     }
     const customer = await businessUserService.uploadBusinessAgreementDocument(
       {
-        user_id:req.user.user_id,
+        user_id:req.user.id,
         agreement_document_id:value.agreementDocumentId,
         uploaded_agreement_document:uploadedAgreementDocument,
         status:"pending"

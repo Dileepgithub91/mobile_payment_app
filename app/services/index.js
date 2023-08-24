@@ -24,4 +24,7 @@ module.exports = {
     cardProviderServices: require('./card.provider.setting.service'),
     orderRouteService: require('./order.routes.services'),
     uploadedCardsService: require('./uploaded.card.service'),
+    salesMarginServices: require('./sales.margin.service'),
+    purchaseMarginServices: require('./purchase.margin.service'),
+    salesMarginGroupServices: require('./sales.margin.group.service'),
 }

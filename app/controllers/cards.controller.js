@@ -43,21 +43,19 @@ const getPrePaidCards = catchAsyncError(async (req, res, next) => {
 });
 const getCardDetails = catchAsyncError(async (req, res, next) => {
     const value =
-    await cardValidator.cardDetails.validateAsync(product);
+    await cardValidator.cardDetails.validateAsync(req.query);
     const giftCard = await cardService.getCardDetails(value.id);
     response.success(res, "List of Gift Cards!", giftCard);
 });
 
 ////Temp Uploaded Card APi:
-const bulkCreateTempUploadedCard = async (req, res, next) => {
-  try {
-    console.log("hit");
+const bulkCreateTempUploadedCard = catchAsyncError(async (req, res, next) => {
     let filePath;
     let bodyData = req.body;
     const successRes = [];
     const errorRes = [];
-    let userId = "3445"; //req.user.user_id;
-    let providerId = "3"; //req.user.role_id==admin?"3":"4";
+    let userId = req.user.id;
+    let providerId = req.user.role_id=="admin"?"3":"4";
     let formatId = bodyData.format_id;
     let batchProcessId = await helpFunc.generateDateTimeString();
     const cardFormat = await cardValidator.validateFormatId.validateAsync({
@@ -127,14 +125,9 @@ const bulkCreateTempUploadedCard = async (req, res, next) => {
     console.log(errorRes);
     logger.log("info", { successRes, errorRes });
     response.success(res, "Uploaded Card Have been Saved!");
-  } catch (error) {
-    logger.log("error", error);
-    console.log(error);
-    response.generalError(res, error.message);
-  }
-};
-const createTempUploadedCard = async (req, res, next) => {
-  try {
+});
+
+const createTempUploadedCard = catchAsyncError(async (req, res, next) => {
     let value = {};
     const cardFormat = await cardValidator.validateFormatId.validateAsync({
       format_id: req.body.format_id,
@@ -161,20 +154,14 @@ const createTempUploadedCard = async (req, res, next) => {
         req.body
       );
     }
-    value.user_id = req.user.user_id;
+    value.user_id = req.user.id;
     value.provider_id = req.user.role_id == "admin" ? "3" : "4";
     value.batch_process_Id = await helpFunc.generateDateTimeString();
     ///update user
     const card = await tempUploadedCardsService.saveUploadedCardsTemp(value);
     response.success(res, "temp Uploaded Card Have been Created!", card);
-  } catch (error) {
-    logger.log("error", error);
-    console.log(error);
-    response.generalError(res, error.message);
-  }
-};
-const updateTempUploadedCard = async (req, res, next) => {
-  try {
+});
+const updateTempUploadedCard = catchAsyncError(async (req, res, next) => {
     //validator
     let value;
     const valueID = await cardValidator.validateEditUploadedCard.validateAsync(
@@ -212,14 +199,8 @@ const updateTempUploadedCard = async (req, res, next) => {
       id
     );
     response.success(res, "temp Uploaded Card Status updated!", card);
-  } catch (error) {
-    logger.log("error", error);
-    console.log(error);
-    response.generalError(res, error.message);
-  }
-};
-const getTempUploadedCard = async (req, res, next) => {
-  try {
+});
+const getTempUploadedCard = catchAsyncError(async (req, res, next) => {
     const bodyData = req.query;
     let requestData = {};
     bodyData.pageNumber ? (requestData.pageNumber = bodyData.pageNumber) : {};
@@ -233,14 +214,8 @@ const getTempUploadedCard = async (req, res, next) => {
       requestData
     );
     response.success(res, "List of Uploaded Card!", cards);
-  } catch (error) {
-    logger.log("error", error);
-    console.log(error);
-    response.generalError(res, error.message);
-  }
-};
-const getTempUploadedCardDetails = async (req, res, next) => {
-  try {
+});
+const getTempUploadedCardDetails = catchAsyncError(async (req, res, next) => {
     const value = await cardValidator.validateCardDetails.validateAsync(
       req.query
     );
@@ -248,16 +223,10 @@ const getTempUploadedCardDetails = async (req, res, next) => {
       value.id
     );
     response.success(res, "Details Of Uploaded Card!", card);
-  } catch (error) {
-    logger.log("error", error);
-    console.log(error);
-    response.generalError(res, error.message);
-  }
-};
+});
 
 ////Uploaded Card APi:
-const createUploadedCard = async (req, res, next) => {
-  try {
+const createUploadedCard = catchAsyncError(async (req, res, next) => {
     ///tempCardId
     let listCardId = req.body.tempCardId;
     let errorRes=[];
@@ -296,14 +265,8 @@ const createUploadedCard = async (req, res, next) => {
     })
    
     response.success(res, "Uploaded Card Have been Created!", card);
-  } catch (error) {
-    logger.log("error", error);
-    console.log(error);
-    response.generalError(res, error.message);
-  }
-};
-const updateUploadedCard = async (req, res, next) => {
-  try {
+});
+const updateUploadedCard =catchAsyncError( async (req, res, next) => {
     //validator
     let value;
     const valueID = await cardValidator.validateEditUploadedCard.validateAsync(
@@ -338,14 +301,8 @@ const updateUploadedCard = async (req, res, next) => {
     ///update Uploaded Card status
     const card = await uploadedCardsService.updateUploadedCard(value, id);
     response.success(res, "Uploaded Card Status updated!", card);
-  } catch (error) {
-    logger.log("error", error);
-    console.log(error);
-    response.generalError(res, error.message);
-  }
-};
-const getUploadedCard = async (req, res, next) => {
-  try {
+});
+const getUploadedCard = catchAsyncError(async (req, res, next) => {
     const bodyData = req.query;
     let requestData = {};
     bodyData.pageNumber ? (requestData.pageNumber = bodyData.pageNumber) : {};
@@ -357,29 +314,17 @@ const getUploadedCard = async (req, res, next) => {
     requestData.query = bodyData;
     const cards = await uploadedCardsService.getUploadedCard(requestData);
     response.success(res, "List of Uploaded Card!", cards);
-  } catch (error) {
-    logger.log("error", error);
-    console.log(error);
-    response.generalError(res, error.message);
-  }
-};
-const getUploadedCardDetails = async (req, res, next) => {
-  try {
+});
+const getUploadedCardDetails = catchAsyncError(async (req, res, next) => {
     const value = await cardValidator.validateCardDetails.validateAsync(
       req.query
     );
     const card = await uploadedCardsService.getUploadedCardDetails(value.id);
     response.success(res, "Details Of Uploaded Card!", card);
-  } catch (error) {
-    logger.log("error", error);
-    console.log(error);
-    response.generalError(res, error.message);
-  }
-};
+});
 
 ///////Card Provider API
-const getCardProviders = async (req, res, next) => {
-  try {
+const getCardProviders = catchAsyncError(async (req, res, next) => {
     const bodyData = req.query;
     let requestData;
     bodyData.pageNumber ? (requestData.pageNumber = bodyData.pageNumber) : {};
@@ -391,30 +336,19 @@ const getCardProviders = async (req, res, next) => {
     requestData.query = bodyData;
     const giftCards = await cardProviderServices.getCardProvider(requestData);
     response.success(res, "List of Card Providers!", giftCards);
-  } catch (error) {
-    logger.log("info", error.message);
-    console.log(error);
-    response.generalError(res, error.message);
-  }
-};
-const getCardProviderDetails = async (req, res, next) => {
-  try {
+});
+
+const getCardProviderDetails = catchAsyncError(async (req, res, next) => {
     const value = await cardValidator.cardDetails.validateAsync(req.query);
     const giftCards = await cardProviderServices.getCardProviderDetails(
       value.id
     );
     response.success(res, "List of Gift Cards!", giftCards);
-  } catch (error) {
-    logger.log("info", error.message);
-    console.log(error);
-    response.generalError(res, error.message);
-  }
-};
+});
 
 
 //Card Format APi Api
-const getCardFormat = async (req, res, next) => {
-  try {
+const getCardFormat = catchAsyncError(async (req, res, next) => {
     const bodyData = req.query;
     let requestData = {};
     bodyData.pageNumber ? (requestData.pageNumber = bodyData.pageNumber) : {};
@@ -426,25 +360,14 @@ const getCardFormat = async (req, res, next) => {
     requestData.query = bodyData;
     const cards = await uploadedCardsService.getCardFormat(requestData);
     response.success(res, "List of Card Fromat!", cards);
-  } catch (error) {
-    logger.log("error", error);
-    console.log(error);
-    response.generalError(res, error.message);
-  }
-};
-const getCardFormatDetails = async (req, res, next) => {
-  try {
+});
+const getCardFormatDetails = catchAsyncError(async (req, res, next) => {
     const value = await cardValidator.validateCardDetails.validateAsync(
       req.query
     );
     const card = await uploadedCardsService.getUploadedCardsDetails(value.id);
     response.success(res, "Details Of Card Format!", card);
-  } catch (error) {
-    logger.log("error", error);
-    console.log(error);
-    response.generalError(res, error.message);
-  }
-};
+});
 
 
 

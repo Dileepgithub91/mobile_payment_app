@@ -2,7 +2,7 @@ const logger = require("../logger");
 const db = require("../models");
 
 //Create Main Model
-const cardProviderSetting = db.card_provider_setting;
+const cardProviderSetting = db.CardProviderSetting;
 
 const getCardProvider = async ({ pageNumber, limitPerPage, query }) => {
   try {

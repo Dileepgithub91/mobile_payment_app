@@ -22,13 +22,13 @@ const updateWalletStatus = catchAsyncError(async (req, res, next) => {
       req.body
     );
     ///update Wallet status
-    const wallet = await walletService.updateWallet({status:value.status}, req.user.user_id);
+    const wallet = await walletService.updateWallet({status:value.status}, req.user.id);
     response.success(res, "Wallet Status updated!", wallet);
 });
 
 const newUserActivateWallet = catchAsyncError(async (req, res, next) => {
     ///update Wallet status
-    const wallet = await walletService.saveWallet({user_id:req.user.user_id});
+    const wallet = await walletService.saveWallet({user_id:req.user.id});
     response.success(res, "new User Wallet Activated!", wallet);
 });
 
@@ -40,13 +40,13 @@ const getWallets= catchAsyncError(async (req, res, next) => {
     delete bodyData.pageNumber;
     delete bodyData.limitPerPage;
     requestData.query = bodyData;
-    requestData.query.user_id=req.user.user_id;
+    requestData.query.user_id=req.user.id;
     const wallets = await walletService.getWallets(requestData);
     response.success(res, "List of Wallet!", wallets);
 });
 
 const getWalletsDetails = catchAsyncError(async (req, res, next) => {
-    const wallet = await walletService.getWalletDetails(req.user.user_id);
+    const wallet = await walletService.getWalletDetails(req.user.id);
     response.success(res, "Details Of Wallets!", wallet);
 });
 

@@ -14,7 +14,6 @@ const addUser = async (body) => {
       },
     });
     if (finduser.length === 0) {
-      body.user_id = Math.floor(1000 + Math.random() * 9000);
       body.role = "user";
       body.status = 1;
       let saveduser = await users.create(body);
@@ -29,7 +28,7 @@ const addUser = async (body) => {
         },
         {
           where: {
-            user_id: user.user_id,
+            id: user.user_id,
           },
         }
       );
@@ -44,7 +43,7 @@ const addUser = async (body) => {
 const updateUser = async (updatebody, userID) => {
   try {
     const user = await users.update(updatebody, {
-      where: { user_id: userID },
+      where: { id: userID },
     });
     return user;
   } catch (error) {
@@ -56,7 +55,7 @@ const getUserByUserId = async (userID) => {
   try {
     const getuser = await users.findAll({
       where: {
-        user_id: userID,
+        id: userID,
       },
     });
     const getToken = await userToken.findAll({

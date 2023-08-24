@@ -2,6 +2,9 @@ const db = require("../models");
 
 //Create Main Model
 const userKycDetails = db.UserKycDetail;
+const KycAadharDetail = db.KycAadharDetail;
+const KycPanDetail = db.KycPanDetail;
+const KycGstDetail = db.KycGstDetail;
 
 const addUserKycDetails = async (body) => {
   try {
@@ -43,6 +46,7 @@ const getUserKycDetailsByUserId = async (userId) => {
       where: {
         user_id: userId,
       },
+      include: [ KycAadharDetail,KycPanDetail, KycGstDetail],
     });
     return user;
   } catch (error) {

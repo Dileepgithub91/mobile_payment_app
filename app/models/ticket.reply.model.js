@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       document: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       }
     });
     return TicketReply;

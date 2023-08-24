@@ -3,19 +3,11 @@ const logger =require("../logger");
 
 //Create Main Model
 const Ticket = db.Ticket;
+const User = db.User;
 const TicketReply = db.TicketReply;
 
 const addTickets = async (body) => {
   try {
-    const description = body.description;
-    let tickets = await Ticket.findAll({
-      where: {
-        description: description,
-      },
-    });
-    if (tickets.length != 0) {
-      throw new Error("Role Exists, try again!");
-    }
     let ticket = await Ticket.create(body);
     return ticket;
   } catch (error) {
@@ -47,19 +39,17 @@ const findTicketDetails = async (id) => {
       where: {
         id:id
       },
+      include: [
+        {
+          model: User,
+          attributes: ['first_name','middle_name','last_name', 'id', 'mobile_no','email'],
+        },
+        {
+          model: TicketReply
+        },
+      ],
     });
-    if(tickets.length==0){
-        throw new Error("Ticket Not Found!")
-    }
-    let replys = await TicketReply.findAll({
-      where: {
-        ticket_id:tickets.id
-      },
-    });
-    return {
-        ticket:tickets.dataValues,
-        reply:replys
-    };
+    return tickets;
   } catch (error) {
     logger.log("error",{source:"ticket managemant Services  -- find Ticket Details",error});
     throw error;
@@ -70,6 +60,12 @@ const findTickets = async (query) => {
   try {
     let tickets = await Ticket.findAll({
       where: query,
+      include: [
+        {
+          model: User,
+          attributes: ['first_name','middle_name','last_name', 'id', 'mobile_no','email'],
+        },
+      ],
     });
     if(tickets.length==0){
         throw new Error("Ticket Not Found!")

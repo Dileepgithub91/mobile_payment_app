@@ -27,11 +27,11 @@ const updateUserProfile = catchAsyncError(async (req, res, next) => {
         last_name: value.lastname,
         email: value.email,
       },
-      req.user.user_id
+      req.user.id
     );
     ///create new user profile
     await userProfileService.addUserProfile({
-      user_id: req.user.user_id,
+      user_id: req.user.id,
       avtar: value.avtar || "",
       image_url: imageUrl,
       whatsapp_number: value.whatsappNumber,
@@ -40,7 +40,7 @@ const updateUserProfile = catchAsyncError(async (req, res, next) => {
     });
     ///create new user address
     await userAddressService.addUserAddress({
-      user_id: req.user.user_id,
+      user_id: req.user.id,
       address_type: "user_address",
       address_line_1: value.addressLine1,
       address_line_2: value.addressLine2,
@@ -49,7 +49,7 @@ const updateUserProfile = catchAsyncError(async (req, res, next) => {
       postcode: value.postcode,
     });
     //create Wallet of user
-    await walletService.saveWallet({user_id:req.user.user_id});
+    await walletService.saveWallet({user_id:req.user.id});
     response.success(res, "User Profile Updated!");
 });
 
@@ -65,7 +65,7 @@ const uploadUserProfileImage = catchAsyncError(async (req, res, next) => {
       {
         image_url: imageUrl,
       },
-      req.user.user_id
+      req.user.id
     );
     response.success(res, "User Profile image Updated!");
 });
@@ -77,14 +77,14 @@ const changeUserAvatar = catchAsyncError(async (req, res, next) => {
       {
         avatar: value.avatar,
       },
-      req.user.user_id
+      req.user.id
     );
     response.success(res, "User Avatar Updated!");
 });
 
 const saveManualKycFile = catchAsyncError(async (req, res, next) => {
     const checkKycStatus =
-      await userKycDetailsService.getUserKycDetailsByUserId(req.user.user_id);
+      await userKycDetailsService.getUserKycDetailsByUserId(req.user.id);
     if (checkKycStatus) {
       let checkDData = checkKycStatus.dataValues;
       if (
@@ -118,17 +118,17 @@ const saveManualKycFile = catchAsyncError(async (req, res, next) => {
       {
         kyc_level: kycLevel,
       },
-      req.user.user_id
+      req.user.id
     );
     ///update User Kyc files
     await userKycDetailsService.addUserKycDetails({
-      user_id: req.user.user_id,
+      user_id: req.user.id,
       adhaar_image_front: AadharFront,
       adhaar_image_back: AadharBack,
       pan_image: PanImage,
       adhaar_kyc_status: adhaarKycStatus,
       pan_kyc_status: panKycStatus,
-      user_id:req.user.user_id
+      user_id:req.user.id
     });
     response.success(res, "User Profile Updated!");
 });
@@ -139,27 +139,27 @@ const skipUserKyc = catchAsyncError(async (req, res, next) => {
       {
         status: "Active",
       },
-      req.user.user_id
+      req.user.id
     );
     ///update user profile
     await userProfileService.updateUserProfilebyUserID(
       {
         kyc_level: "0",
       },
-      req.user.user_id
+      req.user.id
     );
     ///update User Kyc files
     await userKycDetailsService.addUserKycDetails({
-      user_id: req.user.user_id,
+      user_id: req.user.id,
       adhaar_kyc_status: "notVerified",
       pan_kyc_status: "notVerified",
-      user_id:req.user.user_id
+      user_id:req.user.id
     });
     response.success(res, "User Kyc Skiped!");
 });
 
 const getUserProfile =  catchAsyncError(async (req, res, next) => {
-    const userId = req.user.user_id;
+    const userId = req.user.id;
     const userProfile = await userProfileService.getUserProfilebyUserID(
       userId
     );
@@ -168,39 +168,23 @@ const getUserProfile =  catchAsyncError(async (req, res, next) => {
     response.success(res, "User Profile!", user);
 });
 const getManualKycdocument =  catchAsyncError(async (req, res, next) => {
-    const userId = req.user.user_id;
+    const userId = req.user.id;
     let aadharKyc = {};
     let panKyc = {};
     let gstKyc = {};
-    const userKycdata = await userKycDetailsService.getUserKycDetailsByUserId(
+    const Kycdata = await userKycDetailsService.getUserKycDetailsByUserId(
       userId
     );
     if (!userKycdata) {
       throw new Error(responseMessages.userKycNotFound);
       // throw new Error("User Kyc Data not found!");
     }
-    const userKyc = userKycdata.dataValues;
-    if (userKyc.adhaar_kyc_status == "Verified") {
-      aadharKyc = await kycService.getAadharVerificationData(userId);
-    }
-    if (userKyc.pan_kyc_status == "Verified") {
-      panKyc = await kycService.getPanVerificationData(userId);
-    }
-    if (userKyc.gst_kyc_status == "Verified") {
-      gstKyc = await kycService.getGSTVerificationData(userId);
-    }
-    let kycDetails = {
-      kycData :userKyc,
-      aadharData:aadharKyc,
-      panData:panKyc,
-      gstData:gstKyc,
-    };
-    response.success(res, "User Kyc data retrived!", kycDetails);
+    response.success(res, "User Kyc data retrived!", Kycdata);
 });
 
 const kycPanVerification = catchAsyncError(async (req, res, next) => {
     const checkKycStatus =
-      await userKycDetailsService.getUserKycDetailsByUserId(req.user.user_id);
+      await userKycDetailsService.getUserKycDetailsByUserId(req.user.id);
       if (checkKycStatus) {
         let checkDData = checkKycStatus.dataValues;
         if (
@@ -219,7 +203,7 @@ const kycPanVerification = catchAsyncError(async (req, res, next) => {
         pan_number: panData.data.pan_number,
         pan_kyc_status: "verified",
       },
-      req.user.user_id
+      req.user.id
     );
     //update zip city and state
     await userAddressService.updateUserAddress(
@@ -227,17 +211,17 @@ const kycPanVerification = catchAsyncError(async (req, res, next) => {
         postcode: panData.data.data.address.zip,
         state_id: panData.data.data.address.state,
       },
-      req.user.user_id
+      req.user.id
     );
     //update kyc level
     await userProfileService.updateUserProfilebyUserID(
       {
         kyc_level: "2",
       },
-      req.user.user_id
+      req.user.id
     );
     const kycdata = panData.data.data;
-    kycdata.user_id = req.user.user_id;
+    kycdata.user_id = req.user.id;
     //save pan responce
     const verifydata = await kycService.SavePanVerificationData(kycdata);
     response.success(res, "User Kyc Pan Verification Successfull!");
@@ -245,7 +229,7 @@ const kycPanVerification = catchAsyncError(async (req, res, next) => {
 
 const kycAadharGenerateOtp =  catchAsyncError(async (req, res, next) => {
     const checkKycStatus =
-      await userKycDetailsService.getUserKycDetailsByUserId(req.user.user_id);
+      await userKycDetailsService.getUserKycDetailsByUserId(req.user.id);
       if (checkKycStatus) {
         let checkDData = checkKycStatus.dataValues;
         if (
@@ -274,7 +258,7 @@ const kycAadharVerificationOtp =  catchAsyncError(async (req, res, next) => {
         adhaar_number: aadharData.data.aadhaar_number,
         adhaar_kyc_status: "verified",
       },
-      req.user.user_id
+      req.user.id
     );
     //update zip city and state
     await userAddressService.updateUserAddress(
@@ -282,17 +266,17 @@ const kycAadharVerificationOtp =  catchAsyncError(async (req, res, next) => {
         state_id: aadharData.data.data.address.state,
         city_id: aadharData.data.data.address.dist,
       },
-      req.user.user_id
+      req.user.id
     );
     //update kyc level
     await userProfileService.updateUserProfilebyUserID(
       {
         kyc_level: "1",
       },
-      req.user.user_id
+      req.user.id
     );
     const verifyData = aadharData.data.data;
-    verifyData.user_id = req.user.user_id;
+    verifyData.user_id = req.user.id;
     //save pan responce
     await kycService.SaveAadharVerificationData(verifyData);
     response.success(res, "Aadhar Verification Successfull!");
@@ -300,7 +284,7 @@ const kycAadharVerificationOtp =  catchAsyncError(async (req, res, next) => {
 
 const kycGStVerification = catchAsyncError( async (req, res, next) => {
     const checkKycStatus =
-      await userKycDetailsService.getUserKycDetailsByUserId(req.user.user_id);
+      await userKycDetailsService.getUserKycDetailsByUserId(req.user.id);
       if (checkKycStatus) {
         let checkDData = checkKycStatus.dataValues;
         if (
@@ -325,7 +309,7 @@ const kycGStVerification = catchAsyncError( async (req, res, next) => {
         gst_state_code: gstData.data.state_jurisdiction,
         gst_kyc_status: "verified",
       },
-      req.user.user_id
+      req.user.id
     );
     //update kyc level
     await userProfileService.updateUserProfilebyUserID(
@@ -333,7 +317,7 @@ const kycGStVerification = catchAsyncError( async (req, res, next) => {
         kyc_level: "3",
         bussiness_name: gstData.data.business_name,
       },
-      req.user.user_id
+      req.user.id
     );
     //save pan responce
     await kycService.SaveGSTVerificationData(gstData.data);

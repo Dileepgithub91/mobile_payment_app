@@ -9,9 +9,9 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
     },
     address: {
-      type: DataTypes.STRING, // Use TEXT type to store JSON-like data
+      type: DataTypes.STRING,
       allowNull: true,
-      defaultValue: JSON.stringify({"":""}), // Default value as an empty JSON object
+      defaultValue: JSON.stringify({"":""}),
       get() {
         const rawValue = this.getDataValue('address');
         return rawValue ? JSON.parse(rawValue) : {};

@@ -22,7 +22,7 @@ const createOrder = catchAsyncError(async (req, res, next) => {
   //validator
   const value = await orderValidator.saveOrder.validateAsync(req.body);
   //save user_id via authentication
-  value.user_id = req.user.user_id;
+  value.user_id = req.user.id;
   value.total_amount = value.quantity * value.amount;
   value.sell_amount = value.total_amount;
   logger.log("order", {
@@ -239,7 +239,7 @@ const getOrders = catchAsyncError(async (req, res, next) => {
   delete bodyData.pageNumber;
   delete bodyData.limitPerPage;
   requestData.query = bodyData;
-  requestData.query.user_id = req.user.user_id;
+  requestData.query.user_id = req.user.id;
   const orders = await orderService.getOrder(requestData);
   response.success(res, "List of Orders!", orders);
 });
@@ -248,7 +248,7 @@ const getOrderDetails = catchAsyncError(async (req, res, next) => {
   const value = await orderValidator.validateOrderDetails.validateAsync(
     req.query
   );
-  value.user_id=req.user.user_id;
+  value.user_id=req.user.id;
   const order = await orderService.getOrderDetails(value);
   response.success(res, "Details Of Orders!", order);
 });

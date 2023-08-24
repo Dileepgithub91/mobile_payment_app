@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-    const cardProviderSetting = sequelize.define("card_provider_setting", {
+    const CardProviderSetting = sequelize.define("card_provider_setting", {
       product_id: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -8,8 +8,8 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      provider_id: {
-        type: DataTypes.STRING,
+      provider: {
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
       priority: {
@@ -38,6 +38,6 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue:1
       }
     });
-    return cardProviderSetting;
+    return CardProviderSetting;
   };
   

@@ -91,12 +91,12 @@ const verifyRegisterOtp =  catchAsyncError(async (req, res, next) => {
     });
     //generate token
     const token = await HelperFunction.genAuthToken(
-      user.user_id,
+      user.id,
       deviceType,
       ipAddress
     );
     await userTokenService.addUserToken({
-      user_id: user.user_id,
+      user_id: user.id,
       token: token,
     });
     response.success(res, "User Registered Successfully!", { user, token ,password});
@@ -130,7 +130,6 @@ const getResendOtp = catchAsyncError(async (req, res, next) => {
 });
 
 const sendForgetPasswordOtp = catchAsyncError(async (req, res, next) => {
-  try {
     const { mobileNo } = req.body;
     const value = await Validator.registerOtp.validateAsync({
       mobileNo: mobileNo,
@@ -150,14 +149,9 @@ const sendForgetPasswordOtp = catchAsyncError(async (req, res, next) => {
     ///api to send otp
     await dataGenService.sendOtp(value.mobileNo, registeredUser.otp);
     response.success(res, "Your otp have been sent",registeredUser);
-  } catch (error) {
-    logger.log("info", error.message);
-    response.generalError(res, error.message);
-  }
 });
 
 const reSendForgetPasswordOtp = catchAsyncError(async (req, res, next) => {
-  try {
     const { mobileNo } = req.body;
     const value = await Validator.registerOtp.validateAsync({
       mobileNo: mobileNo,
@@ -175,14 +169,9 @@ const reSendForgetPasswordOtp = catchAsyncError(async (req, res, next) => {
     ///api to send otp
     await dataGenService.sendOtp(value.mobileNo, registeredUser.otp);
     response.success(res, "Your otp have been sent",registeredUser);
-  } catch (error) {
-    logger.log("info", error.message);
-    response.generalError(res, error.message);
-  }
 });
 
 const verifyForgetPasswordOtp = catchAsyncError(async (req, res, next) => {
-  try {
     const { mobileNo, otp } = req.body;
     const now = new Date().toISOString();
     ///validate input
@@ -225,14 +214,9 @@ const verifyForgetPasswordOtp = catchAsyncError(async (req, res, next) => {
       "A email for change password has been sent to your registered email!",
       { registeredUser }
     );
-  } catch (error) {
-    logger.log("info", error.message);
-    response.generalError(res, error.message);
-  }
 });
 
 const forgetPasswordChangePassword = catchAsyncError(async (req, res, next) => {
-  try {
     const { mobileNo, newPassword, confirmPassword } = req.body;
     const value =
       await Validator.validateChangePassword.validateAsync(
@@ -248,17 +232,12 @@ const forgetPasswordChangePassword = catchAsyncError(async (req, res, next) => {
       {
         password: hashedPassword,
       },
-      findUser.user_id
+      findUser.id
     );
     response.success(res, "User Password Changed Successfully!", user);
-  } catch (error) {
-    logger.log("info", error.message);
-    response.generalError(res, error.message);
-  }
 });
 
 const loginViaPassowrd = catchAsyncError(async (req, res, next) => {
-  try {
     const { mobileNo, password, deviceType, ipAddress } = req.body;
     const value = await Validator.userLogin.validateAsync({
       mobileNo: mobileNo,
@@ -280,19 +259,15 @@ const loginViaPassowrd = catchAsyncError(async (req, res, next) => {
     //remove password from user before removing
     delete user.dataValues.password;
     const token = await HelperFunction.genAuthToken(
-      user.user_id,
+      user.id,
       deviceType,
       ipAddress
     );
     await userTokenService.addUserToken({
-      user_id: user.user_id,
+      user_id: user.id,
       token: token,
     });
     response.success(res, "User Registered Successfully!", { user, token });
-  } catch (error) {
-    logger.log("info", error.message);
-    response.generalError(res, error.message);
-  }
 });
 
 module.exports = {

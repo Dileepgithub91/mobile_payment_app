@@ -4,7 +4,7 @@ const fileName = require("fs");
 
 var attach_files = multer.diskStorage({
   destination: function (req, file, cb) {
-    const userId=req.user?req.user.user_id :"anonamus";
+    const userId=req.user?req.user.id :"anonamus";
     if (!fileName.existsSync("uploads")) {
       fileName.mkdir("uploads", function (err) {
         if (err) {
@@ -35,7 +35,7 @@ var attach_files = multer.diskStorage({
     cb(null, "uploads/kycDocument/"+userId);
   },
   filename: function (req, file, cb) {
-    const userId=req.user?req.user.user_id :"anonamus";
+    const userId=req.user?req.user.id :"anonamus";
     let ext = path.extname(file.originalname);
     cb(null, userId+"_"+Date.now() + ext);
   },
