@@ -13,6 +13,7 @@ const orderRoute = require("./order.route");
 const walletRoute = require("./wallet.routes");
 const providerRoute = require("./provider.route");
 const marginRoute = require("./margin.route");
+const taxSetting = require("./tax.setting.route");
 
 const routesIndex = [
   {
@@ -58,6 +59,10 @@ const routesIndex = [
   {
     path: "/margin",
     route: marginRoute,
+  },
+  {
+    path: "/tax",
+    route: taxSetting,
   },
 ];
 

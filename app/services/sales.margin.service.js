@@ -64,6 +64,20 @@ const getSalesMargin = async ({ pageNumber, limitPerPage, query }) => {
   }
 };
 
+const getSalesMarginByProductId = async (productId) => {
+  try {
+    const margin = await SalesMargin.findOne({
+      where: {
+        product_id: productId,
+      },
+    });
+    return margin;
+  } catch (error) {
+    logger.log("info", error);
+    throw error;
+  }
+};
+
 const getSalesMarginDetails = async (marginId) => {
   try {
     const margin = await SalesMargin.findOne({
@@ -100,5 +114,6 @@ module.exports = {
   updateSalesMargin,
   getSalesMargin,
   getSalesMarginDetails,
-  deleteSalesMargin
+  deleteSalesMargin,
+  getSalesMarginByProductId
 };

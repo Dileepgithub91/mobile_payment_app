@@ -68,12 +68,6 @@ const getCard = async ({ pageNumber, limitPerPage, query }) => {
       limit: limitPage,
       offset: offset,
       where: query ||{},
-      include: [
-        {
-          model: CardProviderSetting,
-          attributes: ['name', 'id'],
-        },
-      ],
     });
     return giftCard;
   } catch (error) {
@@ -87,12 +81,6 @@ const getCardDetails = async (cardId) => {
       where: {
         id: cardId,
       },
-      include: [
-        {
-          model: CardProviderSetting,
-          attributes: ['name', 'id'],
-        },
-      ],
     });
     return giftCard;
   } catch (error) {

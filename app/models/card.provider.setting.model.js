@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      provider: {
+      provider_ref: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },

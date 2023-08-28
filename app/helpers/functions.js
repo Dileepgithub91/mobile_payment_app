@@ -21,3 +21,7 @@ exports.generateStrongPassword=async(length)=> {
 exports.generateSixDigitRandomNumber=async()=> {
   return  Math.floor(100000 + Math.random() * 900000);
 }
+
+exports.calcPercentage=async(amount,percentage)=>{
+  retrun (percentage/100*amount);
+}

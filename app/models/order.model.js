@@ -6,12 +6,64 @@ module.exports = (sequelize, DataTypes) => {
       unique:true
     },
     user_id: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     product_id: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
+    },
+    gst_version: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    hsn: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    sgst: {
+      type: DataTypes.STRING,
+     allowNull: true,
+    },
+    cgst: {
+      type: DataTypes.STRING,
+     allowNull: true,
+    },
+    igst: {
+      type: DataTypes.STRING,
+     allowNull: true,
+    },
+    gst: {
+      type: DataTypes.STRING,
+     allowNull: true,
+    },
+    cess: {
+      type: DataTypes.STRING,
+     allowNull: true,
+    },
+    s_fees: {
+      type: DataTypes.STRING,
+     allowNull: true,
+    },
+    s_mode: {
+      type: DataTypes.STRING,
+     allowNull: true,
+    },
+    tds: {
+      type: DataTypes.STRING,
+     allowNull: true,
+    },
+    tds_w_pan: {
+      type: DataTypes.STRING,
+     allowNull: true,
+    },
+    commission: {
+      type: DataTypes.STRING,
+     allowNull: true,
+    },
+    discount: {
+      type: DataTypes.STRING,
+     allowNull: true,
     },
     quantity: {
       type: DataTypes.INTEGER,

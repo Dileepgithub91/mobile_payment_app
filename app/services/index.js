@@ -27,4 +27,7 @@ module.exports = {
     salesMarginServices: require('./sales.margin.service'),
     purchaseMarginServices: require('./purchase.margin.service'),
     salesMarginGroupServices: require('./sales.margin.group.service'),
+    taxSettingService: require('./tax.setting.service'),
+    taxSettingVersionService: require('./tax.setting.version.service'),
+    taxSettingHistoryService: require('./tax.setting.history.service'),
 }

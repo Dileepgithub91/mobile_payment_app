@@ -1,7 +1,11 @@
 const cardService = require("./card.service");
 const providerService = require("./card.provider.setting.service");
 const uploadedCardService = require("./uploaded.card.service");
+const gstSettingService = require("./tax.setting.service");
+const orderServides = require("./order.service");
+const saleMarginServides = require("./sales.margin.service");
 const logger = require("../logger");
+const helper =require('../helpers/functions');
 
 const checkProductAvailabilityAndPorviders = async (productId) => {
   try {
@@ -41,7 +45,7 @@ const deductMoneyAsOrderAmount = async (value) => {
     console.log(wallet);
     const remainBalance =
       parseInt(wallet.dmt_wallet) - parseInt(value.sell_amount);
-    if (remainBalance < 1) {
+    if (remainBalance < 1) { 
       throw new Error("Wallet balance not enough!");
     }
     let walletUpdateStatus = await walletService.updateWallet(
@@ -70,6 +74,48 @@ const deductMoneyAsOrderAmount = async (value) => {
     throw err;
   }
 };
+
+//Calculate margin and Gst 
+const calcMarginAndGst= async(value)=>{
+  try{
+    let updateTax={};
+    let fullPrice= parseInt(value.sell_amount);
+    ///////Tax Calculation
+    //get the gst details as per product id
+    const gstData= await gstSettingService.getTaxSettingByProduct(value.product_id);
+
+    if(gstData.taxable){
+      updateTax.hsn=gstData.hsn,
+      updateTax.sgst= helper.calcPercentage(fullPrice,parseInt(gstData.sgst)),
+      updateTax.cgst= helper.calcPercentage(fullPrice,parseInt(gstData.cgst)),
+      updateTax.igst= helper.calcPercentage(fullPrice,parseInt(gstData.igst)),
+      updateTax.gst= helper.calcPercentage(fullPrice,parseInt(gstData.gst))
+    }
+    if(gstData.is_tds){
+      updateTax.tds= helper.calcPercentage(fullPrice,parseInt(gstData.tds)),
+      updateTax.tds_w_pan= helper.calcPercentage(fullPrice,parseInt(gstData.tds_w_pan))
+    }
+    if(gstData.is_cess){
+      updateTax.cess= helper.calcPercentage(fullPrice,parseInt(gstData.cess))
+    }
+    if(gstData.is_s_fee){
+      updateTax.s_mode=gstData.s_mode,
+      updateTax.s_fees= helper.calcPercentage(fullPrice,parseInt(gstData.s_fees))
+    }
+    ////Margin calculations
+    //get margin details
+    const marginData =await saleMarginServides.getSalesMarginByProductId(value.product_id);
+    updateTax.discount=helper.calcPercentage(fullPrice,parseInt(marginData.s_fees));
+    //save tax and order: 
+    if(updateTax.length==0){
+      return true;
+    }
+    await orderServides.updateOrder(updateTax,value.order_id);
+    return true;
+  }catch(err){
+    throw err;
+  }
+}
 
 /**
  * in pine perk when purchesed in bulk we needs to gen customer list
@@ -404,5 +450,6 @@ module.exports = {
   qwikcilverOrderFlow,
   pinePerksOrderFLow,
   userOrderFlow,
-  adminOrderFlow
+  adminOrderFlow,
+  calcMarginAndGst
 };

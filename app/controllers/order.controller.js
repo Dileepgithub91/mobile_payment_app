@@ -72,6 +72,9 @@ const createOrder = catchAsyncError(async (req, res, next) => {
     throw new Error("Wallet balance not enough!");
   }
 
+  ///margin and gst calculations
+  await orderRouteService.calcMarginAndGst(value);
+
   let providerList = provider.provider;
   let currProvider = providerList[0];
   for (let i = 0; i < providerList.length; i++) {
