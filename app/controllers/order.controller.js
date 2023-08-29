@@ -198,16 +198,16 @@ const createMultiProductOrder = catchAsyncError(async (req, res, next) => {
 
   for (let i = 0; i < order.no_of_items; i++) {
     const item = value.items[i];
-    /////check availabilty of products and return provider
-    const provider =
-      await orderRouteService.checkProductAvailabilityAndPorviders(
-        item.product_id
-      );
-    logger.log("order", {
-      message: "provider have been fetched!",
-      provider,
-      time: new Date().toISOString(),
-    });
+    // /////check availabilty of products and return provider
+    // const provider =
+    //   await orderRouteService.checkProductAvailabilityAndPorviders(
+    //     item.product_id
+    //   );
+    // logger.log("order", {
+    //   message: "provider have been fetched!",
+    //   provider,
+    //   time: new Date().toISOString(),
+    // });
     ///save order item in order item table
     const TotalAmounts = parseInt(item.quantity) * parseInt(item.amount);
     totalAmount = totalAmount + TotalAmounts;
@@ -226,70 +226,168 @@ const createMultiProductOrder = catchAsyncError(async (req, res, next) => {
       orderItem,
       time: new Date().toISOString(),
     });
-    value.currItem=orderItem.dataValues;
+    value.currItem = orderItem.dataValues;
     ///margin and gst calculations
     await orderRouteService.calcMarginAndGstMultiProduct(value);
 
-    let providerList = provider.provider;
-    let currProvider = providerList[0];
-    for (let i = 0; i < providerList.length; i++) {
-      //Directing flow according to providers
-      if (currProvider == "admin") {
-        extOrderRes = await orderRouteService.adminOrderFlow(value);
-        if (extOrderRes.success == "1") {
-          break;
-        } else if (extOrderRes.success == "2") {
-          // Recoverable error
-          currProvider = providerList[i + 1];
-          continue;
-        } else {
-          throw extOrderRes.error;
-        }
-      }
+    // let providerList = provider.provider;
+    // let currProvider = providerList[0];
+    // for (let i = 0; i < providerList.length; i++) {
+    //   //Directing flow according to providers
+    //   if (currProvider == "admin") {
+    //     extOrderRes = await orderRouteService.adminOrderFlow(value);
+    //     if (extOrderRes.success == "1") {
+    //       break;
+    //     } else if (extOrderRes.success == "2") {
+    //       // Recoverable error
+    //       currProvider = providerList[i + 1];
+    //       continue;
+    //     } else {
+    //       throw extOrderRes.error;
+    //     }
+    //   }
 
-      if (currProvider == "user") {
-        extOrderRes = await orderRouteService.userOrderFlow(value);
-        if (extOrderRes.success == "1") {
-          break;
-        } else if (extOrderRes.success == "2") {
-          // Recoverable error
-          currProvider = providerList[i + 1];
-          continue;
-        } else {
-          throw extOrderRes.error;
-        }
-      }
+    //   if (currProvider == "user") {
+    //     extOrderRes = await orderRouteService.userOrderFlow(value);
+    //     if (extOrderRes.success == "1") {
+    //       break;
+    //     } else if (extOrderRes.success == "2") {
+    //       // Recoverable error
+    //       currProvider = providerList[i + 1];
+    //       continue;
+    //     } else {
+    //       throw extOrderRes.error;
+    //     }
+    //   }
 
-      if (currProvider == "qwikcilver") {
-        extOrderRes = await orderRouteService.qwikcilverOrderFlow(value);
-        if (extOrderRes.success == "1") {
-          break;
-        } else if (extOrderRes.success == "2") {
-          // Recoverable error
-          currProvider = providerList[i + 1];
-          continue;
-        } else {
-          throw extOrderRes.error;
-        }
-      }
+    //   if (currProvider == "qwikcilver") {
+    //     extOrderRes = await orderRouteService.qwikcilverOrderFlow(value);
+    //     if (extOrderRes.success == "1") {
+    //       break;
+    //     } else if (extOrderRes.success == "2") {
+    //       // Recoverable error
+    //       currProvider = providerList[i + 1];
+    //       continue;
+    //     } else {
+    //       throw extOrderRes.error;
+    //     }
+    //   }
 
-      if (currProvider == "pineperks") {
-        extOrderRes = await orderRouteService.pinePerksOrderFLow(value);
-        if (extOrderRes.success == "1") {
-          break;
-        } else if (extOrderRes.success == "2") {
-          // Recoverable error
-          currProvider = providerList[i + 1];
-          continue;
-        } else {
-          throw extOrderRes.error;
-        }
-      }
-      throw new Error("Card Not Available!");
-    }
+    //   if (currProvider == "pineperks") {
+    //     extOrderRes = await orderRouteService.pinePerksOrderFLow(value);
+    //     if (extOrderRes.success == "1") {
+    //       break;
+    //     } else if (extOrderRes.success == "2") {
+    //       // Recoverable error
+    //       currProvider = providerList[i + 1];
+    //       continue;
+    //     } else {
+    //       throw extOrderRes.error;
+    //     }
+    //   }
+    //   throw new Error("Card Not Available!");
+    // }
     console.log(extOrderRes);
   }
   response.success(res, "New Order Created!", order);
+});
+
+const bulkOrderUpdateStatus = catchAsyncError(async (req, res, next) => {
+  let extOrderRes = {};
+  let extCardOrderId;
+  //validator
+  const value =
+    await orderValidator.validatebulkOrderUpdateStatus.validateAsync(req.body);
+  //find order_item_id
+  const orderItem = await orderItemService.getOrderItemDetails(
+    value.order_item_id
+  );
+  //find order:
+  const order = await orderService.getOrderByOrderId(orderItem.order_id);
+  /////check availabilty of products and return provider
+  const provider = await orderRouteService.checkProductAvailabilityAndPorviders(
+    orderItem.product_id
+  );
+  console.log(provider);
+  let providerList = provider.provider;
+  let currProvider = providerList[0];
+  for (let i = 0; i < providerList.length; i++) {
+    //Directing flow according to providers
+    if (currProvider == "admin") {
+      extOrderRes = await orderRouteService.adminOrderFlow(orderItem);
+      if (extOrderRes.success == "1") {
+        break;
+      } else if (extOrderRes.success == "2") {
+        // Recoverable error
+        currProvider = providerList[i + 1];
+        continue;
+      } else {
+        throw extOrderRes.error;
+      }
+    }
+
+    if (currProvider == "user") {
+      extOrderRes = await orderRouteService.userOrderFlow(orderItem);
+      if (extOrderRes.success == "1") {
+        break;
+      } else if (extOrderRes.success == "2") {
+        // Recoverable error
+        currProvider = providerList[i + 1];
+        continue;
+      } else {
+        throw extOrderRes.error;
+      }
+    }
+
+    if (currProvider == "qwikcilver") {
+      extOrderRes = await orderRouteService.qwikcilverOrderFlow(orderItem);
+      if (extOrderRes.success == "1") {
+        break;
+      } else if (extOrderRes.success == "2") {
+        // Recoverable error
+        currProvider = providerList[i + 1];
+        continue;
+      } else {
+        throw extOrderRes.error;
+      }
+    }
+
+    if (currProvider == "pineperks") {
+      extOrderRes = await orderRouteService.pinePerksOrderFLow(orderItem);
+      if (extOrderRes.success == "1") {
+        break;
+      } else if (extOrderRes.success == "2") {
+        // Recoverable error
+        currProvider = providerList[i + 1];
+        continue;
+      } else {
+        throw extOrderRes.error;
+      }
+    }
+    throw new Error("Card Not Available!");
+  }
+  console.log(extOrderRes);
+  //Save card order details data in card order details table
+  const cardOrderDetails = await cardOrderService.saveCardOrderDetail({
+    order_id: orderItem.order_id,
+    card_order_id: extCardOrderId || "iuiuiu",
+    user_id: orderItem.user_id,
+    product_id: orderItem.product_id,
+    quantity: orderItem.quantity,
+    amount: orderItem.amount,
+    total_amount: orderItem.sell_amount,
+    customer_name: order.customer_name,
+    customer_mobile: order.customer_mobile,
+    customer_email: order.customer_email,
+    image: provider.images,
+    send_as_gift: order.send_as_gift,
+  });
+  //update Order_item table status
+  await orderItemService.updateOrderItem(
+    { status: value.status },
+    orderItem.id
+  );
+  response.success(res, "Bulk Order Status updates!", order);
 });
 
 const checkOrderStatus = catchAsyncError(async (req, res, next) => {
@@ -422,4 +520,5 @@ module.exports = {
   deleteOrderItem,
   updateOrderItem,
   createMultiProductOrder,
+  bulkOrderUpdateStatus,
 };

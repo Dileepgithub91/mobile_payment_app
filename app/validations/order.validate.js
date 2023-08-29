@@ -48,3 +48,8 @@ module.exports.saveItemOrder = Joi.object({
       "string.pattern.base": "Invalid mobile number format",
     }),
 });
+
+module.exports.validatebulkOrderUpdateStatus = Joi.object({
+  order_item_id: Joi.number().required(),
+  status: Joi.string().required()
+});

@@ -98,6 +98,21 @@ const getOrderItemDetails = async (OrderId) => {
   }
 };
 
+const getProcessingOrderItem = async (OrderId) => {
+  try {
+    const Order = await OrderItem.findOne({
+      where: {
+        id: OrderId,
+        status:"PROCESSING"
+      },
+    });
+    return Order;
+  } catch (error) {
+    logger.log("info", error);
+    throw error;
+  }
+};
+
 const deleteOrderItem = async (OrderId) => {
   try {
     const Order = await OrderItem.findOne({
@@ -121,5 +136,6 @@ module.exports = {
   getOrderItem,
   getOrderItemDetails,
   deleteOrderItem,
-  getOrderItemByProductId
+  getOrderItemByProductId,
+  getProcessingOrderItem
 };

@@ -78,6 +78,21 @@ const getOrderDetails = async (data) => {
   }
 };
 
+//get Order Details by order_Id
+const getOrderByOrderId = async (OrderId) => {
+  try {
+    const order = await Order.findOne({
+      where: {
+        order_id: OrderId
+      },
+    });
+    return order;
+  } catch (error) {
+    logger.log("info", error);
+    throw error;
+  }
+};
+
 //Delete Order
 const deleteOrder = async (orderId) => {
   try {
@@ -101,5 +116,6 @@ module.exports = {
   updateOrder,
   getOrder,
   getOrderDetails,
+  getOrderByOrderId,
   deleteOrder
 };
