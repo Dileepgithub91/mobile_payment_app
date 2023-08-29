@@ -5,6 +5,7 @@ const { response } = require("../helpers");
 const logger = require("../logger");
 const {
   orderService,
+  orderItemService,
   cardOrderService,
   orderRouteService,
   qwikCilverService,
@@ -28,8 +29,6 @@ const createOrder = catchAsyncError(async (req, res, next) => {
   logger.log("order", {
     message: "An order has initited!",
     user: value.user_id,
-    product: value.product_id,
-    Quantity: value.quantity,
     totalAmount: value.sell_amount,
     time: new Date().toISOString(),
   });
@@ -46,13 +45,11 @@ const createOrder = catchAsyncError(async (req, res, next) => {
   ///save order in order table
   const order = await orderService.saveOrder({
     user_id: value.user_id,
-    product_id: value.product_id,
-    quantity: value.quantity,
-    amount: value.amount,
+    send_as_gift: value.send_as_gift,
     total_amount: value.total_amount,
     sell_amount: value.sell_amount,
   });
-  value.order_id=order.order_id;
+  value.order_id = order.order_id;
   logger.log("order", {
     message: "Order Saved!",
     order,
@@ -132,7 +129,7 @@ const createOrder = catchAsyncError(async (req, res, next) => {
     }
     throw new Error("Card Not Available!");
   }
-   console.log(extOrderRes);
+  console.log(extOrderRes);
   //Save card order details data in card order details table
   const cardOrderDetails = await cardOrderService.saveCardOrderDetail({
     order_id: order.order_id,
@@ -148,7 +145,7 @@ const createOrder = catchAsyncError(async (req, res, next) => {
     image: provider.images,
     send_as_gift: value.send_as_gift,
   });
- console.log(cardOrderDetails);
+  console.log(cardOrderDetails);
   console.log(extOrderRes);
 
   response.success(
@@ -156,6 +153,143 @@ const createOrder = catchAsyncError(async (req, res, next) => {
     "Order placed successfully, delivery in progress!",
     extOrderRes
   );
+});
+
+const createMultiProductOrder = catchAsyncError(async (req, res, next) => {
+  let extOrderRes = {};
+  let totalAmount = 0;
+  let totalQuantity = 0;
+  //fetch the oreder
+  const value = await orderValidator.saveItemOrder.validateAsync(req.body);
+  value.user_id = req.user.id;
+  logger.log("order", {
+    message: "An order has initited!",
+    data: value,
+    time: new Date().toISOString(),
+  });
+  const order = await orderService.saveOrder({
+    user_id: value.user_id,
+    no_of_items: value.items.length,
+    total_quantity: value.total_quantity,
+    total_amount: value.total_amount,
+    sell_amount: value.total_amount,
+    send_as_gift: value.send_as_gift,
+    total_amount: value.total_amount,
+    sell_amount: value.total_amount,
+    customer_name: value.customer_name,
+    customer_email: value.customer_email,
+    customer_mobile: value.customer_mobile,
+  });
+  value.order_id = order.order_id;
+  ///Deduct money from wallet and store in ledger
+  await orderRouteService.deductMoneyAsOrderAmount(value);
+  logger.log("order", {
+    message: "Money deducted!",
+    user_id: value.user_id,
+    amount: value.total_amount,
+    time: new Date().toISOString(),
+  });
+  // check amount again if it is negative if it is throw error
+  const reCheckWallet = await walletService.getWalletByUserId(value.user_id);
+  ///check if the amount is in negative
+  if (parseInt(reCheckWallet.dmt_wallet) < 1) {
+    throw new Error("Wallet balance not enough!");
+  }
+
+  for (let i = 0; i < order.no_of_items; i++) {
+    const item = value.items[i];
+    /////check availabilty of products and return provider
+    const provider =
+      await orderRouteService.checkProductAvailabilityAndPorviders(
+        item.product_id
+      );
+    logger.log("order", {
+      message: "provider have been fetched!",
+      provider,
+      time: new Date().toISOString(),
+    });
+    ///save order item in order item table
+    const TotalAmounts = parseInt(item.quantity) * parseInt(item.amount);
+    totalAmount = totalAmount + TotalAmounts;
+    totalQuantity = totalQuantity + parseInt(item.quantity);
+    const orderItem = await orderItemService.saveOrderItem({
+      user_id: value.user_id,
+      order_id: value.order_id,
+      product_id: item.product_id,
+      quantity: item.quantity,
+      amount: item.amount,
+      total_amount: TotalAmounts,
+      sell_amount: TotalAmounts,
+    });
+    logger.log("order", {
+      message: "Order Item Saved!",
+      orderItem,
+      time: new Date().toISOString(),
+    });
+    value.currItem=orderItem.dataValues;
+    ///margin and gst calculations
+    await orderRouteService.calcMarginAndGstMultiProduct(value);
+
+    let providerList = provider.provider;
+    let currProvider = providerList[0];
+    for (let i = 0; i < providerList.length; i++) {
+      //Directing flow according to providers
+      if (currProvider == "admin") {
+        extOrderRes = await orderRouteService.adminOrderFlow(value);
+        if (extOrderRes.success == "1") {
+          break;
+        } else if (extOrderRes.success == "2") {
+          // Recoverable error
+          currProvider = providerList[i + 1];
+          continue;
+        } else {
+          throw extOrderRes.error;
+        }
+      }
+
+      if (currProvider == "user") {
+        extOrderRes = await orderRouteService.userOrderFlow(value);
+        if (extOrderRes.success == "1") {
+          break;
+        } else if (extOrderRes.success == "2") {
+          // Recoverable error
+          currProvider = providerList[i + 1];
+          continue;
+        } else {
+          throw extOrderRes.error;
+        }
+      }
+
+      if (currProvider == "qwikcilver") {
+        extOrderRes = await orderRouteService.qwikcilverOrderFlow(value);
+        if (extOrderRes.success == "1") {
+          break;
+        } else if (extOrderRes.success == "2") {
+          // Recoverable error
+          currProvider = providerList[i + 1];
+          continue;
+        } else {
+          throw extOrderRes.error;
+        }
+      }
+
+      if (currProvider == "pineperks") {
+        extOrderRes = await orderRouteService.pinePerksOrderFLow(value);
+        if (extOrderRes.success == "1") {
+          break;
+        } else if (extOrderRes.success == "2") {
+          // Recoverable error
+          currProvider = providerList[i + 1];
+          continue;
+        } else {
+          throw extOrderRes.error;
+        }
+      }
+      throw new Error("Card Not Available!");
+    }
+    console.log(extOrderRes);
+  }
+  response.success(res, "New Order Created!", order);
 });
 
 const checkOrderStatus = catchAsyncError(async (req, res, next) => {
@@ -238,7 +372,9 @@ const getOrders = catchAsyncError(async (req, res, next) => {
   const bodyData = req.query;
   let requestData = {};
   bodyData.pageNumber ? (requestData.pageNumber = bodyData.pageNumber) : {};
-  bodyData.limitPerPage ? (requestData.limitPerPage = bodyData.limitPerPage) : {};
+  bodyData.limitPerPage
+    ? (requestData.limitPerPage = bodyData.limitPerPage)
+    : {};
   delete bodyData.pageNumber;
   delete bodyData.limitPerPage;
   requestData.query = bodyData;
@@ -251,9 +387,29 @@ const getOrderDetails = catchAsyncError(async (req, res, next) => {
   const value = await orderValidator.validateOrderDetails.validateAsync(
     req.query
   );
-  value.user_id=req.user.id;
+  value.user_id = req.user.id;
   const order = await orderService.getOrderDetails(value);
   response.success(res, "Details Of Orders!", order);
+});
+
+//update order item
+const updateOrderItem = catchAsyncError(async (req, res, next) => {
+  const value = await orderValidator.validateOrderDetails.validateAsync(
+    req.query
+  );
+  const orderItemId = value.id;
+  delete value.id;
+  value.user_id = req.user.id;
+  const order = await orderItemService.updateOrderItem(value, orderItemId);
+  response.success(res, "Order Item Updated!", order);
+});
+//remove an order item
+const deleteOrderItem = catchAsyncError(async (req, res, next) => {
+  const value = await orderValidator.validateOrderDetails.validateAsync(
+    req.query
+  );
+  const order = await orderItemService.deleteOrderItem(value.id);
+  response.success(res, "Order Item Updated!", order);
 });
 
 module.exports = {
@@ -263,4 +419,7 @@ module.exports = {
   getOrders,
   getOrderDetails,
   checkOrderStatus,
+  deleteOrderItem,
+  updateOrderItem,
+  createMultiProductOrder,
 };

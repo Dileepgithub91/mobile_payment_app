@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-    const TaxSetting = sequelize.define("tax_settings", {
+    const TaxSettingHistory = sequelize.define("tax_setting_history", {
       product_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -87,6 +87,6 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: 1,
       },
     });
-    return TaxSetting;
+    return TaxSettingHistory;
   };
   

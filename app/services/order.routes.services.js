@@ -3,9 +3,11 @@ const providerService = require("./card.provider.setting.service");
 const uploadedCardService = require("./uploaded.card.service");
 const gstSettingService = require("./tax.setting.service");
 const orderServides = require("./order.service");
+const orderItemServides = require("./order.item.service");
+const walletService = require("./wallet.service");
 const saleMarginServides = require("./sales.margin.service");
 const logger = require("../logger");
-const helper =require('../helpers/functions');
+const helper = require("../helpers/functions");
 
 const checkProductAvailabilityAndPorviders = async (productId) => {
   try {
@@ -44,8 +46,8 @@ const deductMoneyAsOrderAmount = async (value) => {
     console.log("wallet ways");
     console.log(wallet);
     const remainBalance =
-      parseInt(wallet.dmt_wallet) - parseInt(value.sell_amount);
-    if (remainBalance < 1) { 
+      parseInt(wallet.dmt_wallet) - parseInt(value.total_amount);
+    if (remainBalance < 1) {
       throw new Error("Wallet balance not enough!");
     }
     let walletUpdateStatus = await walletService.updateWallet(
@@ -58,9 +60,9 @@ const deductMoneyAsOrderAmount = async (value) => {
     ///save transection
     const transections = await walletService.saveTransection({
       user_id: value.user_id,
-      order_id: order.order_id,
+      order_id: value.order_id,
       transection_type: "dmt_transection",
-      amount: value.sell_amount,
+      amount: value.total_amount,
       before_amount: parseInt(wallet.dmt_wallet),
       current_amount: remainBalance,
     });
@@ -75,47 +77,165 @@ const deductMoneyAsOrderAmount = async (value) => {
   }
 };
 
-//Calculate margin and Gst 
-const calcMarginAndGst= async(value)=>{
-  try{
-    let updateTax={};
-    let fullPrice= parseInt(value.sell_amount);
+//Calculate margin and Gst
+const calcMarginAndGst = async (value) => {
+  try {
+    let updateTax = {};
+    let fullPrice = parseInt(value.sell_amount);
     ///////Tax Calculation
     //get the gst details as per product id
-    const gstData= await gstSettingService.getTaxSettingByProduct(value.product_id);
+    const gstData = await gstSettingService.getTaxSettingByProduct(
+      value.product_id
+    );
+    if (gstData != null) {
+      updateTax.gst_version = gstData.tax_version_id;
 
-    if(gstData.taxable){
-      updateTax.hsn=gstData.hsn,
-      updateTax.sgst= helper.calcPercentage(fullPrice,parseInt(gstData.sgst)),
-      updateTax.cgst= helper.calcPercentage(fullPrice,parseInt(gstData.cgst)),
-      updateTax.igst= helper.calcPercentage(fullPrice,parseInt(gstData.igst)),
-      updateTax.gst= helper.calcPercentage(fullPrice,parseInt(gstData.gst))
-    }
-    if(gstData.is_tds){
-      updateTax.tds= helper.calcPercentage(fullPrice,parseInt(gstData.tds)),
-      updateTax.tds_w_pan= helper.calcPercentage(fullPrice,parseInt(gstData.tds_w_pan))
-    }
-    if(gstData.is_cess){
-      updateTax.cess= helper.calcPercentage(fullPrice,parseInt(gstData.cess))
-    }
-    if(gstData.is_s_fee){
-      updateTax.s_mode=gstData.s_mode,
-      updateTax.s_fees= helper.calcPercentage(fullPrice,parseInt(gstData.s_fees))
+      if (gstData.taxable) {
+        (updateTax.hsn = gstData.hsn),
+          (updateTax.sgst = await helper.calcPercentage(
+            fullPrice,
+            parseInt(gstData.sgst)
+          )),
+          (updateTax.cgst = await helper.calcPercentage(
+            fullPrice,
+            parseInt(gstData.cgst)
+          )),
+          (updateTax.igst = await helper.calcPercentage(
+            fullPrice,
+            parseInt(gstData.igst)
+          )),
+          (updateTax.gst = await helper.calcPercentage(
+            fullPrice,
+            parseInt(gstData.gst)
+          ));
+      }
+      if (gstData.is_tds) {
+        (updateTax.tds = await helper.calcPercentage(
+          fullPrice,
+          parseInt(gstData.tds)
+        )),
+          (updateTax.tds_w_pan = await helper.calcPercentage(
+            fullPrice,
+            parseInt(gstData.tds_w_pan)
+          ));
+      }
+      if (gstData.is_cess) {
+        updateTax.cess = await helper.calcPercentage(
+          fullPrice,
+          parseInt(gstData.cess)
+        );
+      }
+      if (gstData.is_s_fee) {
+        (updateTax.s_mode = gstData.s_mode),
+          (updateTax.s_fees = await helper.calcPercentage(
+            fullPrice,
+            parseInt(gstData.s_fees)
+          ));
+      }
     }
     ////Margin calculations
     //get margin details
-    const marginData =await saleMarginServides.getSalesMarginByProductId(value.product_id);
-    updateTax.discount=helper.calcPercentage(fullPrice,parseInt(marginData.s_fees));
-    //save tax and order: 
-    if(updateTax.length==0){
+    const marginData = await saleMarginServides.getSalesMarginByProductId(
+      value.product_id
+    );
+    if (marginData != null) {
+      updateTax.discount = await helper.calcPercentage(
+        fullPrice,
+        parseInt(marginData.margin)
+      );
+    }
+
+    //save tax and order:
+    if (updateTax.length == 0) {
       return true;
     }
-    await orderServides.updateOrder(updateTax,value.order_id);
+    console.log(updateTax);
+    await orderItemServides.updateOrderItem(updateTax, value.order_id);
     return true;
-  }catch(err){
+  } catch (err) {
     throw err;
   }
-}
+};
+
+//Calculate margin and Gst
+const calcMarginAndGstMultiProduct = async (value) => {
+  try {
+    let updateTax = {};
+    let fullPrice = parseInt(value.currItem.total_amount);
+    ///////Tax Calculation
+    //get the gst details as per product id
+    const gstData = await gstSettingService.getTaxSettingByProduct(
+      value.currItem.product_id
+    );
+    if (gstData != null) {
+      updateTax.gst_version = gstData.tax_version_id;
+
+      if (gstData.taxable) {
+        (updateTax.hsn = gstData.hsn),
+          (updateTax.sgst = await helper.calcPercentage(
+            fullPrice,
+            parseInt(gstData.sgst)
+          )),
+          (updateTax.cgst = await helper.calcPercentage(
+            fullPrice,
+            parseInt(gstData.cgst)
+          )),
+          (updateTax.igst = await helper.calcPercentage(
+            fullPrice,
+            parseInt(gstData.igst)
+          )),
+          (updateTax.gst = await helper.calcPercentage(
+            fullPrice,
+            parseInt(gstData.gst)
+          ));
+      }
+      if (gstData.is_tds) {
+        (updateTax.tds = await helper.calcPercentage(
+          fullPrice,
+          parseInt(gstData.tds)
+        )),
+          (updateTax.tds_w_pan = await helper.calcPercentage(
+            fullPrice,
+            parseInt(gstData.tds_w_pan)
+          ));
+      }
+      if (gstData.is_cess) {
+        updateTax.cess = await helper.calcPercentage(
+          fullPrice,
+          parseInt(gstData.cess)
+        );
+      }
+      if (gstData.is_s_fee) {
+        (updateTax.s_mode = gstData.s_mode),
+          (updateTax.s_fees = await helper.calcPercentage(
+            fullPrice,
+            parseInt(gstData.s_fees)
+          ));
+      }
+    }
+    ////Margin calculations
+    //get margin details
+    const marginData = await saleMarginServides.getSalesMarginByProductId(
+      value.currItem.product_id
+    );
+    if (marginData != null) {
+      updateTax.discount = await helper.calcPercentage(
+        fullPrice,
+        parseInt(marginData.margin)
+      );
+    }
+
+    //save tax and order:
+    if (updateTax.length == 0) {
+      return true;
+    }
+    console.log(updateTax);
+    await orderItemServides.updateOrderItem(updateTax, value.currItem.id);
+    return true;
+  } catch (err) {
+    throw err;
+  }
+};
 
 /**
  * in pine perk when purchesed in bulk we needs to gen customer list
@@ -155,8 +275,8 @@ const savePurchasedCardAndActiveCard = async (flowtype, data, value) => {
     console.log(flowtype);
     console.log(data);
     console.log(value);
-    if(flowtype=="admin"){
-      const purchasedCard= await cardService.savePurchasedCard({
+    if (flowtype == "admin") {
+      const purchasedCard = await cardService.savePurchasedCard({
         order_id: value.order_id,
         user_id: value.user_id,
         product_id: value.product_id,
@@ -167,7 +287,9 @@ const savePurchasedCardAndActiveCard = async (flowtype, data, value) => {
         customer_email: value.customer_email,
         response_message: "Delivered!",
       });
-      let maskedCardNumber=`${data.card_no.slice(5)}********${data.card_no.slice(-5)}`;
+      let maskedCardNumber = `${data.card_no.slice(
+        5
+      )}********${data.card_no.slice(-5)}`;
       await cardService.saveActiveCard({
         ref_order_id: data.id,
         order_id: value.order_id,
@@ -177,12 +299,12 @@ const savePurchasedCardAndActiveCard = async (flowtype, data, value) => {
         referenceNumber: "0",
         card_link: data.activation_url,
         masked_card_no: maskedCardNumber,
-        customer_name:value.customer_name,
+        customer_name: value.customer_name,
         customer_email: value.customer_email,
-        customer_mobile:value.customer_mobile,
+        customer_mobile: value.customer_mobile,
         amount: data.balance,
         status: "Active",
-      })
+      });
       return purchasedCard;
     }
     if (flowtype == "qwikcilver") {
@@ -200,10 +322,10 @@ const savePurchasedCardAndActiveCard = async (flowtype, data, value) => {
       return purchasedCard;
     }
     if (flowtype == "pineperks") {
-      let purchasedCard=[];
+      let purchasedCard = [];
       if (data.cardDetailResponseList) {
         await data.data.cardDetailResponseList.map(async (card) => {
-         let pCards= await cardService.savePurchasedCard({
+          let pCards = await cardService.savePurchasedCard({
             order_id: data.data.externalRequestId,
             user_id: value.user_id,
             product_id: value.product_id,
@@ -245,22 +367,22 @@ const savePurchasedCardAndActiveCard = async (flowtype, data, value) => {
         response_code: data.data.responseCode,
       });
       purchasedCard.push(pSCard);
-      if(data.responseCode=="0"&& data.responseMessage=="Success"){
+      if (data.responseCode == "0" && data.responseMessage == "Success") {
         await cardService.saveActiveCard({
-          ref_order_id:  data.data.orderId,
+          ref_order_id: data.data.orderId,
           order_id: data.data.externalRequestId,
           user_id: value.user_id,
           product_id: value.product_id,
-          serialNumber:  data.data.serialNumber,
-          referenceNumber:data.data.referenceNumber,
+          serialNumber: data.data.serialNumber,
+          referenceNumber: data.data.referenceNumber,
           card_link: data.data.cardLink,
           masked_card_no: data.data.maskedCardNumber,
-          customer_name:data.data.customerName,
+          customer_name: data.data.customerName,
           customer_email: value.customer_email,
-          customer_mobile:data.data.mobileNumber,
+          customer_mobile: data.data.mobileNumber,
           amount: data.data.orderAmount,
           status: data.data.responseMessage,
-        })
+        });
       }
       return purchasedCard;
     }
@@ -297,22 +419,31 @@ const userOrderFlow = async () => {
 const adminOrderFlow = async (value) => {
   try {
     console.log(value);
-    let cardList=[];
-    let cardAvailable= parseInt(value.quantity);
-    let requireMore=0;
+    let cardList = [];
+    let cardAvailable = parseInt(value.quantity);
+    let requireMore = 0;
     //loop to find all the cards available in uploads
-    let cards = await uploadedCardService.getAllUploadedCard({product_id:value.product_id,sell_status:0},cardAvailable);
-    if(cardAvailable<cards.length){
-      requireMore =cardAvailable-cards.length;
+    let cards = await uploadedCardService.getAllUploadedCard(
+      { product_id: value.product_id, sell_status: 0 },
+      cardAvailable
+    );
+    if (cardAvailable < cards.length) {
+      requireMore = cardAvailable - cards.length;
     }
-    for(let i=0;i<cardAvailable;i++){
-      let currCard=cards[i];
+    for (let i = 0; i < cardAvailable; i++) {
+      let currCard = cards[i];
       //save purchased card and active cards
-       const purchesedCard=await this.savePurchasedCardAndActiveCard("admin",currCard,value);
-       if(!purchesedCard){
-        throw new Error("Error occured during Purchase and Active card generation!")
-       }
-       cardList.push(purchesedCard);
+      const purchesedCard = await this.savePurchasedCardAndActiveCard(
+        "admin",
+        currCard,
+        value
+      );
+      if (!purchesedCard) {
+        throw new Error(
+          "Error occured during Purchase and Active card generation!"
+        );
+      }
+      cardList.push(purchesedCard);
     }
     return {
       success: "1",
@@ -451,5 +582,6 @@ module.exports = {
   pinePerksOrderFLow,
   userOrderFlow,
   adminOrderFlow,
-  calcMarginAndGst
+  calcMarginAndGst,
+  calcMarginAndGstMultiProduct
 };

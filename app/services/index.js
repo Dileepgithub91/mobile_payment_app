@@ -19,6 +19,7 @@ module.exports = {
     businessUserService: require('./business.user.services'),
     providerServices: require('./provider.service'),
     orderService: require('./order.service'),
+    orderItemService: require('./order.item.service'),
     cardOrderService: require('./card.order.detail.service'),
     walletService: require('./wallet.service'),
     cardProviderServices: require('./card.provider.setting.service'),

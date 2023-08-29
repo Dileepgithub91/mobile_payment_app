@@ -75,6 +75,7 @@ db.CardProviderSetting = require("./card.provider.setting.model")(
 db.Wallet = require("./wallets.model")(sequelize, DataTypes);
 db.Transection = require("./transections.model")(sequelize, DataTypes);
 db.Order = require("./order.model")(sequelize, DataTypes);
+db.OrderItem = require("./order.item.model")(sequelize, DataTypes);
 db.CardOrderDetail = require("./card.order.details.model")(
   sequelize,
   DataTypes
@@ -185,9 +186,5 @@ TaxSetting.hasMany(TaxSettingVersion, { foreignKey: "tax_version_id" });
 //taxSetting and products
 Product.hasMany(TaxSetting, { foreignKey: "product_id" });
 TaxSetting.belongsTo(Product, { foreignKey: "id" });
-
-//TaxSettingHistory and product
-Product.hasMany(TaxSettingHistory, { foreignKey: "product_id" });
-TaxSettingHistory.belongsTo(Product, { foreignKey: "id" });
 
 module.exports = db;
