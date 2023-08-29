@@ -1,7 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
     const Ticket = sequelize.define("ticket", {
         user_id: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
       order_id: {

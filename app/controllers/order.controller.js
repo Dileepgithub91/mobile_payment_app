@@ -213,6 +213,7 @@ const createMultiProductOrder = catchAsyncError(async (req, res, next) => {
     totalAmount = totalAmount + TotalAmounts;
     totalQuantity = totalQuantity + parseInt(item.quantity);
     const orderItem = await orderItemService.saveOrderItem({
+      order_ref_id:order.id,
       user_id: value.user_id,
       order_id: value.order_id,
       product_id: item.product_id,

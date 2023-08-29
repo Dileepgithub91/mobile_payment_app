@@ -23,7 +23,6 @@ exports.generateSixDigitRandomNumber=async()=> {
 }
 
 exports.calcPercentage=async(amount,percentage)=>{
-  console.log(amount);
-  console.log(percentage);
-  return (parseInt(percentage)/100*parseInt(amount));
+  let data= (parseFloat(percentage).toFixed(5)/100*parseFloat(amount).toFixed(5));
+  return data.toFixed(5);
 }

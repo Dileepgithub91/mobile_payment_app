@@ -6,11 +6,11 @@ module.exports = (sequelize, DataTypes) => {
         unique:true
       },
       user_id: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
       product_id: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false,
       }, 
       amount: {

@@ -4,6 +4,7 @@ const HelperFunction = require("../helpers/functions");
 
 //Create Main Model
 const Order = db.Order;
+const OrderItem = db.OrderItem;
 
 //Save Sales Order 
 const saveOrder = async (bodyData) => {
@@ -70,6 +71,7 @@ const getOrderDetails = async (data) => {
         id: data.id,
         user_id:data.user_id,
       },
+      include: OrderItem
     });
     return order;
   } catch (error) {

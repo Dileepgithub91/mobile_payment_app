@@ -1,7 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
   const kyc_pan_detail = sequelize.define("kyc_pan_detail", {
     user_id: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     client_id: {

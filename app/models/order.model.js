@@ -37,6 +37,27 @@ module.exports = (sequelize, DataTypes) => {
     no_of_items: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      defaultValue:0
+    },
+    no_of_success: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue:0
+    },
+    no_of_pending: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue:0
+    },
+    no_of_failed: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue:0
+    },
+    refund_Amount: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue:0
     },
     customer_name: {
       type: DataTypes.STRING,

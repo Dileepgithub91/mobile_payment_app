@@ -1,11 +1,11 @@
 module.exports = (sequelize, DataTypes) => {
     const TicketReply = sequelize.define("ticket_reply", {
         user_id: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
         ticket_id: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
       reply: {

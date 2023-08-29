@@ -77,6 +77,46 @@ const deductMoneyAsOrderAmount = async (value) => {
   }
 };
 
+///Refund money to wallet and store in ledger
+/**
+ * check wallet money
+ * check the order money,
+ * determine the refund amount,
+ * save the ledger
+ */
+const refundMoneyAsOrderAmount = async (value) => {
+  try {
+    let refundAmount = 0;
+    const wallet = await walletService.getWalletByUserId(value.user_id);
+    const currentAmount = wallet.dmt_wallet;
+    console.log("wallet ways");
+    console.log(wallet);
+    //get orders
+    const order = await orderServides.getOrderByOrderId(value.order_id);
+    refundAmount = order.refund_Amount;
+    //refund the amount to wallet]
+    wallet.dmt_wallet = parseInt(wallet.dmt_wallet) + refundAmount;
+    await wallet.save();
+    ///save transection
+    const transections = await walletService.saveTransection({
+      user_id: order.user_id,
+      order_id: order.order_id,
+      transection_type: "dmt_refund",
+      amount: refundAmount,
+      before_amount: currentAmount,
+      current_amount: parseInt(wallet.dmt_wallet),
+    });
+    console.log(transections);
+    if (!transections) {
+      throw new Error("Error occured, while saving transection.");
+    }
+    return true;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
+
 //Calculate margin and Gst
 const calcMarginAndGst = async (value) => {
   try {
@@ -94,42 +134,42 @@ const calcMarginAndGst = async (value) => {
         (updateTax.hsn = gstData.hsn),
           (updateTax.sgst = await helper.calcPercentage(
             fullPrice,
-            parseInt(gstData.sgst)
+            parseFloat(gstData.sgst).toFixed(5)
           )),
           (updateTax.cgst = await helper.calcPercentage(
             fullPrice,
-            parseInt(gstData.cgst)
+            parseFloat(gstData.cgst).toFixed(5)
           )),
           (updateTax.igst = await helper.calcPercentage(
             fullPrice,
-            parseInt(gstData.igst)
+            parseFloat(gstData.igst).toFixed(5)
           )),
           (updateTax.gst = await helper.calcPercentage(
             fullPrice,
-            parseInt(gstData.gst)
+            parseFloat(gstData.gst).toFixed(5)
           ));
       }
       if (gstData.is_tds) {
         (updateTax.tds = await helper.calcPercentage(
           fullPrice,
-          parseInt(gstData.tds)
+          parseFloat(gstData.tds).toFixed(5)
         )),
           (updateTax.tds_w_pan = await helper.calcPercentage(
             fullPrice,
-            parseInt(gstData.tds_w_pan)
+            parseFloat(gstData.tds_w_pan).toFixed(5)
           ));
       }
       if (gstData.is_cess) {
         updateTax.cess = await helper.calcPercentage(
           fullPrice,
-          parseInt(gstData.cess)
+          parseFloat(gstData.cess).toFixed(5)
         );
       }
       if (gstData.is_s_fee) {
         (updateTax.s_mode = gstData.s_mode),
           (updateTax.s_fees = await helper.calcPercentage(
             fullPrice,
-            parseInt(gstData.s_fees)
+            parseFloat(gstData.s_fees).toFixed(5)
           ));
       }
     }
@@ -141,7 +181,7 @@ const calcMarginAndGst = async (value) => {
     if (marginData != null) {
       updateTax.discount = await helper.calcPercentage(
         fullPrice,
-        parseInt(marginData.margin)
+        parseFloat(marginData.margin).toFixed(5)
       );
     }
 
@@ -174,42 +214,42 @@ const calcMarginAndGstMultiProduct = async (value) => {
         (updateTax.hsn = gstData.hsn),
           (updateTax.sgst = await helper.calcPercentage(
             fullPrice,
-            parseInt(gstData.sgst)
+            parseFloat(gstData.sgst).toFixed(5)
           )),
           (updateTax.cgst = await helper.calcPercentage(
             fullPrice,
-            parseInt(gstData.cgst)
+            parseFloat(gstData.cgst).toFixed(5)
           )),
           (updateTax.igst = await helper.calcPercentage(
             fullPrice,
-            parseInt(gstData.igst)
+            parseFloat(gstData.igst).toFixed(5)
           )),
           (updateTax.gst = await helper.calcPercentage(
             fullPrice,
-            parseInt(gstData.gst)
+            parseFloat(gstData.gst).toFixed(5)
           ));
       }
       if (gstData.is_tds) {
         (updateTax.tds = await helper.calcPercentage(
           fullPrice,
-          parseInt(gstData.tds)
+          parseFloat(gstData.tds).toFixed(5)
         )),
           (updateTax.tds_w_pan = await helper.calcPercentage(
             fullPrice,
-            parseInt(gstData.tds_w_pan)
+            parseFloat(gstData.tds_w_pan).toFixed(5)
           ));
       }
       if (gstData.is_cess) {
         updateTax.cess = await helper.calcPercentage(
           fullPrice,
-          parseInt(gstData.cess)
+          parseFloat(gstData.cess).toFixed(5)
         );
       }
       if (gstData.is_s_fee) {
         (updateTax.s_mode = gstData.s_mode),
           (updateTax.s_fees = await helper.calcPercentage(
             fullPrice,
-            parseInt(gstData.s_fees)
+            parseFloat(gstData.s_fees).toFixed(5)
           ));
       }
     }
@@ -583,5 +623,6 @@ module.exports = {
   userOrderFlow,
   adminOrderFlow,
   calcMarginAndGst,
-  calcMarginAndGstMultiProduct
+  calcMarginAndGstMultiProduct,
+  refundMoneyAsOrderAmount,
 };

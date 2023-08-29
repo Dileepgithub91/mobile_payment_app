@@ -1,7 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
     const CardProviderSetting = sequelize.define("card_provider_setting", {
       product_id: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
       name: {

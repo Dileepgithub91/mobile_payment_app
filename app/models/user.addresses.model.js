@@ -1,7 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
   const user_addresses = sequelize.define("user_addresses", {
     user_id: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: true,
     },
     business_mobile: {

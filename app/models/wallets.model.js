@@ -1,7 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
     const Wallet = sequelize.define("wallets", {
       user_id: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
       regular_wallet: {

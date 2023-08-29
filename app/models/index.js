@@ -109,7 +109,7 @@ let {
   UploadedCardsTemp,CardOrderDetail,UserAddress, UserKycDetail, 
   PurchaseMargin, CardProviderSetting, Product, KycPanDetail, KycAadharDetail,
   UploadedCards,KycGstDetail,Provider,TaxSetting,TaxSettingVersion,
-  TaxSettingHistory,
+  OrderItem,
 } = db;
 
 // user relations with all
@@ -186,5 +186,10 @@ TaxSetting.hasMany(TaxSettingVersion, { foreignKey: "tax_version_id" });
 //taxSetting and products
 Product.hasMany(TaxSetting, { foreignKey: "product_id" });
 TaxSetting.belongsTo(Product, { foreignKey: "id" });
+
+//Order and Order Item
+Order.hasMany(OrderItem,{foreignKey:"order_ref_id"});
+OrderItem.belongsTo(Order,{foreignKey:"id"});
+
 
 module.exports = db;

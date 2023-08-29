@@ -1,7 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
   const UserProfile = sequelize.define("user_profile", {
     user_id: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: true,
     },
     avatar: {
