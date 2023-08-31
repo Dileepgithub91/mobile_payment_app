@@ -29,6 +29,10 @@ module.exports = (sequelize, DataTypes) => {
     current_step: {
       type: DataTypes.STRING,
     },
+    signup_aggreement: {
+      type: DataTypes.TINYINT,
+      defaultValue:1
+    },
     status: {
       type: DataTypes.STRING,
       defaultValue: "active",

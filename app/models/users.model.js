@@ -30,6 +30,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
       defaultValue: "user",
     },
+    next_step: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     status: {
       type: DataTypes.TINYINT,
       allowNull: false,

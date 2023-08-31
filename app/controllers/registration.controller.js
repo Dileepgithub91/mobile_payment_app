@@ -23,7 +23,8 @@ const getRegisterOtp = catchAsyncError(async (req, res, next) => {
     }
     const registeredUser = await authService.addRegistrationUser({
       mobileNo: value.mobileNo,
-      verificationType:"register"
+      verificationType:"register",
+      signup_aggreement:value.signup_aggreement
     });
     // //api to send otp
     await dataGenService.sendOtp(value.mobileNo, registeredUser.otp);
@@ -88,6 +89,7 @@ const verifyRegisterOtp =  catchAsyncError(async (req, res, next) => {
       last_name: "user",
       mobile_no: value.mobileNo,
       password: hashedPassword,
+      next_step:"Update-Profile"
     });
     //generate token
     const token = await HelperFunction.genAuthToken(

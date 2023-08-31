@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const giftCardProducts = sequelize.define("products", {
-    provider_id: {
+    format_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },

@@ -150,6 +150,7 @@ const saveBusinessUserProfile = catchAsyncError(async (req, res, next) => {
         middle_name: value.middlename,
         last_name: value.lastname,
         email: value.email,
+        next_step:"update-shop-details",
       },
       req.user.id
     );
@@ -207,6 +208,13 @@ const saveBusinessUserShopDetails = catchAsyncError(async (req, res, next) => {
     if (req.file) {
       imageUrl = req.file.path || "";
     }
+    ///update user
+    await userService.updateUser(
+      {
+        next_step:"kyc-verification",
+      },
+      req.user.id
+    );
     ///create new user profile
     await userProfileService.addUserProfile({
       user_id: req.user.id,
@@ -244,7 +252,8 @@ const skipBusinessUserKyc = catchAsyncError(async (req, res, next) => {
     ///update user
     await userService.updateUser(
       {
-        status: 1,
+        status: 1,    
+        next_step:"Home-page",
       },
       req.user.id
     );

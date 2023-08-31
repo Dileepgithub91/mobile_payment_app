@@ -7,6 +7,9 @@ module.exports.registerOtp = Joi.object({
       .required()
       .messages({
         'string.pattern.base': 'Invalid mobile number format'
+      }),
+      signup_aggreement:Joi.number().min(1).max(1).messages({
+        'string.pattern.base': 'You must agree to terms and conditions!'
       })
   });
 module.exports.registerOtpVerify = Joi.object({

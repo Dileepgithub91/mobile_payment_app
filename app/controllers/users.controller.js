@@ -26,6 +26,7 @@ const updateUserProfile = catchAsyncError(async (req, res, next) => {
         middle_name: value.middlename,
         last_name: value.lastname,
         email: value.email,
+        next_step:"kyc-verification"
       },
       req.user.id
     );
@@ -113,6 +114,13 @@ const saveManualKycFile = catchAsyncError(async (req, res, next) => {
       : (adhaarKycStatus = "pending");
     PanImage === "" ? {} : (kycLevel = "2");
     PanImage === "" ? {} : (panKycStatus = "pending");
+    ///update user 
+    await userService.updateUser(
+      {
+        next_step:"Home-Page",
+      },
+      req.user.id
+    );
     ///update user profile
     await userProfileService.updateUserProfilebyUserID(
       {
@@ -138,6 +146,7 @@ const skipUserKyc = catchAsyncError(async (req, res, next) => {
     await userService.updateUser(
       {
         status: "Active",
+        next_step:"Home-Page",
       },
       req.user.id
     );
@@ -172,11 +181,12 @@ const getManualKycdocument =  catchAsyncError(async (req, res, next) => {
     let aadharKyc = {};
     let panKyc = {};
     let gstKyc = {};
-    const Kycdata = await userKycDetailsService.getUserKycDetailsByUserId(
+    let Kycdata = await userKycDetailsService.getUserKycDetailsByUserId(
       userId
     );
-    if (!userKycdata) {
-      throw new Error(responseMessages.userKycNotFound);
+    if (!Kycdata) {
+      Kycdata={};
+      // throw new Error(responseMessages.userKycNotFound);
       // throw new Error("User Kyc Data not found!");
     }
     response.success(res, "User Kyc data retrived!", Kycdata);
@@ -213,10 +223,19 @@ const kycPanVerification = catchAsyncError(async (req, res, next) => {
       },
       req.user.id
     );
+     ///update user
+     await userService.updateUser(
+      {
+        status: "Active",
+        next_step:"Home-Page",
+      },
+      req.user.id
+    );
     //update kyc level
     await userProfileService.updateUserProfilebyUserID(
       {
         kyc_level: "2",
+        signup_completed:"true",
       },
       req.user.id
     );
@@ -268,10 +287,19 @@ const kycAadharVerificationOtp =  catchAsyncError(async (req, res, next) => {
       },
       req.user.id
     );
+     ///update user
+     await userService.updateUser(
+      {
+        status: "Active",
+        next_step:"kyc-verification",
+      },
+      req.user.id
+    );
     //update kyc level
     await userProfileService.updateUserProfilebyUserID(
       {
         kyc_level: "1",
+        signup_completed:"true",
       },
       req.user.id
     );
@@ -311,10 +339,19 @@ const kycGStVerification = catchAsyncError( async (req, res, next) => {
       },
       req.user.id
     );
+     ///update user
+     await userService.updateUser(
+      {
+        status: "Active",
+        next_step:"kyc-verification",
+      },
+      req.user.id
+    );
     //update kyc level
     await userProfileService.updateUserProfilebyUserID(
       {
         kyc_level: "3",
+        signup_completed:"true",
         bussiness_name: gstData.data.business_name,
       },
       req.user.id

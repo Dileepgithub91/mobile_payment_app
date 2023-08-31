@@ -49,7 +49,7 @@ const validateOtpExpireBeforeGeneration = async (registeredUser) => {
   return { otp, retriesValue };
 };
 
-const addRegistrationUser = async ({ mobileNo ,verificationType}) => {
+const addRegistrationUser = async ({ mobileNo ,verificationType,signup_aggreement}) => {
   try {
     let passotp;
     let registeredUser;
@@ -63,7 +63,8 @@ const addRegistrationUser = async ({ mobileNo ,verificationType}) => {
       let SavedRegisteredUser = await OtpVerification.create({
         mobile_no: mobileNo,
         otp: passotp,
-        verification_type:verificationType
+        verification_type:verificationType,
+        signup_aggreement:signup_aggreement
       });
       registeredUser = SavedRegisteredUser.dataValues;
       return registeredUser;
