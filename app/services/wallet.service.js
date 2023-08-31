@@ -16,7 +16,7 @@ const saveWallet = async (bodyData) => {
       },
     });
     if (findWallet!=null) {
-      throw new Error("Wallet Already Exists!!");
+      return findWallet;
     }
     let wallet = await Wallet.create(bodyData);
     return wallet;

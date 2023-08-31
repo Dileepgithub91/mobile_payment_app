@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
       },
       state_id: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: true,
       },
       state_code: {
@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
       },
       country_id: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: true,
       },
       country_code: {

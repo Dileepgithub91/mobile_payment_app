@@ -1,4 +1,5 @@
 const {responseMessages,responseFlags} = require("../core/constants");
+const moment = require("moment");
 const catchAsyncError=require('../middleware/catch.async.error');
 const {
   businessCustomerValidator,
@@ -101,6 +102,17 @@ const verifyBusinessUserRequest = catchAsyncError(async (req, res, next) => {
       throw new Error(responseMessages.otpTryExceded);
       // response.validatationError(res, "You have exceeded no of tries for otp,you can resend otp.");
       // return false;
+    }
+    //check as the otp must be generated within 5 min
+    const endDate = moment(new Date());
+    const startDate = moment(regesteredUser.createdAt);
+    const diffInMinutes = endDate.diff(startDate, "minutes");
+    if (diffInMinutes >5) {
+      logger.log(
+        "info",
+        "You Otp  has Expired, please resend new otp!"
+      );
+      throw new Error(responseMessages.otpExpired);
     }
   //check if the otp is correct
   if (regesteredUser.otp !== otp) {

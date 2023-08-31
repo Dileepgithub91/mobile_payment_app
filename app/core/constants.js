@@ -13,6 +13,7 @@ exports.responseMessages = {
   passwordNotMatch: "Password does not match.",
   otpTryExceded: "You have exceeded no of tries for otp, you can resend otp.",
   otpInvalid: "Invalid Otp!, enter correct otp.",
+  otpExpired: "You Otp  has Expired, please resend new otp!",
   phoneAlreadyExist: "Phone Already Exists.",
   dataNotFound: "Data Not Found.",
   gstInactive: "Gst is Inactive, gst verification failed.",
