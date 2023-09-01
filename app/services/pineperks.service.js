@@ -3,7 +3,8 @@ const db = require("../models");
 const { client } = require("../helpers");
 const {pinePerksErrorHandler} =require("../helpers/apierror.handler");
 const env = require("../env");
-const { PINEPERKS_ENDPOINT } = require("../core/constants");
+const { PINEPERKS_ENDPOINT, responseFlags } = require("../core/constants");
+const ErrorHandler = require("../helpers/error.handler");
 
 //Create Main Model
 const apiProviderSetting = db.ApiProviderSetting;
@@ -87,9 +88,9 @@ const generateHeaders = async () => {
   } catch (e) {
     console.log(e);
     if (e.error == "FORBIDDEN" && e.status == "403") {
-      throw new Error( "Service is not available now, try again after some time!" );
+      throw new ErrorHandler( "Service is not available now, try again after some time!",responseFlags.failure );
     }
-    throw new Error("An Error Occured,contact your provioder!!");
+    throw new ErrorHandler("An Error Occured,contact your provioder!!",responseFlags.failure);
   }
 };
 //Get Scheme

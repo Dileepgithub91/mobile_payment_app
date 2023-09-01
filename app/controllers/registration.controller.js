@@ -12,7 +12,9 @@ const {
   userService,
   userTokenService,
   dataGenService,
+  emailService
 } = require("../services");
+const ErrorHandler = require("../helpers/error.handler");
 
 const getRegisterOtp = catchAsyncError(async (req, res, next) => {
   const { mobileNo } = req.body;
@@ -21,7 +23,7 @@ const getRegisterOtp = catchAsyncError(async (req, res, next) => {
   });
   const checkUserExists = await userService.getUserByMobile(value.mobileNo);
   if (checkUserExists) {
-    throw new Error("User Exists!");
+    throw new ErrorHandler("User Exists!",400);
   }
   const registeredUser = await authService.addRegistrationUser({
     mobileNo: value.mobileNo,
@@ -54,7 +56,7 @@ const verifyRegisterOtp = catchAsyncError(async (req, res, next) => {
     verification_type: "register",
   });
   if (!registeredUser) {
-    throw new Error(responseMessages.userNotFound);
+    throw new ErrorHandler(responseMessages.userNotFound,responseFlags.notFound);
   }
   const updatedRetriesValue = parseInt(registeredUser.no_of_retries) + 1;
   //check if the user has not exceeded otp limit i.e. 3
@@ -63,14 +65,14 @@ const verifyRegisterOtp = catchAsyncError(async (req, res, next) => {
       "info",
       "You have exceeded no of tries for otp,you can resend otp!"
     );
-    throw new Error(responseMessages.otpTryExceded);
+    throw new ErrorHandler(responseMessages.otpTryExceded,responseFlags.failure);
   }
   //check as the otp must be generated within 5 min
   const startDate = moment(registeredUser.createdAt);
   const diffInMinutes = endDate.diff(startDate, "minutes");
   if (diffInMinutes > 5) {
     logger.log("info", "You Otp  has Expired, please resend new otp!");
-    throw new Error(responseMessages.otpExpired);
+    throw new ErrorHandler(responseMessages.otpExpired,responseFlags.failure);
   }
   //check if the otp is correct
   if (registeredUser.otp !== otp) {
@@ -79,9 +81,7 @@ const verifyRegisterOtp = catchAsyncError(async (req, res, next) => {
       { id: registeredUser.id, verification_type: "register" }
     );
     logger.log("info", "Invalid Otp!, enter correct otp.");
-    throw new Error(responseMessages.otpInvalid);
-    // response.validatationError(res, "Invalid Otp!, enter correct otp.");
-    // return false;
+    throw new ErrorHandler(responseMessages.otpInvalid,responseFlags.failure);
   }
 
   ///in case all ok update current step so when login goes to user profile
@@ -111,6 +111,8 @@ const verifyRegisterOtp = catchAsyncError(async (req, res, next) => {
     user_id: user.id,
     token: token,
   });
+ //send sms of new User ANd PAssword
+
   response.success(res, "User Registered Successfully!", {
     user,
     token,
@@ -126,7 +128,7 @@ const getResendOtp = catchAsyncError(async (req, res, next) => {
   const checkUserExists = await userService.getUserByMobile(value.mobileNo);
   if (checkUserExists != null) {
     logger.log("info", "User Exists, Can't be registered again!");
-    throw new Error(responseMessages.userExist);
+    throw new ErrorHandler(responseMessages.userExist,responseFlags.failure);
   }
   const user = await authService.findRegistrationUser({
     mobile_no: value.mobileNo,
@@ -134,7 +136,7 @@ const getResendOtp = catchAsyncError(async (req, res, next) => {
   });
   if (!user) {
     logger.log("info", "User Not Found");
-    throw new Error(responseMessages.userNotFound);
+    throw new ErrorHandler(responseMessages.userNotFound,responseFlags.notFound);
   }
   const registeredUser = await authService.addRegistrationUser({
     mobileNo: value.mobileNo,
@@ -154,9 +156,7 @@ const sendForgetPasswordOtp = catchAsyncError(async (req, res, next) => {
   const user = await userService.getUserByMobile(value.mobileNo);
   if (!user) {
     logger.log("info", "User Not Found");
-    throw new Error(responseMessages.userNotFound);
-    // response.generalError(res, "User Not Found");
-    // return false;
+    throw new ErrorHandler(responseMessages.userNotFound,responseFlags.notFound);
   }
   const registeredUser = await authService.addRegistrationUser({
     mobileNo: value.mobileNo,
@@ -179,7 +179,7 @@ const reSendForgetPasswordOtp = catchAsyncError(async (req, res, next) => {
   });
   if (!user) {
     logger.log("info", "User Not Found");
-    throw new Error(responseMessages.userNotFound);
+    throw new ErrorHandler(responseMessages.userNotFound,responseFlags.notFound);
   }
   const registeredUser = await authService.addRegistrationUser({
     mobileNo: value.mobileNo,
@@ -211,9 +211,7 @@ const verifyForgetPasswordOtp = catchAsyncError(async (req, res, next) => {
       "info",
       "You have exceeded no of tries for otp,you can resend otp"
     );
-    throw new Error(responseMessages.otpTryExceded);
-    // response.validatationError(res, "You have exceeded no of tries for otp,you can resend otp.");
-    // return false;
+    throw new ErrorHandler(responseMessages.otpTryExceded,responseFlags.failure);
   }
 
   //check as the otp must be generated within 5 min
@@ -222,7 +220,7 @@ const verifyForgetPasswordOtp = catchAsyncError(async (req, res, next) => {
   const diffInMinutes = endDate.diff(startDate, "minutes");
   if (diffInMinutes > 5) {
     logger.log("info", "You Otp  has Expired, please resend new otp!");
-    throw new Error(responseMessages.otpExpired);
+    throw new ErrorHandler(responseMessages.otpExpired,responseFlags.failure);
   }
   //check if the otp is correct
   if (registeredUser.otp !== otp) {
@@ -231,9 +229,7 @@ const verifyForgetPasswordOtp = catchAsyncError(async (req, res, next) => {
       { id: registeredUser.id, verification_type: "forget" }
     );
     logger.log("info", "Invalid Otp!, enter correct otp.");
-    throw new Error(responseMessages.otpInvalid);
-    // response.validatationError(res, "Invalid Otp!, enter correct otp.");
-    // return false;
+    throw new ErrorHandler(responseMessages.otpInvalid,responseFlags.failure);
   }
 
   //Sent email for change password
@@ -250,8 +246,7 @@ const forgetPasswordChangePassword = catchAsyncError(async (req, res, next) => {
   const hashedPassword = await bcrypt.hash(value.newPassword, 10);
   const findUser = await userService.getUserByMobile(mobileNo);
   if (!findUser) {
-    throw new Error(responseMessages.userNotFound);
-    // throw new Error("User Not found");
+    throw new ErrorHandler(responseMessages.userNotFound,responseFlags.notFound);
   }
   const user = await userService.updateUser(
     {
@@ -271,15 +266,11 @@ const loginViaPassowrd = catchAsyncError(async (req, res, next) => {
   const user = await userService.getUserByMobile(value.mobileNo);
   if (!user) {
     logger.log("info", "User Not Found");
-    throw new Error(responseMessages.userNotFound);
-    // response.generalError(res, "User Not Found");
-    // return false;
+    throw new ErrorHandler(responseMessages.userNotFound,responseFlags.notFound);
   }
   if (!(await bcrypt.compare(value.password, user.password))) {
     logger.log("info", "Password does not match!");
-    throw new Error(responseMessages.passwordNotMatch);
-    // response.generalError(res, "Password does not match!");
-    // return false;
+    throw new ErrorHandler(responseMessages.passwordNotMatch,responseFlags.failure);
   }
   //remove password from user before removing
   delete user.dataValues.password;

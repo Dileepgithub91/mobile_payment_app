@@ -13,6 +13,7 @@ const {
   walletService,
   uploadedCardsService,
 } = require("../services");
+const ErrorHandler = require("../helpers/error.handler");
 
 // save order
 const createOrder = catchAsyncError(async (req, res, next) => {
@@ -66,7 +67,7 @@ const createOrder = catchAsyncError(async (req, res, next) => {
   const reCheckWallet = await walletService.getWalletByUserId(value.user_id);
   ///check if the amount is in negative
   if (parseInt(reCheckWallet.dmt_wallet) < 1) {
-    throw new Error("Wallet balance not enough!");
+    throw new ErrorHandler("Wallet balance not enough!",400);
   }
 
   ///margin and gst calculations
@@ -127,7 +128,7 @@ const createOrder = catchAsyncError(async (req, res, next) => {
         throw extOrderRes.error;
       }
     }
-    throw new Error("Card Not Available!");
+    throw new ErrorHandler("Card Not Available!",404);
   }
   console.log(extOrderRes);
   //Save card order details data in card order details table
@@ -193,7 +194,7 @@ const createMultiProductOrder = catchAsyncError(async (req, res, next) => {
   const reCheckWallet = await walletService.getWalletByUserId(value.user_id);
   ///check if the amount is in negative
   if (parseInt(reCheckWallet.dmt_wallet) < 1) {
-    throw new Error("Wallet balance not enough!");
+    throw new ErrorHandler("Wallet balance not enough!");
   }
 
   for (let i = 0; i < order.no_of_items; i++) {
@@ -230,64 +231,6 @@ const createMultiProductOrder = catchAsyncError(async (req, res, next) => {
     value.currItem = orderItem.dataValues;
     ///margin and gst calculations
     await orderRouteService.calcMarginAndGstMultiProduct(value);
-
-    // let providerList = provider.provider;
-    // let currProvider = providerList[0];
-    // for (let i = 0; i < providerList.length; i++) {
-    //   //Directing flow according to providers
-    //   if (currProvider == "admin") {
-    //     extOrderRes = await orderRouteService.adminOrderFlow(value);
-    //     if (extOrderRes.success == "1") {
-    //       break;
-    //     } else if (extOrderRes.success == "2") {
-    //       // Recoverable error
-    //       currProvider = providerList[i + 1];
-    //       continue;
-    //     } else {
-    //       throw extOrderRes.error;
-    //     }
-    //   }
-
-    //   if (currProvider == "user") {
-    //     extOrderRes = await orderRouteService.userOrderFlow(value);
-    //     if (extOrderRes.success == "1") {
-    //       break;
-    //     } else if (extOrderRes.success == "2") {
-    //       // Recoverable error
-    //       currProvider = providerList[i + 1];
-    //       continue;
-    //     } else {
-    //       throw extOrderRes.error;
-    //     }
-    //   }
-
-    //   if (currProvider == "qwikcilver") {
-    //     extOrderRes = await orderRouteService.qwikcilverOrderFlow(value);
-    //     if (extOrderRes.success == "1") {
-    //       break;
-    //     } else if (extOrderRes.success == "2") {
-    //       // Recoverable error
-    //       currProvider = providerList[i + 1];
-    //       continue;
-    //     } else {
-    //       throw extOrderRes.error;
-    //     }
-    //   }
-
-    //   if (currProvider == "pineperks") {
-    //     extOrderRes = await orderRouteService.pinePerksOrderFLow(value);
-    //     if (extOrderRes.success == "1") {
-    //       break;
-    //     } else if (extOrderRes.success == "2") {
-    //       // Recoverable error
-    //       currProvider = providerList[i + 1];
-    //       continue;
-    //     } else {
-    //       throw extOrderRes.error;
-    //     }
-    //   }
-    //   throw new Error("Card Not Available!");
-    // }
     console.log(extOrderRes);
   }
   response.success(res, "New Order Created!", order);
@@ -365,7 +308,7 @@ const bulkOrderUpdateStatus = catchAsyncError(async (req, res, next) => {
         throw extOrderRes.error;
       }
     }
-    throw new Error("Card Not Available!");
+    throw new ErrorHandler("Card Not Available!",404);
   }
   console.log(extOrderRes);
   //Save card order details data in card order details table
@@ -399,7 +342,7 @@ const checkOrderStatus = catchAsyncError(async (req, res, next) => {
     value.order_id
   );
   if (!orderDetail) {
-    throw new Error("Order not Found!");
+    throw new ErrorHandler("Order not Found!",404);
   }
   const provider = await orderRouteService.checkProductAvailabilityAndPorviders(
     orderDetail.product_id

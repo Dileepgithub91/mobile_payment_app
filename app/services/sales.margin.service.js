@@ -1,3 +1,5 @@
+const { responseFlags } = require("../core/constants");
+const ErrorHandler = require("../helpers/error.handler");
 const logger = require("../logger");
 const db = require("../models");
 
@@ -13,7 +15,7 @@ const saveSalesMargin = async (bodyData) => {
       },
     });
     if (findSalesMargin.length != 0) {
-      throw new Error("Margin Already Exists!!");
+      throw new ErrorHandler("Margin Already Exists!!",responseFlags.failure);
     }
     let margin = await SalesMargin.create(bodyData);
     return margin;
@@ -32,7 +34,7 @@ const updateSalesMargin = async (bodyData, marginId) => {
       },
     });
     if (findMargin.length == 0) {
-      throw new Error("margin Not Found!");
+      throw new ErrorHandler("margin Not Found!",responseFlags.notFound);
     }
     let margin = await SalesMargin.update(bodyData, {
       where: {

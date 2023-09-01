@@ -1,3 +1,5 @@
+const { responseFlags } = require("../core/constants");
+const ErrorHandler = require("../helpers/error.handler");
 const logger = require("../logger");
 const db = require("../models");
 
@@ -13,7 +15,7 @@ const saveCardOrderDetail = async (bodyData) => {
       },
     });
     if (findCardOrderDetail.length != 0) {
-      throw new Error("Card Order Detail Already Exists!!");
+      throw new ErrorHandler("Card Order Detail Already Exists!!",responseFlags.failure);
     }
     let order = await CardOrderDetail.create(bodyData);
     return order;
@@ -32,7 +34,7 @@ const updateCardOrderDetail = async (bodyData, cardOrderId) => {
       },
     });
     if (findCardOrderDetail.length == 0) {
-      throw new Error("Card Order Detail Not Found!");
+      throw new ErrorHandler("Card Order Detail Not Found!",responseFlags.notFound);
     }
     let cardOrderDetail = await CardOrderDetail.update(bodyData, {
       where: {

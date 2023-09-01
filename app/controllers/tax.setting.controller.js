@@ -1,6 +1,8 @@
 const catchAsyncError = require("../middleware/catch.async.error");
 const { response } = require("../helpers");
 const { taxSettingService } = require("../services");
+const ErrorHandler = require("../helpers/error.handler");
+const { responseFlags } = require("../core/constants");
 
 ///get Tax Setting APi
 const getTaxSettings = catchAsyncError(async (req, res, next) => {
@@ -15,7 +17,7 @@ const getTaxSettings = catchAsyncError(async (req, res, next) => {
   requestData.query = bodyData;
   const taxSettings = await taxSettingService.getTaxSetting(requestData);
   if (taxSettings == null) {
-    throw new Error("Tax Setting not Found!");
+    throw new ErrorHandler("Tax Setting not Found!",responseFlags.failure);
   }
   response.success(res, "List of Tax Setting!", taxSettings);
 });
@@ -33,7 +35,7 @@ const getTaxSettingDetails = catchAsyncError(async (req, res, next) => {
   requestData.query = bodyData;
   const taxSettings = await taxSettingService.getTaxSetting(requestData);
   if (taxSettings == null) {
-    throw new Error("Tax Setting not Found!");
+    throw new ErrorHandler("Tax Setting not Found!",responseFlags.notFound);
   }
   response.success(res, "List of Tax Setting!", taxSettings);
 });

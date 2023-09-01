@@ -1,3 +1,5 @@
+const { responseFlags } = require("../core/constants");
+const ErrorHandler = require("../helpers/error.handler");
 const db = require("../models");
 
 //Create Main Model
@@ -12,7 +14,7 @@ const addUserRoles = async (body) => {
       },
     });
     if (findRoles.length != 0) {
-      throw new Error("Role Exists, try again!");
+      throw new ErrorHandler("Role Exists, try again!",responseFlags.failure);
     }
     let roles = await userRoles.create(body);
 

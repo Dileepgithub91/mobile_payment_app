@@ -1,5 +1,7 @@
 const db = require("../models");
 const logger =require("../logger");
+const ErrorHandler = require("../helpers/error.handler");
+const { responseFlags } = require("../core/constants");
 
 //Create Main Model
 const Ticket = db.Ticket;
@@ -23,7 +25,7 @@ const addTicketReply = async (body) => {
       },
     });
     if (ticket==null) {
-      throw new Error("Invalid Ticket!");
+      throw new ErrorHandler("Invalid Ticket!",responseFlags.failure);
     }
     let reply = await TicketReply.create(body);
     return reply;
@@ -68,7 +70,7 @@ const findTickets = async (query) => {
       ],
     });
     if(tickets.length==0){
-        throw new Error("Ticket Not Found!")
+        throw new ErrorHandler("Ticket Not Found!",responseFlags.notFound)
     }
     return tickets;
   } catch (error) {

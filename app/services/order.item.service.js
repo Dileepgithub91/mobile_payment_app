@@ -1,3 +1,5 @@
+const { responseFlags } = require("../core/constants");
+const ErrorHandler = require("../helpers/error.handler");
 const logger = require("../logger");
 const db = require("../models");
 
@@ -38,7 +40,7 @@ const updateOrderItem = async (bodyData, OrderItemId) => {
       },
     });
     if (findOrder.length == 0) {
-      throw new Error("Order Not Found!");
+      throw new ErrorHandler("Order Not Found!",responseFlags.notFound);
     }
     let Order = await OrderItem.update(bodyData, {
       where: {

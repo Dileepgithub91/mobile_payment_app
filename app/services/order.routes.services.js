@@ -8,6 +8,8 @@ const walletService = require("./wallet.service");
 const saleMarginServides = require("./sales.margin.service");
 const logger = require("../logger");
 const helper = require("../helpers/functions");
+const ErrorHandler = require("../helpers/error.handler");
+const { responseFlags } = require("../core/constants");
 
 const checkProductAvailabilityAndPorviders = async (productId) => {
   try {
@@ -19,7 +21,7 @@ const checkProductAvailabilityAndPorviders = async (productId) => {
     let product = await cardService.getCardDetails(productId);
     console.log(product);
     if (!product) {
-      throw new Error("Product not found!");
+      throw new ErrorHandler("Product not found!",responseFlags.notFound);
     }
     //check error if product exists
     let providers = await providerService.getCardProviderByProductId(productId);
@@ -48,14 +50,14 @@ const deductMoneyAsOrderAmount = async (value) => {
     const remainBalance =
       parseInt(wallet.dmt_wallet) - parseInt(value.total_amount);
     if (remainBalance < 1) {
-      throw new Error("Wallet balance not enough!");
+      throw new ErrorHandler("Wallet balance not enough!",responseFlags.failure);
     }
     let walletUpdateStatus = await walletService.updateWallet(
       { dmt_wallet: remainBalance },
       wallet.id
     );
     if (walletUpdateStatus && walletUpdateStatus[0] != 1) {
-      throw new Error("Error occured when wallet was updated", 400);
+      throw new ErrorHandler("Error occured when wallet was updated",responseFlags.failure);
     }
     ///save transection
     const transections = await walletService.saveTransection({
@@ -68,7 +70,7 @@ const deductMoneyAsOrderAmount = async (value) => {
     });
     console.log(transections);
     if (!transections) {
-      throw new Error("Error occured, while saving transection.");
+      throw new ErrorHandler("Error occured, while saving transection.",responseFlags.failure);
     }
     return true;
   } catch (err) {
@@ -108,7 +110,7 @@ const refundMoneyAsOrderAmount = async (value) => {
     });
     console.log(transections);
     if (!transections) {
-      throw new Error("Error occured, while saving transection.");
+      throw new ErrorHandler("Error occured, while saving transection.",responseFlags.failure);
     }
     return true;
   } catch (err) {
@@ -426,7 +428,7 @@ const savePurchasedCardAndActiveCard = async (flowtype, data, value) => {
       }
       return purchasedCard;
     }
-    throw new Error("Flow type not found!");
+    throw new ErrorHandler("Flow type not found!",responseFlags.failure);
   } catch (error) {
     logger.log("error", {
       source: "Order Route Service  -- save purchased Card",
@@ -479,8 +481,8 @@ const adminOrderFlow = async (value) => {
         value
       );
       if (!purchesedCard) {
-        throw new Error(
-          "Error occured during Purchase and Active card generation!"
+        throw new ErrorHandler(
+          "Error occured during Purchase and Active card generation!",responseFlags.failure
         );
       }
       cardList.push(purchesedCard);

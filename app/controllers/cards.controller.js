@@ -8,6 +8,7 @@ const catchAsyncError=require('../middleware/catch.async.error');
 const { response } = require("../helpers");
 const logger = require("../logger");
 const { cardService,cardProviderServices,uploadedCardsService,tempUploadedCardsService} = require("../services");
+const ErrorHandler = require("../helpers/error.handler");
  
 const getGiftCards = catchAsyncError(async (req, res, next) => {
     const bodyData = req.query;
@@ -232,7 +233,7 @@ const createUploadedCard = catchAsyncError(async (req, res, next) => {
     let errorRes=[];
     let successRes=[];
     if(!listCardId || listCardId.length<1){
-      throw new Error("Temp Uploaded card id is required");
+      throw new ErrorHandler("Temp Uploaded card id is required",responseFlags.failure);
     }
     listCardId.forEach(async(cardId)=>{
       const tempUploadedCard = await tempUploadedCardsService.getUploadedCardsTempById(cardId);

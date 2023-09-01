@@ -1,3 +1,5 @@
+const { responseFlags } = require("../core/constants");
+const ErrorHandler = require("../helpers/error.handler");
 const logger = require("../logger");
 const db = require("../models");
 
@@ -44,7 +46,7 @@ const updateCard = async (bodyData, card_id) => {
       },
     });
     if (findCard.length == 0) {
-      throw new Error("Card Not Found!");
+      throw new ErrorHandler("Card Not Found!",responseFlags.notFound);
     }
     let card = await Product.update(bodyData, {
       where: {
@@ -110,7 +112,7 @@ const updatePurchasedCard = async (bodyData, id) => {
       },
     });
     if (findCard.length == 0) {
-      throw new Error("Card Not Found!");
+      throw new ErrorHandler("Card Not Found!",responseFlags.notFound);
     }
     let card = await PurchasedCard.update(bodyData, {
       where: {
@@ -177,7 +179,7 @@ const updateActiveCard = async (bodyData, id) => {
       },
     });
     if (findCard.length == 0) {
-      throw new Error("Card Not Found!");
+      throw new ErrorHandler("Card Not Found!",responseFlags.notFound);
     }
     let card = await ActiveCard.update(bodyData, {
       where: {

@@ -1,3 +1,5 @@
+const { responseFlags } = require("../core/constants");
+const ErrorHandler = require("../helpers/error.handler");
 const logger = require("../logger");
 const db = require("../models");
 
@@ -35,7 +37,7 @@ const updateWallet = async (bodyData, UserId) => {
       },
     });
     if (findWallet==null) {
-      throw new Error("Wallet Not Found!");
+      throw new ErrorHandler("Wallet Not Found!",responseFlags.notFound);
     }
     let wallet = await Wallet.update(bodyData, {
       where: {
@@ -77,7 +79,7 @@ const getWalletDetails = async (userId) => {
       },
     });
     if(wallet==null){
-      throw new Error("Wallet not Activated!");
+      throw new ErrorHandler("Wallet not Activated!",responseFlags.failure);
     }
     return wallet;
   } catch (error) {
@@ -125,7 +127,7 @@ const updateTransection = async (bodyData, transectionId) => {
       },
     });
     if (findTransection.length == 0) {
-      throw new Error("Transection Not Found!");
+      throw new ErrorHandler("Transection Not Found!",responseFlags.notFound);
     }
     let transection = await Transection.update(bodyData, {
       where: {

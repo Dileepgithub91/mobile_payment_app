@@ -11,6 +11,7 @@ const {
   kycService ,
   walletService
 } = require("../services");
+const ErrorHandler = require("../helpers/error.handler");
 
 const updateUserProfile = catchAsyncError(async (req, res, next) => {
     const bodyData = req.body;
@@ -59,7 +60,7 @@ const uploadUserProfileImage = catchAsyncError(async (req, res, next) => {
     if (req.file) {
       imageUrl = req.file.path || "";
     }else{
-      throw new Error("Upload is required")
+      throw new ErrorHandler("Upload is required",responseFlags.failure)
     }
     ///create new user profile
     await userProfileService.updateUserProfilebyUserID(
@@ -186,8 +187,6 @@ const getManualKycdocument =  catchAsyncError(async (req, res, next) => {
     );
     if (!Kycdata) {
       Kycdata={};
-      // throw new Error(responseMessages.userKycNotFound);
-      // throw new Error("User Kyc Data not found!");
     }
     response.success(res, "User Kyc data retrived!", Kycdata);
 });
@@ -326,8 +325,7 @@ const kycGStVerification = catchAsyncError( async (req, res, next) => {
     const { gstNo } = req.body;
     const gstData = await kycService.verifyGst(gstNo);
     if (gstData.data.gstin_status != "Active") {
-      throw new Error(responseMessages.gstInactive);
-      // throw new Error("Gst is Inactive, gst verification failed!");
+      throw new ErrorHandler(responseMessages.gstInactive,responseFlags.failure);
     }
     //update kyc document
     await userKycDetailsService.updateUserKycDetails(

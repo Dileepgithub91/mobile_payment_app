@@ -25,7 +25,16 @@ module.exports = (err, req, res, next) => {
     const message = `An Error Occured,Contact Your Provider!!`;
     err = new ErrorHandler(message, 400);
   }
-
+  if (err.name == "Error") {
+    const message = err.message;
+    let stCode=err.statusCode||412;
+    err = new ErrorHandler(message, stCode);
+  }
+  if (err.name == "ValidationError") {
+    const message = err.message;
+    let stCode=400;
+    err = new ErrorHandler(message, stCode);
+  }
   //Wrong JWT token error
   if (err.name == "JsonWebTokenError") {
     const message = `Json Web Token is invalid, try again`;
@@ -42,6 +51,7 @@ module.exports = (err, req, res, next) => {
     success: false,
     error: err.stack,
     message: err.message,
+    code:err.statusCode,
   });
 };
 //use err only in error of res but in case err.stack it provides all the path of error

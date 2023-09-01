@@ -3,7 +3,8 @@ const db = require("../../models");
 const {qwikCilverErrorHandler} =require("../../helpers/apierror.handler");
 const createSignature = require("./requestSignature");
 const { client } = require("../../helpers");
-const { QWIKCILVER_ENDPOINT } = require("../../core/constants");
+const { QWIKCILVER_ENDPOINT, responseFlags } = require("../../core/constants");
+const ErrorHandler = require("../../helpers/error.handler");
 
 //Create Main Model
 const apiProviderSetting = db.api_provider_setting;
@@ -123,12 +124,12 @@ const generateTokens = async (data, url, getORPost) => {
     };
   } catch (e) {
     if (e.error == "FORBIDDEN" && e.status == "403") {
-      throw new Error(
-        "Service is not available now, try again after some time!"
+      throw new ErrorHandler(
+        "Service is not available now, try again after some time!",responseFlags.failure
       );
     }
     throw {
-      message: new Error("An Error Occured,contact your provioder!!"),
+      message: new ErrorHandler("An Error Occured,contact your provioder!!",responseFlags.failure),
       data: e,
     };
   }

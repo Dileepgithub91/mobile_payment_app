@@ -3,6 +3,8 @@ const fs = require("fs");
 const csvParser = require("fast-csv");
 const logger = require("../logger");
 const db = require("../models");
+const ErrorHandler = require("../helpers/error.handler");
+const { responseFlags } = require("../core/constants");
 
 //Create Main Model
 const UploadedCardsTemp = db.UploadedCardsTemp;
@@ -43,7 +45,7 @@ const saveUploadedCardsTemp = async (bodyData) => {
       },
     });
     if (findCard.length != 0) {
-      throw new Error("Temp Card with this number exists!");
+      throw new ErrorHandler("Temp Card with this number exists!",responseFlags.failure);
     }
     card = await UploadedCardsTemp.create(bodyData);
     return { success: true, data: card };
@@ -66,7 +68,7 @@ const updateUploadedCardsTemp = async (bodyData, cardId) => {
       },
     });
     if (findCard.length == 0) {
-      throw new Error("Temp Card Not Found!");
+      throw new ErrorHandler("Temp Card Not Found!",responseFlags.notFound);
     }
     let card = await UploadedCardsTemp.update(bodyData, {
       where: {

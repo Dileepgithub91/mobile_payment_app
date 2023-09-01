@@ -1,3 +1,5 @@
+const { responseFlags } = require("../core/constants");
+const ErrorHandler = require("../helpers/error.handler");
 const logger = require("../logger");
 const db = require("../models");
 
@@ -16,7 +18,7 @@ const saveUploadedCards = async (bodyData) => {
       },
     });
     if (findCard.length != 0) {
-      throw new Error("Card with this number exists!");
+      throw new ErrorHandler("Card with this number exists!",responseFlags.failure);
     }
     card = await UploadedCards.create(bodyData);
     return { success: true, data: card };
@@ -38,7 +40,7 @@ const updateUploadedCards = async (bodyData, cardId) => {
       },
     });
     if (findCard.length == 0) {
-      throw new Error("Card Not Found!");
+      throw new ErrorHandler("Card Not Found!",responseFlags.notFound);
     }
     let card = await UploadedCards.update(bodyData, {
       where: {
@@ -123,7 +125,7 @@ const saveCardFormat = async (bodyData) => {
       },
     });
     if (findCardFormat.length != 0) {
-      throw new Error("Card format name exists!");
+      throw new ErrorHandler("Card format name exists!",responseFlags.failure);
     }
     cardFormat = await CardFormat.create(bodyData);
     return { success: true, data: cardFormat };
@@ -145,7 +147,7 @@ const updateCardFormat = async (bodyData, cardId) => {
       },
     });
     if (findCardFormat.length == 0) {
-      throw new Error("Card Format Not Found!");
+      throw new ErrorHandler("Card Format Not Found!",responseFlags.notFound);
     }
     let cardFormat = await CardFormat.update(bodyData, {
       where: {

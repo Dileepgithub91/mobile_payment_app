@@ -1,6 +1,8 @@
 const logger = require("../logger");
 const db = require("../models");
 const HelperFunction = require("../helpers/functions");
+const ErrorHandler = require("../helpers/error.handler");
+const { responseFlags } = require("../core/constants");
 
 //Create Main Model
 const Order = db.Order;
@@ -30,7 +32,7 @@ const updateOrder = async (bodyData, orderId) => {
       },
     });
     if (findOrder.length == 0) {
-      throw new Error("Order Not Found!");
+      throw new ErrorHandler("Order Not Found!",responseFlags.notFound);
     }
     let order = await Order.update(bodyData, {
       where: {

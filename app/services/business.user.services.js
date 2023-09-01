@@ -1,5 +1,7 @@
 const db = require("../models");
 const logger = require("../logger");
+const ErrorHandler = require("../helpers/error.handler");
+const { responseFlags } = require("../core/constants");
 
 //Create Main Model
 const BusinessRequest = db.BusinessRequest;
@@ -46,7 +48,7 @@ const getBusinessUserRequest= async (mobileNo) => {
     return customer[0].dataValues;
   } catch (error) {
     logger.log("error",{source:"Business User Service  -- get business user request",error});
-    throw new Error("Business Request Not Found!");
+    throw new ErrorHandler("Business Request Not Found!",responseFlags.notFound);
   }
 };
 ////get business agreement list

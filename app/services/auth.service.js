@@ -1,6 +1,8 @@
 const moment = require("moment");
 const db = require("../models");
 const logger = require("../logger");
+const ErrorHandler = require("../helpers/error.handler");
+const { responseFlags } = require("../core/constants");
 
 //Create Main Model
 const OtpVerification = db.OtpVerification;
@@ -17,7 +19,7 @@ const validateOtpExpireBeforeGeneration = async (registeredUser) => {
     let acBlockDate =moment(new Date(blockDate));
     let diffInDay = endDate.diff(acBlockDate, "hours");
     if(diffInDay<13){
-      throw new Error("You have used up your otp limit, try again tomorrow!");
+      throw new ErrorHandler("You have used up your otp limit, try again tomorrow!",responseFlags.failure);
     }
   }
   ///Check no of tries
@@ -36,7 +38,7 @@ const validateOtpExpireBeforeGeneration = async (registeredUser) => {
         },
       }
     );
-    throw new Error("You have used up your otp limit, try again tomorrow!");
+    throw new ErrorHandler("You have used up your otp limit, try again tomorrow!",responseFlags.failure);
   }
  
   

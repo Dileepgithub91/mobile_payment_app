@@ -1,3 +1,5 @@
+const { responseFlags } = require("../core/constants");
+const ErrorHandler = require("../helpers/error.handler");
 const logger = require("../logger");
 const db = require("../models");
 
@@ -13,7 +15,7 @@ const saveSalesMarginGroup = async (bodyData) => {
       },
     });
     if (findSalesMarginGroup.length != 0) {
-      throw new Error("Group Already Exists!!");
+      throw new ErrorHandler("Group Already Exists!!",responseFlags.failure);
     }
     let marginGroup = await SalesMarginGroup.create(bodyData);
     return marginGroup;
@@ -32,7 +34,7 @@ const updateSalesMarginGroup = async (bodyData, groupId) => {
       },
     });
     if (findMarginGroup.length == 0) {
-      throw new Error("margin Group Not Found!");
+      throw new ErrorHandler("margin Group Not Found!",responseFlags.notFound);
     }
     let marginGroup = await SalesMarginGroup.update(bodyData, {
       where: {

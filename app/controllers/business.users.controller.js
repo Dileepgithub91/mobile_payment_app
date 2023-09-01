@@ -17,6 +17,7 @@ const {
   dataGenService,
   emailService
 } = require("../services");
+const ErrorHandler = require("../helpers/error.handler");
 
 ///Business request authrisation starts here
 const addBusinessUserRequest = catchAsyncError(async (req, res, next) => {
@@ -64,12 +65,10 @@ const resendBusinessUserRequestOtp = catchAsyncError(async (req, res, next) => {
     const businessRequset= await businessUserService.getBusinessUserRequest(mobileNo);
 
     if(!businessRequset){
-      throw new Error(responseMessages.businessRequestNotFound);
+      throw new ErrorHandler(responseMessages.businessRequestNotFound,responseFlags.notFound);
     }
     if(businessRequset.status ==="Verified"){
-      throw new Error(responseMessages.businessRequestVerifiedError);
-      // response.validatationError(res, "Business Request is already verified!");
-      // return false;
+      throw new ErrorHandler(responseMessages.businessRequestVerifiedError,responseFlags.failure);
     }
      //add new opt from register otp:
      const registeredUser = await authService.addRegistrationUser({
@@ -99,9 +98,7 @@ const verifyBusinessUserRequest = catchAsyncError(async (req, res, next) => {
     const updatedRetriesValue = parseInt(regesteredUser.no_of_retries) + 1;
     //check if the user has not exceeded otp limit i.e. 3
     if (updatedRetriesValue >= 3) {
-      throw new Error(responseMessages.otpTryExceded);
-      // response.validatationError(res, "You have exceeded no of tries for otp,you can resend otp.");
-      // return false;
+      throw new ErrorHandler(responseMessages.otpTryExceded,responseFlags.failure);
     }
     //check as the otp must be generated within 5 min
     const endDate = moment(new Date());
@@ -112,7 +109,7 @@ const verifyBusinessUserRequest = catchAsyncError(async (req, res, next) => {
         "info",
         "You Otp  has Expired, please resend new otp!"
       );
-      throw new Error(responseMessages.otpExpired);
+      throw new ErrorHandler(responseMessages.otpExpired,responseFlags.failure);
     }
   //check if the otp is correct
   if (regesteredUser.otp !== otp) {
@@ -120,9 +117,7 @@ const verifyBusinessUserRequest = catchAsyncError(async (req, res, next) => {
       { no_of_retries: updatedRetriesValue },
       {id:regesteredUser.id, verification_type:"business"}
     );
-    throw new Error(responseMessages.otpInvalid);
-    // response.validatationError(res, "Invalid Otp!, enter correct otp.");
-    // return false;
+    throw new ErrorHandler(responseMessages.otpInvalid,responseFlags.failure);
   }
     ///update business request
     const customer = await businessUserService.addBusinessUserRequest({
