@@ -21,6 +21,16 @@ exports.generateStrongPassword=async(length)=> {
 exports.generateSixDigitRandomNumber=async()=> {
   return  Math.floor(100000 + Math.random() * 900000);
 }
+exports.generateRandomSecureToken=async()=> {
+  return new Promise((resolve, reject) => {
+    crypto.randomBytes(24,async(err, buffer)=>{
+      if(err)reject(err);
+      let token =buffer.toString('hex');
+      resolve(token);
+    });
+  }); 
+  
+}
 
 exports.calcPercentage=async(amount,percentage)=>{
   let data= (parseFloat(percentage).toFixed(5)/100*parseFloat(amount).toFixed(5));

@@ -4,6 +4,7 @@ module.exports.PINEPERKS_ENDPOINT = "https://apiuat.pineperks.in";
 module.exports.QWIKCILVER_ENDPOINT = "https://sandbox.woohoo.in";
 
 exports.responseMessages = {
+  invalidMobile: "Invalid Mobile Number!",
   userNotFound: "User not found.",
   userAdded: "User added successfully",
   userAlreadyExist: "User already Exists.",

@@ -98,9 +98,9 @@ db.TaxSetting = require("./tax.setting.model")(sequelize, DataTypes);
 db.TaxSettingVersion = require("./tax.setting.versions.model")(sequelize, DataTypes);
 db.TaxSettingHistory = require("./tax.setting.history.model")(sequelize, DataTypes);
 
-db.sequelize.sync({ force: false }).then(() => {
-  console.log("yes re-sync done!");
-});
+// db.sequelize.sync({ force: false }).then(() => {
+//   console.log("yes re-sync done!");
+// });
 
 ///Relations Between Tables
 let {

@@ -102,7 +102,7 @@ const verifyBusinessUserRequest = catchAsyncError(async (req, res, next) => {
     }
     //check as the otp must be generated within 5 min
     const endDate = moment(new Date());
-    const startDate = moment(regesteredUser.createdAt);
+    const startDate = moment(regesteredUser.updatedAt);
     const diffInMinutes = endDate.diff(startDate, "minutes");
     if (diffInMinutes >5) {
       logger.log(

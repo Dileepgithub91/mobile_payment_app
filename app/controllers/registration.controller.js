@@ -68,7 +68,7 @@ const verifyRegisterOtp = catchAsyncError(async (req, res, next) => {
     throw new ErrorHandler(responseMessages.otpTryExceded,responseFlags.failure);
   }
   //check as the otp must be generated within 5 min
-  const startDate = moment(registeredUser.createdAt);
+  const startDate = moment(registeredUser.updatedAt);
   const diffInMinutes = endDate.diff(startDate, "minutes");
   if (diffInMinutes > 5) {
     logger.log("info", "You Otp  has Expired, please resend new otp!");
@@ -135,8 +135,8 @@ const getResendOtp = catchAsyncError(async (req, res, next) => {
     verification_Type: "register",
   });
   if (!user) {
-    logger.log("info", "User Not Found");
-    throw new ErrorHandler(responseMessages.userNotFound,responseFlags.notFound);
+    logger.log("info", `Invalid Mobile Number ${value.mobileNo}`);
+    throw new ErrorHandler(responseMessages.invalidMobile,responseFlags.notFound);
   }
   const registeredUser = await authService.addRegistrationUser({
     mobileNo: value.mobileNo,
@@ -155,8 +155,8 @@ const sendForgetPasswordOtp = catchAsyncError(async (req, res, next) => {
 
   const user = await userService.getUserByMobile(value.mobileNo);
   if (!user) {
-    logger.log("info", "User Not Found");
-    throw new ErrorHandler(responseMessages.userNotFound,responseFlags.notFound);
+    logger.log("info",  `Invalid Mobile Number ${value.mobileNo}`);
+    throw new ErrorHandler(responseMessages.invalidMobile,responseFlags.notFound);
   }
   const registeredUser = await authService.addRegistrationUser({
     mobileNo: value.mobileNo,
@@ -178,8 +178,8 @@ const reSendForgetPasswordOtp = catchAsyncError(async (req, res, next) => {
     verification_type: "forget",
   });
   if (!user) {
-    logger.log("info", "User Not Found");
-    throw new ErrorHandler(responseMessages.userNotFound,responseFlags.notFound);
+    logger.log("info",  `Invalid Mobile Number ${value.mobileNo}`);
+    throw new ErrorHandler(responseMessages.invalidMobile,responseFlags.notFound);
   }
   const registeredUser = await authService.addRegistrationUser({
     mobileNo: value.mobileNo,
@@ -203,7 +203,10 @@ const verifyForgetPasswordOtp = catchAsyncError(async (req, res, next) => {
     mobile_no: value.mobileNo,
     verification_type: "forget",
   });
-
+  if (!registeredUser) {
+    logger.log("info", `Invalid Mobile Number ${value.mobileNo}`);
+    throw new ErrorHandler(responseMessages.invalidMobile,responseFlags.notFound);
+  }
   const updatedRetriesValue = parseInt(registeredUser.no_of_retries) + 1;
   //check if the user has not exceeded otp limit i.e. 3
   if (updatedRetriesValue >= 3) {
@@ -216,7 +219,7 @@ const verifyForgetPasswordOtp = catchAsyncError(async (req, res, next) => {
 
   //check as the otp must be generated within 5 min
   const endDate = moment(new Date());
-  const startDate = moment(registeredUser.createdAt);
+  const startDate = moment(registeredUser.updatedAt);
   const diffInMinutes = endDate.diff(startDate, "minutes");
   if (diffInMinutes > 5) {
     logger.log("info", "You Otp  has Expired, please resend new otp!");
@@ -231,7 +234,11 @@ const verifyForgetPasswordOtp = catchAsyncError(async (req, res, next) => {
     logger.log("info", "Invalid Otp!, enter correct otp.");
     throw new ErrorHandler(responseMessages.otpInvalid,responseFlags.failure);
   }
-
+  const forgetPasswordToken=await HelperFunction.generateRandomSecureToken();
+  await authService.updateRegistrationUser(
+    { forget_password_token: forgetPasswordToken },
+    { id: registeredUser.id, verification_type: "forget" }
+  );
   //Sent email for change password
   response.success(
     res,
@@ -241,9 +248,21 @@ const verifyForgetPasswordOtp = catchAsyncError(async (req, res, next) => {
 });
 
 const forgetPasswordChangePassword = catchAsyncError(async (req, res, next) => {
-  const { mobileNo, newPassword, confirmPassword } = req.body;
+  const { mobileNo, newPassword, confirmPassword, forget_password_token } = req.body;
   const value = await Validator.validateChangePassword.validateAsync(req.body);
   const hashedPassword = await bcrypt.hash(value.newPassword, 10);
+  const registeredUser = await authService.findRegistrationUser({
+    mobile_no: value.mobileNo,
+    verification_type: "forget",
+  });
+  if (!registeredUser) {
+    logger.log("info", `Invalid Mobile Number ${value.mobileNo}`);
+    throw new ErrorHandler(responseMessages.invalidMobile,responseFlags.notFound);
+  }
+  if(registeredUser.forget_password_token!=value.forget_password_token){
+    logger.log("info", `Invalid Mobile Number ${value.mobileNo}`);
+    throw new ErrorHandler(responseMessages.invalidMobile,responseFlags.notFound);
+  }
   const findUser = await userService.getUserByMobile(mobileNo);
   if (!findUser) {
     throw new ErrorHandler(responseMessages.userNotFound,responseFlags.notFound);
@@ -265,8 +284,8 @@ const loginViaPassowrd = catchAsyncError(async (req, res, next) => {
   });
   const user = await userService.getUserByMobile(value.mobileNo);
   if (!user) {
-    logger.log("info", "User Not Found");
-    throw new ErrorHandler(responseMessages.userNotFound,responseFlags.notFound);
+    logger.log("info",  `Invalid Mobile Number ${value.mobileNo}`);
+    throw new ErrorHandler(responseMessages.invalidMobile,responseFlags.notFound);
   }
   if (!(await bcrypt.compare(value.password, user.password))) {
     logger.log("info", "Password does not match!");

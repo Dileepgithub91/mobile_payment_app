@@ -33,6 +33,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TINYINT,
       defaultValue:1
     },
+    forget_password_token: {
+      type: DataTypes.STRING,
+      allowNull:true
+    },
     status: {
       type: DataTypes.STRING,
       defaultValue: "active",

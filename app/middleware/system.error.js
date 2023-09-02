@@ -35,6 +35,16 @@ module.exports = (err, req, res, next) => {
     let stCode=400;
     err = new ErrorHandler(message, stCode);
   }
+  if (err.name == "SyntaxError") {
+    const message = `Request Body Json Format Incorrect, Check your json is in correct format`
+    let stCode=400;
+    err = new ErrorHandler(message, stCode);
+  }
+  if (err.name == "TypeError") {
+    const message = `An Error Occured,Contact Your Provider!!`
+    let stCode=400;
+    err = new ErrorHandler(message, stCode);
+  }
   //Wrong JWT token error
   if (err.name == "JsonWebTokenError") {
     const message = `Json Web Token is invalid, try again`;
