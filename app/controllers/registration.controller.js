@@ -260,8 +260,8 @@ const forgetPasswordChangePassword = catchAsyncError(async (req, res, next) => {
     throw new ErrorHandler(responseMessages.invalidMobile,responseFlags.notFound);
   }
   if(registeredUser.forget_password_token!=value.forget_password_token){
-    logger.log("info", `Invalid Mobile Number ${value.mobileNo}`);
-    throw new ErrorHandler(responseMessages.invalidMobile,responseFlags.notFound);
+    logger.log("info", `Invalid Access Token`);
+    throw new ErrorHandler("Invalid Access Token",responseFlags.notFound);
   }
   const findUser = await userService.getUserByMobile(mobileNo);
   if (!findUser) {

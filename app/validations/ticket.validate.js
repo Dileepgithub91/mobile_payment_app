@@ -6,6 +6,7 @@ module.exports.saveTicket = Joi.object({
   description: Joi.string().required(),
 });
 module.exports.saveReply = Joi.object({
+  ticket_doc: Joi.string().allow('').allow(null),
   ticket_id: Joi.string().required(),
   reply: Joi.string().required()
 });
