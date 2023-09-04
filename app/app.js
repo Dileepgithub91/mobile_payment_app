@@ -7,7 +7,8 @@ const { jwtStrategy } = require('./middleware/passport');
 const { testOtp } = require("./controllers/test.controller");
 const errorMiddleware = require("./middleware/system.error");
 const route = require("./routes")
-const port = 3000;
+const env = require("./env");
+const port = env('APP_PORT') || 3001;
 const app = express();
 app.use(morgan('dev'));
 
