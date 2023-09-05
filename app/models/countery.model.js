@@ -31,6 +31,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true
       },
+      currency_name: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
       currency_symbol: {
         type: DataTypes.STRING,
         allowNull: true
@@ -52,11 +56,11 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true
       },
       timezones: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: true
       },
       translations: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: true
       },
       latitude: {
