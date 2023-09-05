@@ -1,3 +1,6 @@
+var config = {
+  underscored: true,
+};
 module.exports = (sequelize, DataTypes) => {
   const UserKycDetails = sequelize.define("user_kyc_details", {
     user_id: {
@@ -64,6 +67,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true,
     },
-  });
+  },config);
   return UserKycDetails;
 };

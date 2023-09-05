@@ -68,7 +68,7 @@ const verifyRegisterOtp = catchAsyncError(async (req, res, next) => {
     throw new ErrorHandler(responseMessages.otpTryExceded,responseFlags.failure);
   }
   //check as the otp must be generated within 5 min
-  const startDate = moment(registeredUser.updatedAt);
+  const startDate = moment(registeredUser.updated_at);
   const diffInMinutes = endDate.diff(startDate, "minutes");
   if (diffInMinutes > 5) {
     logger.log("info", "You Otp  has Expired, please resend new otp!");
@@ -219,7 +219,7 @@ const verifyForgetPasswordOtp = catchAsyncError(async (req, res, next) => {
 
   //check as the otp must be generated within 5 min
   const endDate = moment(new Date());
-  const startDate = moment(registeredUser.updatedAt);
+  const startDate = moment(registeredUser.updated_at);
   const diffInMinutes = endDate.diff(startDate, "minutes");
   if (diffInMinutes > 5) {
     logger.log("info", "You Otp  has Expired, please resend new otp!");

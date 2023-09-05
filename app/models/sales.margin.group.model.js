@@ -1,3 +1,6 @@
+var config = {
+  underscored: true,
+};
 module.exports = (sequelize, DataTypes) => {
     const SalesMarginGroup = sequelize.define("sales_margin_group", {
       name: {
@@ -25,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
         defaultValue:0
       },
-    });
+    },config);
     return SalesMarginGroup;
   };
   

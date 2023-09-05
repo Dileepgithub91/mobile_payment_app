@@ -1,3 +1,6 @@
+var config = {
+  underscored: true,
+};
 module.exports = (sequelize, DataTypes) => {
   const companyAgreementUploadedDocument = sequelize.define("company_agreement_uploaded_document", {
     user_id: {
@@ -17,6 +20,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: "notVerified"
     }
-  });
+  },config);
   return companyAgreementUploadedDocument;
 };

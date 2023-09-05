@@ -105,8 +105,8 @@ const saveManualKycFile = catchAsyncError(async (req, res, next) => {
     let adhaarKycStatus = "null";
     let panKycStatus = "null";
     if (req.files) {
-      AadharFront = req.files.frontAdhar[0].path;
-      AadharBack = req.files.backAdhar[0].path;
+      AadharFront = req.files.front_adhar[0].path;
+      AadharBack = req.files.back_adhar[0].path;
       PanImage = req.files.pan[0].path;
     }
     AadharFront === "" && AadharBack === "" ? {} : (kycLevel = "1");
@@ -204,8 +204,9 @@ const kycPanVerification = catchAsyncError(async (req, res, next) => {
           return true;
         }
       }
-    const { pan } = req.body;
-    const panData = await kycService.verifyPan(pan);
+    // const { pan } = req.body;
+    const value = await Validator.verifyAutoPan.validateAsync(req.body);
+    const panData = await kycService.verifyPan(value.pan);
     //update kyc document
     await userKycDetailsService.updateUserKycDetails(
       {
@@ -258,8 +259,9 @@ const kycAadharGenerateOtp =  catchAsyncError(async (req, res, next) => {
           return true;
         }
       }
-    const { aadharNo } = req.body;
-    const aadharData = await kycService.generateAadharOtp(aadharNo);
+    // const { aadhar_no } = req.body;
+    const value = await Validator.verifyAutoAadhar.validateAsync(req.body);
+    const aadharData = await kycService.generateAadharOtp(value.aadhar_no);
     response.success(
       res,
       "Otp for aadhar verification has been sent!",
@@ -268,8 +270,9 @@ const kycAadharGenerateOtp =  catchAsyncError(async (req, res, next) => {
 });
 
 const kycAadharVerificationOtp =  catchAsyncError(async (req, res, next) => {
-    const { clientId, otp } = req.body;
-    const aadharData = await kycService.VerifyAadharOtp(clientId, otp);
+    // const { client_id, otp } = req.body;
+    const value = await Validator.verifyAutoAadharOTP.validateAsync(req.body);
+    const aadharData = await kycService.VerifyAadharOtp(value.client_id, value.otp);
     //update kyc document // adhaar_attachmented_number
     await userKycDetailsService.updateUserKycDetails(
       {
@@ -322,8 +325,9 @@ const kycGStVerification = catchAsyncError( async (req, res, next) => {
           return true;
         }
       }
-    const { gstNo } = req.body;
-    const gstData = await kycService.verifyGst(gstNo);
+    const { gst_no } = req.body;
+    const value = await Validator.verifyAutoGst.validateAsync(req.body);
+    const gstData = await kycService.verifyGst(value.gst_no);
     if (gstData.data.gstin_status != "Active") {
       throw new ErrorHandler(responseMessages.gstInactive,responseFlags.failure);
     }

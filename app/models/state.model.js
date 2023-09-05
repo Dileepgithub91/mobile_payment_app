@@ -1,3 +1,6 @@
+var config = {
+  underscored: true,
+};
 module.exports = (sequelize, DataTypes) => {
     const States = sequelize.define("states", {
       name: {
@@ -48,7 +51,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       }
-    });
+    },config);
     return States;
   };
   

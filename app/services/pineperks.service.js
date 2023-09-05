@@ -30,8 +30,8 @@ const generateHeaders = async () => {
           client_id: "0",
           client_secret: "0",
           status: "active",
-          createdAt: "2023-07-21T10:18:04.000Z",
-          updatedAt: "2023-07-21T10:18:04.000Z",
+          created_at: "2023-07-21T10:18:04.000Z",
+          updated_at: "2023-07-21T10:18:04.000Z",
         },
         _previousDataValues: {
           id: 1,
@@ -43,8 +43,8 @@ const generateHeaders = async () => {
           client_id: "0",
           client_secret: "0",
           status: "active",
-          createdAt: "2023-07-21T10:18:04.000Z",
-          updatedAt: "2023-07-21T10:18:04.000Z",
+          created_at: "2023-07-21T10:18:04.000Z",
+          updated_at: "2023-07-21T10:18:04.000Z",
         },
       },
     ];

@@ -25,7 +25,7 @@ const routesIndex = [
     route: registrationRoute,
   },
   {
-    path: "/world",
+    path: "/address",
     route: placesNameRoute,
   },
   {

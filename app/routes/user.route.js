@@ -38,8 +38,8 @@ router.post(
   "/save-user-kyc-manualy",
   auth("updateOwn", "profile"),
   KycDocumentUploader.fields([
-    { name: "frontAdhar", maxCount: 1 },
-    { name: "backAdhar", maxCount: 1 },
+    { name: "front_adhar", maxCount: 1 },
+    { name: "back_adhar", maxCount: 1 },
     { name: "pan", maxCount: 1 },
   ]),
   userController.saveManualKycFile

@@ -1,3 +1,6 @@
+var config = {
+  underscored: true,
+};
 module.exports = (sequelize, DataTypes) => {
     const CardProviderSetting = sequelize.define("card_provider_setting", {
       product_id: {
@@ -37,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue:1
       }
-    });
+    },config);
     return CardProviderSetting;
   };
   

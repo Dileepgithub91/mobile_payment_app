@@ -1,3 +1,6 @@
+var config = {
+  underscored: true,
+};
 module.exports = (sequelize, DataTypes) => {
     const TaxSettingVersion = sequelize.define("tax_setting_version", {
       tax_setting_id: {
@@ -81,7 +84,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: 1,
       },
-    });
+    },config);
     return TaxSettingVersion;
   };
   

@@ -1,3 +1,6 @@
+var config = {
+  underscored: true,
+};
 module.exports = (sequelize, DataTypes) => {
   const business_agreement = sequelize.define("business_agreement", {
     company_type: {
@@ -13,6 +16,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: "Active"
     }
-  });
+  },config);
   return business_agreement;
 };

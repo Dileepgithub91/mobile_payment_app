@@ -1,3 +1,6 @@
+var config = {
+  underscored: true,
+};
 module.exports = (sequelize, DataTypes) => {
   const TicketReply = sequelize.define("ticket_reply", {
     user_id: {
@@ -16,6 +19,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true,
     },
-  });
+  },config);
   return TicketReply;
 };

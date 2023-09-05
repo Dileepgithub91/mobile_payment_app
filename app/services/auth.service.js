@@ -10,7 +10,7 @@ const OtpVerification = db.OtpVerification;
 // validate otp before generation
 const validateOtpExpireBeforeGeneration = async (registeredUser) => {
   const endDate = moment(new Date());
-  const startDate = moment(registeredUser.updatedAt);
+  const startDate = moment(registeredUser.updated_at);
   
   let retriesValue = parseInt(registeredUser.resend_tries);
    ///checking if blocked

@@ -1,3 +1,6 @@
+var config = {
+  underscored: true,
+};
 module.exports = (sequelize, DataTypes) => {
     const Wallet = sequelize.define("wallets", {
       user_id: {
@@ -33,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: 1,
       },
-    });
+    },config);
     return Wallet;
   };
   

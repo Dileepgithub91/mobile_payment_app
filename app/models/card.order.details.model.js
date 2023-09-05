@@ -1,3 +1,6 @@
+var config = {
+  underscored: true,
+};
 module.exports = (sequelize, DataTypes) => {
     const CardOrderDetails = sequelize.define("card_order_details", {
        card_order_id: {
@@ -57,7 +60,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: "pending",
       },
-    });
+    },config);
     return CardOrderDetails;
   };
   

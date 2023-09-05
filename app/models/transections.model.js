@@ -1,3 +1,6 @@
+var config = {
+  underscored: true,
+};
 module.exports = (sequelize, DataTypes) => {
     const Transection = sequelize.define("transections", {
       user_id: {
@@ -29,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: 1,
       },
-    });
+    },config);
     return Transection;
   };
   

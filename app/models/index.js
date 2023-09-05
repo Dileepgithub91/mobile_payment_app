@@ -1,10 +1,5 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const env = require("../env");
-var config = {
-  define: {
-    underscored: true,
-  },
-};
 const sequelize = new Sequelize(
   env("DB_NAME"),
   env("DB_USER"),
@@ -12,8 +7,7 @@ const sequelize = new Sequelize(
   {
     host: env("DB_HOST"),
     dialect: "mysql",
-  },
-  config
+  }
 );
 // const config = require('config');
 // const dir = config.get('sqlite.logFileDir');

@@ -1,3 +1,6 @@
+var config = {
+  underscored: true,
+};
 module.exports = (sequelize, DataTypes) => {
     const CardFormat = sequelize.define("card_format", {
       format_name: {
@@ -9,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue:1
       },
-    });
+    },config);
     return CardFormat;
   };
   

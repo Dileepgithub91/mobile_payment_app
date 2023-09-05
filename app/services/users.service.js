@@ -14,7 +14,7 @@ const addUser = async (body) => {
       },
     });
     if (finduser.length === 0) {
-      body.role = "user";
+      body.role = 1;
       body.status = 1;
       let saveduser = await users.create(body);
       user =saveduser.dataValues;

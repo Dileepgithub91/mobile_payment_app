@@ -24,3 +24,16 @@ module.exports.saveUserProfile = Joi.object({
 module.exports.updateUserProfileAvatar = Joi.object({
   avatar: Joi.string().uri().required(),
 });
+module.exports.verifyAutoGst = Joi.object({
+  gst_no: Joi.string().required(),
+});
+module.exports.verifyAutoPan = Joi.object({
+  pan: Joi.string().required(),
+});
+module.exports.verifyAutoAadhar = Joi.object({
+  aadhar_no: Joi.string().required(),
+});
+module.exports.verifyAutoAadharOTP = Joi.object({
+  client_id: Joi.string().required(),
+  otp: Joi.string().required()
+});

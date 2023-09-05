@@ -1,3 +1,6 @@
+var config = {
+  underscored: true,
+};
 module.exports = (sequelize, DataTypes) => {
     const PurchasedCard = sequelize.define("purchased_card", {
       order_id: {
@@ -75,7 +78,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: "inProgress",
       },
-    });
+    },config);
     return PurchasedCard;
   };
   

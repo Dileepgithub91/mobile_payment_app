@@ -1,3 +1,6 @@
+var config = {
+  underscored: true,
+};
 module.exports = (sequelize, DataTypes) => {
   const Ticket = sequelize.define("ticket", {
     user_id: {
@@ -30,6 +33,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
       defaultValue: 1,
     },
-  });
+  },config);
   return Ticket;
 };

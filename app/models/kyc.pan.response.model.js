@@ -1,3 +1,6 @@
+var config = {
+  underscored: true,
+};
 module.exports = (sequelize, DataTypes) => {
   const kyc_pan_detail = sequelize.define("kyc_pan_detail", {
     user_id: {
@@ -96,6 +99,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: "active",
     },
-  });
+  },config);
   return kyc_pan_detail;
 };

@@ -1,3 +1,6 @@
+var config = {
+  underscored: true,
+};
 module.exports = (sequelize, DataTypes) => {
   const otp_verification = sequelize.define("otp_verification", {
     mobile_no: {
@@ -41,6 +44,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       defaultValue: "active",
     },
-  });
+  },config);
   return otp_verification;
 };

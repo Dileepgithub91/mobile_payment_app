@@ -1,3 +1,6 @@
+var config = {
+  underscored: true,
+};
 module.exports = (sequelize, DataTypes) => {
   const giftCardProducts = sequelize.define("product_price", {
     product_id: {
@@ -13,6 +16,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: 1,
     },
-  });
+  },config);
   return giftCardProducts;
 };

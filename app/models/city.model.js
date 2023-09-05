@@ -1,3 +1,6 @@
+var config = {
+  underscored: true,
+};
 module.exports = (sequelize, DataTypes) => {
     const City = sequelize.define("cities", {
       name: {
@@ -44,7 +47,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       }
-    });
+    },config);
     return City;
   };
   

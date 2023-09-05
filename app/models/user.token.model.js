@@ -1,3 +1,6 @@
+var config = {
+  underscored: true,
+};
 module.exports = (sequelize, DataTypes) => {
   const Token = sequelize.define("user_token", {
     user_id: {
@@ -14,6 +17,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: "active",
     },
-  });
+  },config);
   return Token;
 };

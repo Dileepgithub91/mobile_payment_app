@@ -1,3 +1,6 @@
+var config = {
+  underscored: true,
+};
 module.exports = (sequelize, DataTypes) => {
   const OrderItems = sequelize.define("order_items", {
     order_ref_id: {
@@ -93,6 +96,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: "PROCESSING",
     },
-  });
+  },config);
   return OrderItems;
 };

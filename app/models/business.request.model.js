@@ -1,3 +1,6 @@
+var config = {
+  underscored: true,
+};
 module.exports = (sequelize, DataTypes) => {
   const BusinessRequest = sequelize.define("business_request", {
     first_name: {
@@ -74,6 +77,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: "notVerified",
     },
-  });
+  },config);
   return BusinessRequest;
 };

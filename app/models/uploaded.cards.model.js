@@ -1,3 +1,6 @@
+var config = {
+  underscored: true,
+};
 module.exports = (sequelize, DataTypes) => {
     const UploadedCard = sequelize.define("uploaded_cards", {
       batch_process_Id: {
@@ -79,7 +82,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: "SUCCESS",
       },
-    });
+    },config);
     return UploadedCard;
   };
   

@@ -1,3 +1,6 @@
+var config = {
+  underscored: true,
+};
 module.exports = (sequelize, DataTypes) => {
   const PurchaseMargin = sequelize.define("purchase_margins", {
     category_id: {
@@ -68,6 +71,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: 0,
     },
-  });
+  },config);
   return PurchaseMargin;
 };

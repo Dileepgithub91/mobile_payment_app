@@ -1,3 +1,6 @@
+var config = {
+  underscored: true,
+};
 module.exports = (sequelize, DataTypes) => {
   const Order = sequelize.define("orders", {
     order_id: {
@@ -76,6 +79,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: "inProgress",
     },
-  });
+  },config);
   return Order;
 };

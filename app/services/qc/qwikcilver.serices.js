@@ -55,8 +55,8 @@ const generateTokens = async (data, url, getORPost) => {
           client_id: "88d7346c8674587bc95f8fbde2e33acd",
           client_secret: "1a33c6118d1e0c74f7a012991d0e4e39",
           status: "active",
-          createdAt: "2023-07-21T10:18:04.000Z",
-          updatedAt: "2023-07-21T10:18:04.000Z",
+          created_at: "2023-07-21T10:18:04.000Z",
+          updated_at: "2023-07-21T10:18:04.000Z",
         },
         _previousDataValues: {
           id: 1,
@@ -68,8 +68,8 @@ const generateTokens = async (data, url, getORPost) => {
           client_id: "88d7346c8674587bc95f8fbde2e33acd",
           client_secret: "1a33c6118d1e0c74f7a012991d0e4e39",
           status: "active",
-          createdAt: "2023-07-21T10:18:04.000Z",
-          updatedAt: "2023-07-21T10:18:04.000Z",
+          created_at: "2023-07-21T10:18:04.000Z",
+          updated_at: "2023-07-21T10:18:04.000Z",
         },
       },
     ];

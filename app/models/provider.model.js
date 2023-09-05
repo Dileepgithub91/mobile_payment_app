@@ -1,3 +1,6 @@
+var config = {
+  underscored: true,
+};
 module.exports = (sequelize, DataTypes) => {
   const Providers = sequelize.define("providers", {
     name: {
@@ -29,6 +32,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
       defaultValue: 1,
     },
-  });
+  },config);
   return Providers;
 };

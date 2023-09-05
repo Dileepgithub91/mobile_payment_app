@@ -1,3 +1,6 @@
+var config = {
+    underscored: true,
+};
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define("user", {
     first_name: {
@@ -26,9 +29,9 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
     },
     role_id: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: true,
-      defaultValue: "user",
+      defaultValue: 1,
     },
     next_step: {
       type: DataTypes.STRING,
@@ -39,6 +42,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: 1,
     },
-  });
+  },config);
   return User;
 };

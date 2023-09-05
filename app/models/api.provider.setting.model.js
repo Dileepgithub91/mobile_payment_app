@@ -1,3 +1,6 @@
+var config = {
+  underscored: true,
+};
 module.exports = (sequelize, DataTypes) => {
   const ApiProviderSetting = sequelize.define("api_provider_setting", {
     provider: {
@@ -35,6 +38,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: "active",
     },
-  });
+  },config);
   return ApiProviderSetting;
 };

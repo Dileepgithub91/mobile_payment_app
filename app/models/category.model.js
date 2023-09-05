@@ -1,3 +1,6 @@
+var config = {
+  underscored: true,
+};
 module.exports = (sequelize, DataTypes) => {
     const Category = sequelize.define("category", {
       category_id: {
@@ -25,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: "active",
       },
-    });
+    },config);
     return Category;
   };
   

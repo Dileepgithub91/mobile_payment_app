@@ -1,3 +1,6 @@
+var config = {
+  underscored: true,
+};
 module.exports = (sequelize, DataTypes) => {
     const Countery = sequelize.define("countries", {
         name: {
@@ -88,7 +91,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true
       }
-    });
+    },config);
     return Countery;
   };
   

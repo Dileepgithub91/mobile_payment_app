@@ -1,3 +1,6 @@
+var config = {
+  underscored: true,
+};
 module.exports = (sequelize, DataTypes) => {
     const ActiveCard = sequelize.define("active_card", {
       ref_order_id: {
@@ -55,7 +58,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: "pending",
       },
-    });
+    },config);
     return ActiveCard;
   };
   

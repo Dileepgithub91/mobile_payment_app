@@ -1,3 +1,6 @@
+var config = {
+  underscored: true,
+};
 module.exports = (sequelize, DataTypes) => {
     const TaxSettingHistory = sequelize.define("tax_setting_history", {
       product_id: {
@@ -86,7 +89,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: 1,
       },
-    });
+    },config);
     return TaxSettingHistory;
   };
   
