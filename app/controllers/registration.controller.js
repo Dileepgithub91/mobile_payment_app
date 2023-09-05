@@ -17,7 +17,6 @@ const {
 const ErrorHandler = require("../helpers/error.handler");
 
 const getRegisterOtp = catchAsyncError(async (req, res, next) => {
-  console.log(req.body);
   const value = await Validator.registerOtp.validateAsync(req.body);
   const checkUserExists = await userService.getUserByMobile(value.mobile_no);
   if (checkUserExists) {

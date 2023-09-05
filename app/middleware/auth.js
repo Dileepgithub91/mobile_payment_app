@@ -11,17 +11,17 @@ const verify = (req, res, resolve, reject, rights) => async (err, user) => {
   delete user.password;
   req.user = user;
 
-  if (rights.length) {
-    const action = rights[0]; // createAny, readAny...
-    const resource = rights[1];
-    const permission = roles.can(req.user.role_id)[action](resource);
-    if (!permission.granted) {
-      return reject(
-       new ErrorHandler("Sorry, you don't have enough rights",401) 
-        )
-    }
-    res.locals.permission = permission;
-  }
+  // if (rights.length) {
+  //   const action = rights[0]; // createAny, readAny...
+  //   const resource = rights[1];
+  //   const permission = roles.can(req.user.role_id)[action](resource);
+  //   if (!permission.granted) {
+  //     return reject(
+  //      new ErrorHandler("Sorry, you don't have enough rights",401) 
+  //       )
+  //   }
+  //   res.locals.permission = permission;
+  // }
   resolve();
 };
 
