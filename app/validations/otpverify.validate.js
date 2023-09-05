@@ -2,7 +2,7 @@
 const Joi = require("joi");
 
 module.exports.registerOtp = Joi.object({
-  mobileNo: Joi.string()
+  mobile_no: Joi.string()
       .pattern(new RegExp("^[0-9]{10,12}$"))
       .required()
       .messages({
@@ -13,7 +13,7 @@ module.exports.registerOtp = Joi.object({
       })
   });
 module.exports.registerOtpVerify = Joi.object({
-  mobileNo: Joi.string()
+  mobile_no: Joi.string()
       .pattern(new RegExp("^[0-9]{10,12}$"))
       .required()
       .messages({
@@ -28,7 +28,7 @@ module.exports.registerOtpVerify = Joi.object({
   });
 
 module.exports.userLogin = Joi.object({
-  mobileNo: Joi.string()
+  mobile_no: Joi.string()
       .pattern(new RegExp("^[0-9]{10,12}$"))
       .required()
       .messages({
@@ -42,9 +42,9 @@ module.exports.userLogin = Joi.object({
   });
 
   module.exports.validateChangePassword = Joi.object({
-    mobileNo: Joi.string().trim().min(1).required(),
+    mobile_no: Joi.string().trim().min(1).required(),
     forget_password_token: Joi.string().required(),
-    newPassword: Joi.string().required(),
-    confirmPassword: Joi.string().required().valid(Joi.ref('newPassword'))
+    new_password: Joi.string().required(),
+    confirm_password: Joi.string().required().valid(Joi.ref('new_password'))
     .messages({ 'any.only': 'Confirm password must match the new password' }),
   });

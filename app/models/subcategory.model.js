@@ -17,15 +17,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
       },
       images: {
-        type: DataTypes.JSON,
-        allowNull: true,
-      },
-      subcategoriesCount: {
         type: DataTypes.STRING,
-        allowNull: true,
-      },
-      subcategories: {
-        type: DataTypes.ARRAY(DataTypes.JSON),
         allowNull: true,
       },
       status: {
@@ -34,6 +26,6 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: "active",
       },
     });
-    return giftCardCategory;
+    return SubCategory;
   };
   

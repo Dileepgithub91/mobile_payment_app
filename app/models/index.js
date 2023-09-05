@@ -46,6 +46,8 @@ db.UserKycDetail = require("./user.kyc.details.model")(sequelize, DataTypes);
 db.UserProfile = require("./user.profile.model")(sequelize, DataTypes);
 db.OtpVerification = require("./otp.verification.model")(sequelize, DataTypes);
 db.UserToken = require("./user.token.model")(sequelize, DataTypes);
+db.SubCategory = require("./subcategory.model")(sequelize, DataTypes);
+db.Category = require("./category.model")(sequelize, DataTypes);
 db.BusinessRequest = require("./business.request.model")(sequelize, DataTypes);
 db.BusinessAgreement = require("./business.agreement.model")(
   sequelize,
@@ -98,9 +100,9 @@ db.TaxSetting = require("./tax.setting.model")(sequelize, DataTypes);
 db.TaxSettingVersion = require("./tax.setting.versions.model")(sequelize, DataTypes);
 db.TaxSettingHistory = require("./tax.setting.history.model")(sequelize, DataTypes);
 
-// db.sequelize.sync({ force: false }).then(() => {
-//   console.log("yes re-sync done!");
-// });
+db.sequelize.sync({ force: false }).then(() => {
+  console.log("yes re-sync done!");
+});
 
 ///Relations Between Tables
 let {

@@ -55,14 +55,14 @@ const addBusinessUserRequest = catchAsyncError(async (req, res, next) => {
 });
 
 const resendBusinessUserRequestOtp = catchAsyncError(async (req, res, next) => {
-    const { mobileNo } = req.body;
+    const { mobile_no } = req.body;
     ///validate input
     const value =
       await otpVerificationValidator.registerOtp.validateAsync({
-        mobileNo: mobileNo
+        mobile_no: mobile_no
       });
     //verify otp
-    const businessRequset= await businessUserService.getBusinessUserRequest(mobileNo);
+    const businessRequset= await businessUserService.getBusinessUserRequest(value.mobile_no);
 
     if(!businessRequset){
       throw new ErrorHandler(responseMessages.businessRequestNotFound,responseFlags.notFound);
@@ -72,11 +72,11 @@ const resendBusinessUserRequestOtp = catchAsyncError(async (req, res, next) => {
     }
      //add new opt from register otp:
      const registeredUser = await authService.addRegistrationUser({
-      mobileNo: value.mobileNo,
+      mobileNo: value.mobile_no,
       verificationType:"business"
     });
     ///api to send otp
-    await dataGenService.sendOtp(value.mobileNo, registeredUser.otp);
+    await dataGenService.sendOtp(value.mobile_no, registeredUser.otp);
    
     response.success(
       res,
@@ -86,15 +86,15 @@ const resendBusinessUserRequestOtp = catchAsyncError(async (req, res, next) => {
 });
 
 const verifyBusinessUserRequest = catchAsyncError(async (req, res, next) => {
-    const { mobileNo, otp } = req.body;
+    const { mobile_no, otp } = req.body;
     ///validate input
     const value =
       await otpVerificationValidator.registerOtpVerify.validateAsync({
-        mobileNo: mobileNo,
+        mobile_no: mobile_no,
         otp: otp,
       });
     //verify otp
-    const regesteredUser = await authService.findRegistrationUser({mobile_no:mobileNo,verification_type:"business"});
+    const regesteredUser = await authService.findRegistrationUser({mobile_no:mobile_no,verification_type:"business"});
     const updatedRetriesValue = parseInt(regesteredUser.no_of_retries) + 1;
     //check if the user has not exceeded otp limit i.e. 3
     if (updatedRetriesValue >= 3) {
@@ -121,7 +121,7 @@ const verifyBusinessUserRequest = catchAsyncError(async (req, res, next) => {
   }
     ///update business request
     const customer = await businessUserService.addBusinessUserRequest({
-      mobile_no: value.mobileNo,
+      mobile_no: value.mobile_no,
       status: "Verified",
     });
     customer.status="Verified";

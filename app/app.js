@@ -1,6 +1,8 @@
 require('dotenv').config();
 const express = require("express");
+const http = require('http');
 const cors =require("cors");
+const path= require('path');
 const morgan = require('morgan')
 const passport = require('passport');
 const { jwtStrategy } = require('./middleware/passport');
@@ -9,9 +11,11 @@ const errorMiddleware = require("./middleware/system.error");
 const route = require("./routes")
 const env = require("./env");
 const port = env('APP_PORT') || 3001;
-const app = express();
-app.use(morgan('dev'));
 
+const app = express();
+
+
+app.use(morgan('dev'));
 app.use(cors());
 // PARSING
 app.use(express.json());
@@ -24,6 +28,10 @@ app.use(passport.initialize());
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
+
+// app.get('/', (req, res) => {
+//   res.sendFile(path.join(__dirname, '/index.html'));
+// });
 
 app.use("/api/v1/",route);
 
