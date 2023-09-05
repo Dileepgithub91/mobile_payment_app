@@ -109,83 +109,83 @@ let {
 } = db;
 
 // user relations with all
-UserProfile.belongsTo(User, { foreignKey: "id" });
-User.hasOne(UserProfile, { foreignKey: "user_id" });
+UserProfile.belongsTo(User, { foreignKey: "id" , constraints: false });
+User.hasOne(UserProfile, { foreignKey: "user_id" , constraints: false });
 //user wallet
-Wallet.belongsTo(User, { foreignKey: "id" });
-User.hasOne(Wallet, { foreignKey: "user_id" });
+Wallet.belongsTo(User, { foreignKey: "id" , constraints: false });
+User.hasOne(Wallet, { foreignKey: "user_id" , constraints: false });
 
-User.hasOne(UserToken, { foreignKey: "user_id" });
-UserToken.belongsTo(User, { foreignKey: "id" });
+User.hasOne(UserToken, { foreignKey: "user_id", constraints: false  });
+UserToken.belongsTo(User, { foreignKey: "id" , constraints: false });
 
-User.hasOne(UserAddress, { foreignKey: "user_id" });
-UserAddress.belongsTo(User, { foreignKey: "id" });
+User.hasOne(UserAddress, { foreignKey: "user_id", constraints: false  });
+UserAddress.belongsTo(User, { foreignKey: "id" , constraints: false });
 
-User.hasOne(UserKycDetail, { foreignKey: "user_id" });
-UserKycDetail.belongsTo(User, { foreignKey: "id" });
+User.hasOne(UserKycDetail, { foreignKey: "user_id" , constraints: false });
+UserKycDetail.belongsTo(User, { foreignKey: "id", constraints: false  });
 
-User.hasMany(Order, { foreignKey: "user_id" });
-Order.belongsTo(User, { foreignKey: "id" });
+User.hasMany(Order, { foreignKey: "user_id" , constraints: false });
+Order.belongsTo(User, { foreignKey: "id" , constraints: false });
 
-User.hasMany(Ticket, { foreignKey: "user_id" });
-Ticket.belongsTo(User, { foreignKey: "id" });
+User.hasMany(Ticket, { foreignKey: "user_id", constraints: false  });
+Ticket.belongsTo(User, { foreignKey: "id" , constraints: false });
 
-User.hasMany(ActiveCard, { foreignKey: "user_id" });
-ActiveCard.belongsTo(User, { foreignKey: "id" });
+User.hasMany(ActiveCard, { foreignKey: "user_id" , constraints: false });
+ActiveCard.belongsTo(User, { foreignKey: "id" , constraints: false });
 
-User.hasMany(PurchasedCard, { foreignKey: "user_id" });
-PurchasedCard.belongsTo(User, { foreignKey: "id" });
+User.hasMany(PurchasedCard, { foreignKey: "user_id" , constraints: false });
+PurchasedCard.belongsTo(User, { foreignKey: "id" , constraints: false });
 
-User.hasMany(UploadedCardsTemp, { foreignKey: "user_id" });
-UploadedCardsTemp.belongsTo(User, { foreignKey: "id" });
+User.hasMany(UploadedCardsTemp, { foreignKey: "user_id" , constraints: false });
+UploadedCardsTemp.belongsTo(User, { foreignKey: "id" , constraints: false });
 
-User.hasMany(UploadedCards, { foreignKey: "user_id" });
-UploadedCards.belongsTo(User, { foreignKey: "id" });
+User.hasMany(UploadedCards, { foreignKey: "user_id" , constraints: false });
+UploadedCards.belongsTo(User, { foreignKey: "id" , constraints: false });
 
-User.hasMany(CardOrderDetail, { foreignKey: "user_id" });
-CardOrderDetail.belongsTo(User, { foreignKey: "id" });
+User.hasMany(CardOrderDetail, { foreignKey: "user_id" , constraints: false });
+CardOrderDetail.belongsTo(User, { foreignKey: "id", constraints: false  });
 
-User.hasMany(UploadedBusinessAgreement, { foreignKey: "user_id" });
-UploadedBusinessAgreement.belongsTo(User, { foreignKey: "id" });
+User.hasMany(UploadedBusinessAgreement, { foreignKey: "user_id" , constraints: false });
+UploadedBusinessAgreement.belongsTo(User, { foreignKey: "id" , constraints: false });
 
 //Purchase margin
-PurchaseMargin.belongsTo(Product, { foreignKey: "id" });
-Product.hasMany(PurchaseMargin, { foreignKey: "product_id" });
+PurchaseMargin.belongsTo(Product, { foreignKey: "id", constraints: false  });
+Product.hasMany(PurchaseMargin, { foreignKey: "product_id", constraints: false  });
 
-PurchaseMargin.belongsTo(CardProviderSetting, { foreignKey: "id" });
-CardProviderSetting.hasMany(PurchaseMargin, { foreignKey: "provider_id" });
+PurchaseMargin.belongsTo(CardProviderSetting, { foreignKey: "id" , constraints: false });
+CardProviderSetting.hasMany(PurchaseMargin, { foreignKey: "provider_id" , constraints: false });
 
 ///userKycDetails
-UserKycDetail.hasOne(KycAadharDetail, { foreignKey: "user_id" });
-KycAadharDetail.belongsTo(UserKycDetail, { foreignKey: "user_id" });
-UserKycDetail.hasOne(KycPanDetail, { foreignKey: "user_id" });
-KycPanDetail.belongsTo(UserKycDetail, { foreignKey: "user_id" });
-UserKycDetail.hasOne(KycGstDetail, { foreignKey: "user_id" });
-KycGstDetail.belongsTo(UserKycDetail, { foreignKey: "user_id" });
+UserKycDetail.hasOne(KycAadharDetail, { foreignKey: "user_id", constraints: false  });
+KycAadharDetail.belongsTo(UserKycDetail, { foreignKey: "user_id" , constraints: false });
+UserKycDetail.hasOne(KycPanDetail, { foreignKey: "user_id" , constraints: false });
+KycPanDetail.belongsTo(UserKycDetail, { foreignKey: "user_id" , constraints: false });
+UserKycDetail.hasOne(KycGstDetail, { foreignKey: "user_id" , constraints: false });
+KycGstDetail.belongsTo(UserKycDetail, { foreignKey: "user_id" , constraints: false });
 
 //Product and cardprovider
-CardProviderSetting.belongsTo(Product, { foreignKey: "id" });
-Product.hasMany(CardProviderSetting, { foreignKey: "product_id" });
+CardProviderSetting.belongsTo(Product, { foreignKey: "id" , constraints: false });
+Product.hasMany(CardProviderSetting, { foreignKey: "product_id" , constraints: false });
 
 //cardprovider and provider
-CardProviderSetting.belongsTo(Provider, { foreignKey: "id" });
-Provider.hasMany(CardProviderSetting, { foreignKey: "provider_ref" });
+CardProviderSetting.belongsTo(Provider, { foreignKey: "id" , constraints: false });
+Provider.hasMany(CardProviderSetting, { foreignKey: "provider_ref" , constraints: false });
 
 //Ticket and Ticket Reply
-TicketReply.belongsTo(Ticket, { foreignKey: "id" });
-Ticket.hasMany(TicketReply, { foreignKey: "ticket_id" });
+TicketReply.belongsTo(Ticket, { foreignKey: "id", constraints: false  });
+Ticket.hasMany(TicketReply, { foreignKey: "ticket_id" , constraints: false });
 
 //tax Setting and tax versioning
-TaxSettingVersion.belongsTo(TaxSetting, { foreignKey: "tax_version_id" });
-TaxSetting.hasMany(TaxSettingVersion, { foreignKey: "tax_version_id" });
+TaxSettingVersion.belongsTo(TaxSetting, { foreignKey: "tax_version_id", constraints: false  });
+TaxSetting.hasMany(TaxSettingVersion, { foreignKey: "tax_version_id", constraints: false  });
 
 //taxSetting and products
-Product.hasMany(TaxSetting, { foreignKey: "product_id" });
-TaxSetting.belongsTo(Product, { foreignKey: "id" });
+Product.hasMany(TaxSetting, { foreignKey: "product_id" , constraints: false });
+TaxSetting.belongsTo(Product, { foreignKey: "id" , constraints: false });
 
 //Order and Order Item
-Order.hasMany(OrderItem,{foreignKey:"order_ref_id"});
-OrderItem.belongsTo(Order,{foreignKey:"id"});
+Order.hasMany(OrderItem,{foreignKey:"order_ref_id", constraints: false });
+OrderItem.belongsTo(Order,{foreignKey:"id", constraints: false });
 
 
 module.exports = db;
