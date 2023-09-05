@@ -23,9 +23,9 @@ const updateUserProfile = catchAsyncError(async (req, res, next) => {
     ///update user
     await userService.updateUser(
       {
-        first_name: value.firstname,
-        middle_name: value.middlename,
-        last_name: value.lastname,
+        first_name: value.first_name,
+        middle_name: value.middle_name,
+        last_name: value.last_name,
         email: value.email,
         next_step:"kyc-verification"
       },
@@ -36,19 +36,19 @@ const updateUserProfile = catchAsyncError(async (req, res, next) => {
       user_id: req.user.id,
       avtar: value.avtar || "",
       image_url: imageUrl,
-      whatsapp_number: value.whatsappNumber,
-      alternate_mobile: value.alternateMobile,
-      refferal_code: value.refferalCode,
+      whatsapp_number: value.whatsapp_number,
+      alternate_mobile: value.alternate_mobile,
+      refferal_code: value.refferal_code,
     });
     ///create new user address
     await userAddressService.addUserAddress({
       user_id: req.user.id,
       address_type: "user_address",
-      address_line_1: value.addressLine1,
-      address_line_2: value.addressLine2,
-      city_id: value.cityId,
-      state_id: value.stateId,
-      postcode: value.postcode,
+      address_line_1: value.address_line_1,
+      address_line_2: value.address_line_2,
+      city_id: value.city_id,
+      state_id: value.state_id,
+      postcode: value.post_code,
     });
     //create Wallet of user
     await walletService.saveWallet({user_id:req.user.id});

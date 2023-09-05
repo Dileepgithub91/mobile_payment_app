@@ -29,22 +29,22 @@ const addBusinessUserRequest = catchAsyncError(async (req, res, next) => {
       );
     ///update user
     const customer = await businessUserService.addBusinessUserRequest({
-      first_name: value.firstName,
-      last_name: value.lastName,
-      mobile_no: value.mobileNo,
+      first_name: value.first_name,
+      last_name: value.last_name,
+      mobile_no: value.mobile_no,
       email: value.email,
-      zip_code: value.zipCode,
+      zip_code: value.zip_code,
       services: value.services,
-      business_name: value.businessName,
+      business_name: value.business_name,
     });
 
     //add new opt from register otp:
     const registeredUser = await authService.addRegistrationUser({
-      mobileNo: value.mobileNo,
+      mobileNo: value.mobile_no,
       verificationType:"business"
     });
     ///api to send otp
-    await dataGenService.sendOtp(value.mobileNo, registeredUser.otp);
+    await dataGenService.sendOtp(value.mobile_no, registeredUser.otp);
 
     response.success(
       res,

@@ -1,9 +1,9 @@
 const Joi = require("joi");
 
 module.exports.saveNewCustomerRequest = Joi.object({
-  firstName: Joi.string(),
-  lastName: Joi.string(),
-  mobileNo: Joi.string()
+  first_name: Joi.string(),
+  last_name: Joi.string(),
+  mobile_no: Joi.string()
     .pattern(new RegExp("^[0-9]{10,12}$"))
     .required()
     .messages({
@@ -11,9 +11,9 @@ module.exports.saveNewCustomerRequest = Joi.object({
     }),
  
   email: Joi.string().email().required(),
-  businessName: Joi.string().required(),
+  business_name: Joi.string().required(),
   services: Joi.string(),
-  zipCode: Joi.string(),
+  zip_code: Joi.string(),
 });
 
 module.exports.saveCustomerProfile = Joi.object({
