@@ -170,7 +170,7 @@ const saveActiveCard = async (bodyData) => {
     return { success: false, data: error };
   }
 };
-////updte card api
+////update card api
 const updateActiveCard = async (bodyData, id) => {
   try {
     const findCard = await ActiveCard.findAll({

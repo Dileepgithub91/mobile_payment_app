@@ -14,6 +14,7 @@ const walletRoute = require("./wallet.routes");
 const providerRoute = require("./provider.route");
 const marginRoute = require("./margin.route");
 const taxSetting = require("./tax.setting.route");
+const placeHolderRoute=require("./placeHolder.route");
 
 const routesIndex = [
   {
@@ -31,6 +32,10 @@ const routesIndex = [
   {
     path: "/user",
     route: userRoute,
+  },
+  {
+   path:"/placeHolder",
+   route:placeHolderRoute,
   },
   {
     path: "/business",

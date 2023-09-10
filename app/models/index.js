@@ -30,6 +30,8 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
+
+db.placeHolder=require("./placeHolder.model")(sequelize, DataTypes);
 db.User = require("./users.model")(sequelize, DataTypes);
 db.Country = require("./countery.model")(sequelize, DataTypes);
 db.State = require("./state.model")(sequelize, DataTypes);

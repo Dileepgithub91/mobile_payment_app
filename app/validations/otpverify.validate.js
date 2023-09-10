@@ -12,6 +12,7 @@ module.exports.registerOtp = Joi.object({
         'string.pattern.base': 'You must agree to terms and conditions!'
       })
   });
+  
 module.exports.registerOtpVerify = Joi.object({
   mobile_no: Joi.string()
       .pattern(new RegExp("^[0-9]{10,12}$"))

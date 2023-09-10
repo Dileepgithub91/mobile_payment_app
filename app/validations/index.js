@@ -10,5 +10,6 @@ module.exports = {
     orderValidator: require('./order.validate'),
     walletValidator: require('./wallet.validate'),
     providerValidator: require('./provider.validate'),
-    marginValidator: require('./margin.validate')
+    marginValidator: require('./margin.validate'),
+    placeHolderValidator:require('./placeHolder.validate')
 }
